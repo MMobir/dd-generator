@@ -1,0 +1,341 @@
+$ONEMPTY
+$ONEPS
+$ONWARNING
+$SET RUN_NAME 'FLO_EMIS'
+$SET SCENARIO_NAME 'demo_flo_emis_in-out'
+
+
+SET UNITS_COM
+
+/
+'kt'
+'PJ'
+/;
+
+SET UNITS_CAP
+
+/
+'PJA'
+/;
+
+SET UNITS_ACT
+
+/
+'PJ'
+/;
+
+SET COM_GMAP
+
+/
+'REG1'.'Technology 1_NRGI'.'Commodity 1'
+'REG1'.'Technology 1_NRGI'.'Commodity 2'
+'REG1'.'Technology 1_NRGO'.'Commodity 3'
+'REG1'.'Technology 1_NRGO'.'Commodity 4'
+/;
+
+SET COM_TMAP
+
+/
+'AT'.'ENV'.'CO2 emission'
+'AT'.'NRG'.'Commodity 1'
+'AT'.'NRG'.'Commodity 2'
+'AT'.'NRG'.'Commodity 3'
+'AT'.'NRG'.'Commodity 4'
+'BE'.'ENV'.'CO2 emission'
+'BE'.'NRG'.'Commodity 1'
+'BE'.'NRG'.'Commodity 2'
+'BE'.'NRG'.'Commodity 3'
+'BE'.'NRG'.'Commodity 4'
+'DE'.'ENV'.'CO2 emission'
+'DE'.'NRG'.'Commodity 1'
+'DE'.'NRG'.'Commodity 2'
+'DE'.'NRG'.'Commodity 3'
+'DE'.'NRG'.'Commodity 4'
+'ES'.'ENV'.'CO2 emission'
+'ES'.'NRG'.'Commodity 1'
+'ES'.'NRG'.'Commodity 2'
+'ES'.'NRG'.'Commodity 3'
+'ES'.'NRG'.'Commodity 4'
+'FR'.'ENV'.'CO2 emission'
+'FR'.'NRG'.'Commodity 1'
+'FR'.'NRG'.'Commodity 2'
+'FR'.'NRG'.'Commodity 3'
+'FR'.'NRG'.'Commodity 4'
+'IT'.'ENV'.'CO2 emission'
+'IT'.'NRG'.'Commodity 1'
+'IT'.'NRG'.'Commodity 2'
+'IT'.'NRG'.'Commodity 3'
+'IT'.'NRG'.'Commodity 4'
+'NL'.'ENV'.'CO2 emission'
+'NL'.'NRG'.'Commodity 1'
+'NL'.'NRG'.'Commodity 2'
+'NL'.'NRG'.'Commodity 3'
+'NL'.'NRG'.'Commodity 4'
+'REG1'.'ENV'.'CO2 emission'
+'REG1'.'NRG'.'Commodity 1'
+'REG1'.'NRG'.'Commodity 2'
+'REG1'.'NRG'.'Commodity 3'
+'REG1'.'NRG'.'Commodity 4'
+'REG2'.'ENV'.'CO2 emission'
+'REG2'.'NRG'.'Commodity 1'
+'REG2'.'NRG'.'Commodity 2'
+'REG2'.'NRG'.'Commodity 3'
+'REG2'.'NRG'.'Commodity 4'
+'UK'.'ENV'.'CO2 emission'
+'UK'.'NRG'.'Commodity 1'
+'UK'.'NRG'.'Commodity 2'
+'UK'.'NRG'.'Commodity 3'
+'UK'.'NRG'.'Commodity 4'
+/;
+
+SET COM_UNIT
+
+/
+'AT'.'CO2 emission'.'kt'
+'AT'.'Commodity 1'.'PJ'
+'AT'.'Commodity 2'.'PJ'
+'AT'.'Commodity 3'.'PJ'
+'AT'.'Commodity 4'.'PJ'
+'BE'.'CO2 emission'.'kt'
+'BE'.'Commodity 1'.'PJ'
+'BE'.'Commodity 2'.'PJ'
+'BE'.'Commodity 3'.'PJ'
+'BE'.'Commodity 4'.'PJ'
+'DE'.'CO2 emission'.'kt'
+'DE'.'Commodity 1'.'PJ'
+'DE'.'Commodity 2'.'PJ'
+'DE'.'Commodity 3'.'PJ'
+'DE'.'Commodity 4'.'PJ'
+'ES'.'CO2 emission'.'kt'
+'ES'.'Commodity 1'.'PJ'
+'ES'.'Commodity 2'.'PJ'
+'ES'.'Commodity 3'.'PJ'
+'ES'.'Commodity 4'.'PJ'
+'FR'.'CO2 emission'.'kt'
+'FR'.'Commodity 1'.'PJ'
+'FR'.'Commodity 2'.'PJ'
+'FR'.'Commodity 3'.'PJ'
+'FR'.'Commodity 4'.'PJ'
+'IT'.'CO2 emission'.'kt'
+'IT'.'Commodity 1'.'PJ'
+'IT'.'Commodity 2'.'PJ'
+'IT'.'Commodity 3'.'PJ'
+'IT'.'Commodity 4'.'PJ'
+'NL'.'CO2 emission'.'kt'
+'NL'.'Commodity 1'.'PJ'
+'NL'.'Commodity 2'.'PJ'
+'NL'.'Commodity 3'.'PJ'
+'NL'.'Commodity 4'.'PJ'
+'REG1'.'CO2 emission'.'kt'
+'REG1'.'Commodity 1'.'PJ'
+'REG1'.'Commodity 2'.'PJ'
+'REG1'.'Commodity 3'.'PJ'
+'REG1'.'Commodity 4'.'PJ'
+'REG2'.'CO2 emission'.'kt'
+'REG2'.'Commodity 1'.'PJ'
+'REG2'.'Commodity 2'.'PJ'
+'REG2'.'Commodity 3'.'PJ'
+'REG2'.'Commodity 4'.'PJ'
+'UK'.'CO2 emission'.'kt'
+'UK'.'Commodity 1'.'PJ'
+'UK'.'Commodity 2'.'PJ'
+'UK'.'Commodity 3'.'PJ'
+'UK'.'Commodity 4'.'PJ'
+/;
+
+SET PRC
+
+/
+'Technology 1'
+/;
+
+SET PRC_MAP
+
+/
+'REG1'.'PRE'.'Technology 1'
+/;
+
+SET PRC_TSL
+
+/
+'REG1'.'Technology 1'.ANNUAL
+/;
+
+SET PRC_ACTUNT
+
+/
+'REG1'.'Technology 1'.'Technology 1_NRGO'.'PJ'
+/;
+
+SET TOP
+
+/
+'REG1'.'Technology 1'.'Commodity 1'.IN
+'REG1'.'Technology 1'.'Commodity 2'.IN
+'REG1'.'Technology 1'.'Commodity 3'.OUT
+'REG1'.'Technology 1'.'Commodity 4'.OUT
+/;
+
+SET TOP_IRE
+
+/
+'IMPEXP'.'Commodity 1'.'AT'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'BE'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'DE'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'ES'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'FR'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'IT'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'NL'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'REG1'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'REG2'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 1'.'UK'.'Commodity 1'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'AT'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'BE'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'DE'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'ES'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'FR'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'IT'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'NL'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'REG1'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'REG2'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 2'.'UK'.'Commodity 2'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'AT'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'BE'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'DE'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'ES'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'FR'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'IT'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'NL'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'REG1'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'REG2'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 3'.'UK'.'Commodity 3'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'AT'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'BE'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'DE'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'ES'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'FR'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'IT'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'NL'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'REG1'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'REG2'.'Commodity 4'.'IMPNRGZ'
+'IMPEXP'.'Commodity 4'.'UK'.'Commodity 4'.'IMPNRGZ'
+/;
+
+SET COM_LIM
+
+/
+'AT'.'Commodity 1'.N
+'AT'.'Commodity 2'.N
+'BE'.'Commodity 1'.N
+'BE'.'Commodity 2'.N
+'DE'.'Commodity 1'.N
+'DE'.'Commodity 2'.N
+'ES'.'Commodity 1'.N
+'ES'.'Commodity 2'.N
+'FR'.'Commodity 1'.N
+'FR'.'Commodity 2'.N
+'IT'.'Commodity 1'.N
+'IT'.'Commodity 2'.N
+'NL'.'Commodity 1'.N
+'NL'.'Commodity 2'.N
+'REG1'.'Commodity 1'.N
+'REG1'.'Commodity 2'.N
+'REG2'.'Commodity 1'.N
+'REG2'.'Commodity 2'.N
+'UK'.'Commodity 1'.N
+'UK'.'Commodity 2'.N
+/;
+
+SET PRC_DESC
+
+/
+'REG1'.'Technology 1' 'Technology 1'
+/;
+
+SET COM_DESC
+
+/
+'AT'.'CO2 emission' 'CO2 emission'
+'AT'.'Commodity 1' 'Commodity 1'
+'AT'.'Commodity 2' 'Commodity 2'
+'AT'.'Commodity 3' 'Commodity 3'
+'AT'.'Commodity 4' 'Commodity 4'
+'BE'.'CO2 emission' 'CO2 emission'
+'BE'.'Commodity 1' 'Commodity 1'
+'BE'.'Commodity 2' 'Commodity 2'
+'BE'.'Commodity 3' 'Commodity 3'
+'BE'.'Commodity 4' 'Commodity 4'
+'DE'.'CO2 emission' 'CO2 emission'
+'DE'.'Commodity 1' 'Commodity 1'
+'DE'.'Commodity 2' 'Commodity 2'
+'DE'.'Commodity 3' 'Commodity 3'
+'DE'.'Commodity 4' 'Commodity 4'
+'ES'.'CO2 emission' 'CO2 emission'
+'ES'.'Commodity 1' 'Commodity 1'
+'ES'.'Commodity 2' 'Commodity 2'
+'ES'.'Commodity 3' 'Commodity 3'
+'ES'.'Commodity 4' 'Commodity 4'
+'FR'.'CO2 emission' 'CO2 emission'
+'FR'.'Commodity 1' 'Commodity 1'
+'FR'.'Commodity 2' 'Commodity 2'
+'FR'.'Commodity 3' 'Commodity 3'
+'FR'.'Commodity 4' 'Commodity 4'
+'IT'.'CO2 emission' 'CO2 emission'
+'IT'.'Commodity 1' 'Commodity 1'
+'IT'.'Commodity 2' 'Commodity 2'
+'IT'.'Commodity 3' 'Commodity 3'
+'IT'.'Commodity 4' 'Commodity 4'
+'NL'.'CO2 emission' 'CO2 emission'
+'NL'.'Commodity 1' 'Commodity 1'
+'NL'.'Commodity 2' 'Commodity 2'
+'NL'.'Commodity 3' 'Commodity 3'
+'NL'.'Commodity 4' 'Commodity 4'
+'REG1'.'CO2 emission' 'CO2 emission'
+'REG1'.'Commodity 1' 'Commodity 1'
+'REG1'.'Commodity 2' 'Commodity 2'
+'REG1'.'Commodity 3' 'Commodity 3'
+'REG1'.'Commodity 4' 'Commodity 4'
+'REG2'.'CO2 emission' 'CO2 emission'
+'REG2'.'Commodity 1' 'Commodity 1'
+'REG2'.'Commodity 2' 'Commodity 2'
+'REG2'.'Commodity 3' 'Commodity 3'
+'REG2'.'Commodity 4' 'Commodity 4'
+'UK'.'CO2 emission' 'CO2 emission'
+'UK'.'Commodity 1' 'Commodity 1'
+'UK'.'Commodity 2' 'Commodity 2'
+'UK'.'Commodity 3' 'Commodity 3'
+'UK'.'Commodity 4' 'Commodity 4'
+/;
+
+PARAMETER
+
+ACT_BND ' '/
+'REG1'.0.'Technology 1'.ANNUAL.FX 3
+'REG1'.2005.'Technology 1'.ANNUAL.FX 1
+/;
+
+PARAMETER
+
+ACT_EFF ' '/
+'REG1'.2005.'Technology 1'.'ACT'.ANNUAL 1
+/;
+
+PARAMETER
+
+FLO_EMIS ' '/
+'REG1'.2005.'Technology 1'.'Commodity 1'.'CO2 emission'.ANNUAL 10
+'REG1'.2005.'Technology 1'.'Commodity 2'.'CO2 emission'.ANNUAL 20
+'REG1'.2005.'Technology 1'.'Commodity 3'.'CO2 emission'.ANNUAL -9
+'REG1'.2005.'Technology 1'.'Commodity 4'.'CO2 emission'.ANNUAL -8
+/;
+
+PARAMETER
+
+FLO_SHAR ' '/
+'REG1'.0.'Technology 1'.'Commodity 1'.'Technology 1_NRGI'.ANNUAL.FX 3
+'REG1'.0.'Technology 1'.'Commodity 4'.'Technology 1_NRGO'.ANNUAL.FX 3
+'REG1'.2005.'Technology 1'.'Commodity 1'.'Technology 1_NRGI'.ANNUAL.FX 0.6
+'REG1'.2005.'Technology 1'.'Commodity 4'.'Technology 1_NRGO'.ANNUAL.FX 0.111111111111111
+/;
+
+

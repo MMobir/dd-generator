@@ -1,0 +1,95 @@
+$ONEMPTY
+$ONEPS
+$ONWARNING
+$SET RUN_NAME 'DEMOS_007C'
+$SET SCENARIO_NAME 'uc_growth'
+
+
+SET UNITS_COM
+
+/
+'UCU'
+/;
+
+SET COM_TMAP
+
+/
+'REG1'.'NRG'.'UC_GrowthOfNewCars-'
+'REG1'.'NRG'.'UC_GrowthOfNewCars_'
+'REG2'.'NRG'.'UC_GrowthOfNewCars-'
+'REG2'.'NRG'.'UC_GrowthOfNewCars_'
+/;
+
+SET COM_UNIT
+
+/
+'REG1'.'UC_GrowthOfNewCars-'.'UCU'
+'REG1'.'UC_GrowthOfNewCars_'.'UCU'
+'REG2'.'UC_GrowthOfNewCars-'.'UCU'
+'REG2'.'UC_GrowthOfNewCars_'.'UCU'
+/;
+
+SET TOP_IRE
+
+/
+'IMPEXP'.'UC_GrowthOfNewCars-'.'REG1'.'UC_GrowthOfNewCars-'.'IMPNRGZ'
+'IMPEXP'.'UC_GrowthOfNewCars-'.'REG2'.'UC_GrowthOfNewCars-'.'IMPNRGZ'
+'IMPEXP'.'UC_GrowthOfNewCars_'.'REG1'.'UC_GrowthOfNewCars_'.'IMPNRGZ'
+'IMPEXP'.'UC_GrowthOfNewCars_'.'REG2'.'UC_GrowthOfNewCars_'.'IMPNRGZ'
+/;
+
+SET COM_DESC
+
+/
+'REG1'.'UC_GrowthOfNewCars-' 'Negative dummy var for UC: UC_GrowthOfNewCars'
+'REG1'.'UC_GrowthOfNewCars_' 'Positive dummy var for UC: UC_GrowthOfNewCars'
+'REG2'.'UC_GrowthOfNewCars-' 'Negative dummy var for UC: UC_GrowthOfNewCars'
+'REG2'.'UC_GrowthOfNewCars_' 'Positive dummy var for UC: UC_GrowthOfNewCars'
+/;
+
+SET UC_R_EACH
+
+/
+'REG1'.'UC_GrowthOfNewCars'
+'REG2'.'UC_GrowthOfNewCars'
+/;
+
+SET UC_ATTR
+
+/
+'REG1'.'UC_GrowthOfNewCars'.LHS.CAP.GROWTH
+'REG2'.'UC_GrowthOfNewCars'.LHS.CAP.GROWTH
+/;
+
+PARAMETER
+
+UC_CAP ' '/
+'UC_GrowthOfNewCars'.LHS.'REG1'.2005.'TCAREDSL' 1.01
+'UC_GrowthOfNewCars'.LHS.'REG1'.2005.'TCARNDSL' 1.01
+'UC_GrowthOfNewCars'.LHS.'REG2'.2005.'TCAREDSL' 1.01
+'UC_GrowthOfNewCars'.LHS.'REG2'.2005.'TCARNDSL' 1.01
+'UC_GrowthOfNewCars'.RHS.'REG1'.2005.'TCAREDSL' 1
+'UC_GrowthOfNewCars'.RHS.'REG1'.2005.'TCARNDSL' 1
+'UC_GrowthOfNewCars'.RHS.'REG2'.2005.'TCAREDSL' 1
+'UC_GrowthOfNewCars'.RHS.'REG2'.2005.'TCARNDSL' 1
+/;
+
+PARAMETER
+
+UC_IRE ' '/
+'UC_GrowthOfNewCars'.LHS.'REG1'.2005.'IMPNRGZ'.'UC_GrowthOfNewCars-'.ANNUAL.IMP -1
+'UC_GrowthOfNewCars'.LHS.'REG1'.2005.'IMPNRGZ'.'UC_GrowthOfNewCars_'.ANNUAL.IMP 1
+'UC_GrowthOfNewCars'.LHS.'REG2'.2005.'IMPNRGZ'.'UC_GrowthOfNewCars-'.ANNUAL.IMP -1
+'UC_GrowthOfNewCars'.LHS.'REG2'.2005.'IMPNRGZ'.'UC_GrowthOfNewCars_'.ANNUAL.IMP 1
+/;
+
+PARAMETER
+
+UC_RHSRTS ' '/
+'REG1'.'UC_GrowthOfNewCars'.0.ANNUAL.LO 5
+'REG1'.'UC_GrowthOfNewCars'.2005.ANNUAL.LO -1
+'REG2'.'UC_GrowthOfNewCars'.0.ANNUAL.LO 5
+'REG2'.'UC_GrowthOfNewCars'.2005.ANNUAL.LO -1
+/;
+
+

@@ -1,0 +1,164 @@
+{
+  "sets": {
+    "com": {
+      "index": null,
+      "description": "The set of all commodities in the model, a user-defined list in all regions, and a subset of the commodity group set cg. Aliases include com1, com2, com3."
+    },
+    "prc": {
+      "index": null,
+      "description": "The set containing all processes of the model, a user-defined list in all regions. Alias is p."
+    },
+    "top": {
+      "index": ["r", "p", "c", "io"],
+      "description": "A multi-dimensional set that specifies for a process the commodities entering and leaving that process."
+    },
+    "cg": {
+      "index": null,
+      "description": "The set comprising all commodity groups. Each commodity c is considered a commodity group with only one element. It's a user-defined list of all commodities and commodity groups in all regions. Aliases include com_grp, cg1, cg2, cg3, cg4. The initial elements are the members of com_type."
+    },
+    "all_reg": {
+      "index": null,
+      "description": "The set containing all regions of the model, including both internal and external model regions. Alias is all_r."
+    },
+    "r": {
+      "index": ["all_reg"],
+      "description": "The set comprising the so-called internal model regions. It is a subset of the set all_reg, denoted as r(all_reg). Alias is reg."
+    },
+    "com_type": {
+      "index": null,
+      "description": "Indicator of commodity type; internally established as: 'DEM' (demand), 'NRG' (energy), 'MAT' (material), 'ENV' (environment), 'FIN' (financial). The predefined elements should never be deleted."
+    },
+    "dem_sect": {
+      "index": null,
+      "description": "List of demand sectors; internally established as: 'AGR' (agriculture), 'RES' (residential), 'COM' (commercial and public services), 'IND' (industry), 'TRN' (transport), 'NE' (non-energy), 'OTH' (other). The predefined elements should not be deleted."
+    },
+    "age": {
+      "index": null,
+      "description": "Index for age (number of years since installation) into a parameter shaping curve; default elements 1–200. Aliases are life, jot."
+    },
+    "bd": {
+      "index": ["lim"],
+      "description": "Index of bound type; subset of lim, having the internally fixed elements 'LO', 'UP', 'FX'. Alias is bnd_type, lim."
+    },
+    "lim": {
+      "index": null,
+      "description": "Index of limit types; internally fixed = 'LO', 'UP', 'FX' and 'N'. Alias is lim_type, l."
+    },
+    "nrg_type": {
+      "index": null,
+      "description": "Indicator of energy commodity type; initialized to predefined types."
+    },
+    "pastyear": {
+      "index": null,
+      "description": "Years for which past investments are specified; past years should usually be before the beginning of the first period but past investments may also be specified on later years. Aliases are pyr, modlyear, year."
+    },
+    "prc_grp": {
+      "index": null,
+      "description": "List of process groups; internally established in MAPLIST.DEF."
+    },
+    "s": {
+      "index": ["tslvl"],
+      "description": "Timeslice divisions of a year, at any of the tslvl levels. Aliases are all_ts, ts, s2, sl."
+    },
+    "side": {
+      "index": null,
+      "description": "Side indicator for defining coefficients in user constraints; internally fixed = 'LHS', 'RHS'."
+    },
+    "t": {
+      "index": null,
+      "description": "Representative years for the model periods. Alias is milestonyr, tt."
+    },
+    "teg": {
+      "index": null,
+      "description": "Technologies modelled with endogenous technology learning."
+    },
+    "tslvl": {
+      "index": null,
+      "description": "Timeslice level indicator; internally fixed = 'ANNUAL', 'SEASON', 'WEEKLY', 'DAYNITE'."
+    },
+    "u": {
+      "index": null,
+      "description": "List of all units; maintained in the file UNITS.DEF. Aliases are units, units_com, units_cap, units_act."
+    },
+    "uc_grptyp": {
+      "index": null,
+      "description": "Fixed internal list of the key types of variables. Alias is e."
+    },
+    "uc_n": {
+      "index": null,
+      "description": "User specified unique indicator for a user constraint. Alias is ucn."
+    },
+    "uc_name": {
+      "index": null,
+      "description": "Fixed list of indicators associated with various attributes that can be referenced in user constraints to be applied when deriving a coefficient."
+    },
+    "unit": {
+      "index": null,
+      "description": "List of capacity blocks that can be added in lumpy investment option; default elements 0–100; the element '0' describes the case when no capacity is added."
+    },
+    "com_ts": {
+      "index": ["r", "c", "s"],
+      "description": "Set of triplets {r,c,s} such that commodity c is available in timeslice s in region r; commodity balances will be generated for the given timeslices; Default: all timeslices of timeslice level specified by com_tsl."
+    },
+    "com_tsl": {
+      "index": ["r", "c", "tslvl"],
+      "description": "Set of triplets {r,c,tslvl} such that commodity c is modelled on the timeslice level tslvl in region r; Default: 'ANNUAL' timeslice level."
+    },
+    "com_unit": {
+      "index": ["r", "c", "units_com"],
+      "description": "Set of triplets {r,c,units_com} such that commodity c is expressed in unit units_com in region r."
+    },
+    "afs": {
+      "index": ["r", "t", "p", "s", "bd"],
+      "description": "Indicator that the internal parameter COEF_AF exists."
+    },
+    "bohyear": {
+      "index": ["*"],
+      "description": "Set allyear plus element 'BOH' (Beginning Of Horizon). The asterisk denotes a wildcard, so domain checking is disabled."
+    },
+    "dm_year": {
+      "index": ["year"],
+      "description": "Union of sets datayear and modlyear."
+    },
+    "eachyear": {
+      "index": ["year"],
+      "description": "Set of all years between scalars MINYR and MIYR_VL + DUR_MAX."
+    },
+    "miyr_1": {
+      "index": ["t"],
+      "description": "First milestonyr."
+    },
+    "no_act": {
+      "index": ["r", "p"],
+      "description": "List of processes p in region r not requiring the activity variable; used in reduction algorithm."
+    },
+    "no_cap": {
+      "index": ["r", "p"],
+      "description": "List of processes p in region r not having any capacity related input parameters; used in reduction algorithm."
+    },
+    "no_rvp": {
+      "index": ["r", "v", "p"],
+      "description": "New investment in process p in region r is not possible in period v and previously installed capacity does not exist anymore."
+    },
+    "obj_1a": {
+      "index": ["r", "v", "p"],
+      "description": "Investment case small investment and no repetition of investment."
+    },
+    "obj_1b": {
+      "index": ["r", "v", "p"],
+      "description": "Investment case small investment and repetition of investment."
+    },
+    "UC_SETS": {
+      "index": null,
+      "description": "A higher-level categorization of user constraint sets available in VEDA2.0, including types like R_E, R_S, T_E, T_S, TS_E, TS_S, and T_SUC. These are VEDA-specific ways of using underlying TIMES sets."
+    },
+    "UC_INDEXES": {
+      "index": null,
+      "description": "Row identifiers for user constraint tables in VEDA2.0. They would correspond to the standard TIMES sets."
+    },
+    "SOW": {
+      "index": null,
+      "description": "Mentioned as 'Scenarios of the World' in the context of stochastic programming. This is an index for the different scenarios in a stochastic model."
+    }
+  }
+} 
