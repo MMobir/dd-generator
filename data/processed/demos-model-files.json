@@ -1,0 +1,539 @@
+[
+    {
+      "demo_number": "001",
+      "folder_name": "DemoS_001",
+      "short_description": "Resource supply",
+      "description": "Establishes a minimal energy system model with a single resource (coal), its extraction/import, and a single final demand over two periods.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_001 (Base)",
+          "objective": [
+            "Define basic energy commodities (e.g., coal) and processes (mining, import, export, demand device).",
+            "Model a multi-step domestic resource supply curve using cumulative resource availability (CUM attribute) and step-specific costs (COST). Impose annual production limits per step if needed (ACT_BND with LimType=UP).",
+            "Represent resource import options with specified costs (COST) and annual availability limits (ACT_BND with LimType=UP).",
+            "Represent resource export options with specified prices (negative COST) and annual quantity limits (ACT_BND with LimType=UP).",
+            "Define a generic end-use demand process meeting a final energy service demand.",
+            "Characterize the demand process with key technical and economic parameters: efficiency (EFF), annual availability factor (AFA), investment cost (INVCOST), fixed operation and maintenance cost (FIXOM), and technical lifetime (LIFE).",
+            "Set the base year demand level for the energy service using the DEMAND attribute.",
+            "Establish fundamental model parameters: region(s), time periods, units, currency, discount rate (via G_DYEAR, DISCOUNT), and time slice definitions (initially just annual via YRFR)."
+          ],
+          "key_attributes_concepts": [
+            "Commodity and Process Definition",
+            "Resource Supply Curves (CUM, COST, ACT_BND, LimType)",
+            "Import/Export Modeling",
+            "End-Use Demand Process Characterization (EFF, AFA, INVCOST, FIXOM, LIFE)",
+            "Setting Exogenous Demand (DEMAND)",
+            "Basic Model Horizon and Economic Parameters (Discounting)"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "002",
+      "folder_name": "DemoS_002",
+      "short_description": "More demand options and multiple supply curves",
+      "description": "Expands the model to include multiple fossil fuels (gas, oil), introduces emissions tracking, sector-specific fuel concepts, and distinct end-use sectors.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_002 (Base)",
+          "objective": [
+            "Add supply curves, import, and export options for additional primary energy carriers (Natural Gas, Crude Oil).",
+            "Introduce intermediate fuel conversion processes ('Sector Fuel' processes) to transform primary fuels into sector-specific variants (e.g., transforming primary GAS into RSDGAS for residential use) for improved tracking and potential sectoral policy application. These are often modeled with high efficiency and may have existing capacity (STOCK).",
+            "Define specific end-use demands in different sectors (e.g., Residential 'Other', Transport 'Demand 1').",
+            "Model end-use technologies that consume these sector-specific fuels to meet the defined end-use demands.",
+            "Distinguish between existing, depreciating capacity (modeled using the STOCK attribute) and options for new capacity investments (modeled via processes with INVCOST and a START year).",
+            "Introduce emission commodities (e.g., CO2 for Residential, CO2 for Transport) linked to specific activities.",
+            "Associate emissions directly with the activity of emitting processes (e.g., end-use devices) using emission coefficients (ENV_ACT attribute)."
+          ],
+          "key_attributes_concepts": [
+            "Multiple Commodity Supply/Demand",
+            "Intermediate Fuel Processing ('Sector Fuels')",
+            "Sectoral End-Use Demands",
+            "Existing Capacity Depreciation (STOCK)",
+            "New Technology Introduction Year (START)",
+            "Emission Commodity Definition (Set ENV)",
+            "Activity-Based Emission Factors (ENV_ACT)"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "003",
+      "folder_name": "DemoS_003",
+      "short_description": "Power sector: basics",
+      "description": "Introduces a basic electricity generation sector, including various plant types, grid losses, an extended time horizon, and demonstrates handling of time-series data.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_003 (Base)",
+          "objective": [
+            "Define the electricity commodity (ELC) and power generation processes (assigned to the ELE process set).",
+            "Model different types of power plants: existing (with STOCK) and new (with INVCOST, START) thermal (coal, gas, oil), nuclear, and renewable options.",
+            "Include primary resource extraction for nuclear fuel (uranium) and generic renewables.",
+            "Represent electricity grid efficiency or losses by defining the COM_IE attribute for the ELC commodity.",
+            "Extend the model's time horizon by defining multiple time periods of potentially varying lengths.",
+            "Apply interpolation/extrapolation rules to time-series parameters (e.g., activity bounds ACT_BND) to avoid defining values for every single period, often by specifying a rule code in a dedicated 'year 0' data entry.",
+            "Model and project the demand for electricity (TPSELC), potentially with a growth trend.",
+            "Introduce variable O&M costs (VAROM) for power plants.",
+            "Use capacity-to-activity conversion factors (CAP2ACT) to relate power plant capacity (e.g., GW) to energy generated (e.g., PJ)."
+          ],
+          "key_attributes_concepts": [
+            "Electricity Sector Modeling (ELE Set)",
+            "Grid Efficiency/Losses (COM_IE)",
+            "Extended Time Horizon Definition",
+            "Time-Series Interpolation/Extrapolation Rules",
+            "Electricity Demand Projection",
+            "Variable O&M Costs (VAROM)",
+            "Capacity-to-Activity Conversion (CAP2ACT)"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "004",
+      "folder_name": "DemoS_004",
+      "short_description": "Power sector: sophistication",
+      "description": "Adds intra-annual detail (time slices) to the power sector, models peak load contributions, time-differentiated demand, and peak reserve requirements.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_004 (Base)",
+          "objective": [
+            "Divide the year into multiple time slices (e.g., Winter-Day, Winter-Night, Summer-Day, Summer-Night) and define their fractional length (YRFR attribute).",
+            "Define the electricity demand profile across these time slices using fractional demand values (COM_FR attribute for the electricity demand commodity).",
+            "Specify the time slice level at which the electricity commodity balance is enforced (CTSLvl attribute, e.g., DAYNITE).",
+            "Specify the operational time slice level for different power plant types (Tslvl attribute, e.g., SEASON for baseload, DAYNITE for peakers).",
+            "Define the contribution factor of each power plant type to meeting the system peak load (PEAK attribute).",
+            "Consolidate default interpolation/extrapolation rules for attributes into a central definition location."
+          ],
+          "key_attributes_concepts": [
+            "Time Slices Definition (YRFR)",
+            "Demand Load Profiles (COM_FR)",
+            "Commodity Time Slice Tracking Level (CTSLvl)",
+            "Process Operational Time Slice Level (Tslvl)",
+            "Peak Contribution Factors (PEAK)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_004a (Peak_RSV)",
+          "objective": [
+            "Building on the time-sliced model, introduce a system-wide peak reserve margin requirement.",
+            "Activate the peak equation generation for the electricity commodity (using COM_Peak attribute).",
+            "Specify the required reserve margin as a percentage of the peak load (using COM_PKRSV attribute, e.g., 5 for 5%).",
+            "Observe how the model must install sufficient 'peak contributing' capacity (based on PEAK factors) to meet both the demand in the peak slice and the reserve margin."
+          ],
+          "key_attributes_concepts": [
+            "Peak Reserve Margin Requirement (COM_PKRSV)",
+            "Activating Peak Equation (COM_Peak)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_004b (Peak_RSV-FLX)",
+          "objective": [
+            "Refine the peak reserve modeling by accounting for potential short-term demand fluctuations within the peak time slice.",
+            "In addition to the reserve margin (COM_PKRSV), specify the factor by which the *instantaneous* peak demand might exceed the *average* demand within the designated peak time slice (using COM_PKFLX attribute for that slice).",
+            "This increases the effective peak demand against which the reserve margin is calculated."
+          ],
+          "key_attributes_concepts": [
+            "Peak Demand Fluctuation within Slice (COM_PKFLX)"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "005",
+      "folder_name": "DemoS_005",
+      "short_description": "2-region model with endogenous trade: compact approach",
+      "description": "Introduces multiple regions and models energy trade between them as a model decision variable, along with regional emission constraints.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_005 (Base)",
+          "objective": [
+            "Define multiple regions within the model.",
+            "Specify model parameters (e.g., costs, resource availability, existing stock) on a regional basis.",
+            "Define potential pathways for energy trade (e.g., electricity, gas) between specific regions.",
+            "Allow the model to determine the optimal amount of trade based on costs and constraints by activating these trade links (this implicitly creates Inter-Regional Exchange - IRE - processes, e.g., TB_* for bilateral, TU_* for unilateral).",
+            "Assign costs (e.g., INVCOST for pipeline/interconnector capacity) or limits (e.g., ACT_BND) to these trade pathways/processes."
+          ],
+          "key_attributes_concepts": [
+            "Multi-Region Model Setup",
+            "Regional Parameter Specification",
+            "Endogenous Inter-Regional Trade (IRE processes)",
+            "Trade Link Parameters (Costs, Limits)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_005a (ELC_CO2_BOUND)",
+          "objective": [
+            "Impose an emission constraint on a specific sector (electricity) in a specific region (REG1).",
+            "Define an upper bound (COM_BNDNET attribute with LimType=UP) on the total annual emissions of the relevant CO2 commodity (ELCCO2) within REG1, potentially varying over time using interpolation rules.",
+            "Analyze the impact on regional generation mix and potential emission leakage to the unconstrained region (REG2)."
+          ],
+          "key_attributes_concepts": [
+            "Regional Emission Bounds (COM_BNDNET, LimType)",
+            "Sector-Specific Constraints"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_005b (UCCO2_BND)",
+          "objective": [
+            "Implement a CO2 emission constraint covering multiple sectors (power and transport) within each region independently, using a User Constraint (UC).",
+            "Define a UC that applies individually to each region (R_E constraint type).",
+            "Specify the upper limit (UC_RHSRTS attribute) for the combined net emissions (linked via UC_COMNET) of the target CO2 commodities (TRACO2 and ELCCO2) for specific years within each region.",
+            "Observe how each region must meet its own combined target."
+          ],
+          "key_attributes_concepts": [
+            "User Constraint Definition",
+            "Applying Constraints Per Region (R_E Type)",
+            "Multi-Sector User Constraints",
+            "Constraint Right-Hand Side (UC_RHSRTS)",
+            "Linking UC to Commodity Net Balance (UC_COMNET)"
+          ]
+        }
+      ]
+    },
+      {
+      "demo_number": "006",
+      "folder_name": "DemoS_006",
+      "short_description": "Multi-region with separate regional templates",
+      "description": "Restructures the multi-region model for better modularity, using separate input files for each region's base-year data and introducing shared 'technology repository' files for defining new technologies.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_006 (Base)",
+          "objective": [
+            "Organize the model input using separate files/workbooks for the base-year definition of each region.",
+            "Introduce the concept of 'technology repositories': separate files defining the characteristics of new technologies (e.g., advanced power plants) that are potentially available to multiple regions.",
+            "Use associated 'transformation' files to specify if and how technologies from the repository are available or modified (e.g., different costs, availability factors) in specific regions. (In this base demo, the transformation file is often empty, meaning repository techs are available everywhere with default parameters).",
+            "Implement process vintaging by setting the Vintage attribute to YES for specific processes in the repository.",
+            "Define parameters (e.g., efficiency EFF, emission factors ENV_ACT) that vary by vintage year (START year) for these vintaged processes."
+          ],
+          "key_attributes_concepts": [
+            "Modular Input Structure (Regional Files)",
+            "Technology Repositories (Shared Definitions)",
+            "Regional Customization/Availability of Repository Techs",
+            "Process Vintaging (Vintage=YES)",
+            "Vintage-Specific Parameters"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "007",
+      "folder_name": "DemoS_007",
+      "short_description": "Adding complexity (Robustness)",
+      "description": "Introduces significant modeling detail: a flexible refinery, complex transport sector using non-energy units, fuel-based emissions, data-driven demand projections, growth constraints, and demand elasticity.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_007 (Base)",
+          "objective": [
+            "Model a refinery process converting crude oil into multiple distinct petroleum products (e.g., gasoline, diesel, kerosene).",
+            "Use output shares (Share-O attribute) to define the refinery's output mix, potentially allowing flexibility (if sum of max shares > 100%).",
+            "Explicitly define the Primary Commodity Group (PCG) for the refinery process to ensure correct normalization (e.g., based on crude oil input).",
+            "Model the transport sector using activity units relevant to the service (e.g., Billion passenger-km) and capacity units relevant to the stock (e.g., thousands of vehicles).",
+            "Introduce the ACTFLO attribute to link the service activity (passenger-km) to the stock capacity (vehicles) via a utilization factor (e.g., passengers per vehicle).",
+            "Use CAP2ACT to handle the conversion between the differing capacity and activity units (e.g., vehicle-km from vehicles and km/year).",
+            "Implement fuel-based emission accounting by directly linking emission coefficients to the consumption of specific fuels (e.g., CO2 per PJ of TRAGSL), rather than linking emissions only to the transport service process."
+          ],
+          "key_attributes_concepts": [
+            "Flexible Refinery Modeling (Multiple Outputs, Share-O)",
+            "Primary Commodity Group (PCG) Definition",
+            "Non-Energy Units (Activity, Capacity)",
+            "Activity-Flow Relationship (ACTFLO)",
+            "Fuel-Based Emission Accounting"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_007 (DemProj_DTCAR)",
+          "objective": [
+            "Project future demand for a specific service (car transport, DTCAR) based on its base-year level.",
+            "Use data manipulation features within a scenario definition to first extract ('fill') the base year (2005) demand value for DTCAR from the base-year input data.",
+            "Then, use these extracted values within the same scenario definition to calculate and insert ('ins') demand values for future years by applying specified annual growth multipliers (e.g., 2% for REG1, 3% for REG2)."
+          ],
+          "key_attributes_concepts": [
+            "Data Extraction ('Fill')",
+            "Demand Projection using Growth Factors ('Ins')"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_007 (Refinery Update)",
+          "objective": [
+            "Modify refinery operational parameters over time within a scenario.",
+            "Extract ('fill') the base year activity bound (ACT_BND) for the refinery process.",
+            "Calculate and insert ('ins') future refinery activity bounds based on the base value plus a relaxation factor (e.g., +25% for REG1).",
+            "Update ('ins') the refinery output share limits (Share-O) for future periods (e.g., allow up to 50% for each product)."
+          ],
+          "key_attributes_concepts": [
+            "Time-Varying Process Parameters",
+            "Modifying Output Flexibility (Share-O)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_007a (TRA_CO2_BOUND)",
+          "objective": [
+            "Impose an emission cap specifically on the transport sector.",
+            "Define an upper bound (COM_BNDNET attribute with LimType=UP) for the transport CO2 commodity (TRACO2) in each region for future years. Limits are typically derived from percentage reductions relative to a reference (unconstrained) scenario."
+          ],
+          "key_attributes_concepts": [
+            "Sectoral Emission Bounds (COM_BNDNET)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_007 (UC Growth)",
+          "objective": [
+            "Limit the annual growth rate of a specific technology subset (new diesel cars) using a User Constraint.",
+            "Define a UC targeting processes that consume diesel (PSet_CI=TRADSL).",
+            "Use the specific UC attribute combination `CAP,GROWTH` and provide the maximum annual growth factor (e.g., 1.01 for 1%) as the value in the UC_CAP column.",
+            "Include a non-zero seed value (e.g., UC_RHSRTS=1) to allow growth calculation even if initial capacity is zero."
+          ],
+          "key_attributes_concepts": [
+            "User Constraint on Growth Rate (UC_ATTR: CAP,GROWTH)",
+            "Targeting Processes via IO (PSet_CI/CO)",
+            "Growth Constraint Seeding (UC_RHSRTS)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_007b (ElasticDem)",
+          "objective": [
+            "Activate the price elasticity of demand feature for car transport.",
+            "Define the necessary elasticity parameters for the demand commodity (DTCAR): the price elasticity itself (COM_ELAST), the maximum allowable demand reduction/increase (COM_VOC), and the number of steps for linearizing the demand curve (COM_STEP).",
+            "(Note: This requires base prices generated from a prior reference model run where the appropriate reporting flag was set)."
+          ],
+          "key_attributes_concepts": [
+            "Demand Price Elasticity (COM_ELAST)",
+            "Demand Variation Limit (COM_VOC)",
+            "Demand Curve Linearization Steps (COM_STEP)"
+          ]
+        }
+      ]
+    },
+      {
+      "demo_number": "008",
+      "folder_name": "DemoS_008",
+      "short_description": "Split Base-Year (B-Y) templates by sector: demands by sector",
+      "description": "Restructures base-year inputs into sector-specific files (Primary, ELC, RCA, TRA, IND). Expands modeling detail across all end-use sectors and renewables, extending the horizon to 2050.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_008 (Base)",
+          "objective": [
+            "Organize base-year model inputs into files based on economic sector (e.g., one for Primary Supply, one for Electricity, one for Residential/Commercial/Agricultural, etc.).",
+            "Increase detail in renewable electricity generation, modeling specific technologies for Biomass, Hydro, Wind, and Solar.",
+            "Model end-use energy service demands across all major sectors: Agriculture, Commercial, Residential, Industrial, Transport, defining specific demands within each (e.g., residential space heating, residential appliances).",
+            "Utilize time slice fractional shares (COM_FR) for demands that exhibit significant intra-annual variation (e.g., space heating).",
+            "Implement comprehensive emissions tracking using fuel-based coefficients (~COMEMI concept) defined within each relevant sector's input files.",
+            "Extend the model planning horizon further, e.g., to 2050."
+          ],
+          "key_attributes_concepts": [
+            "Sectoral Input File Structure",
+            "Detailed Renewable Technology Mix",
+            "Comprehensive End-Use Sector Demand Modeling",
+            "Extended Planning Horizon"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_008 (UC_CO2BND - All Sectors)",
+          "objective": [
+            "Apply a CO2 emission cap that covers *all* emitting sectors within each region.",
+            "Modify the User Constraint from DemoS_005b to include the CO2 emission commodities from all defined sectors (Agriculture, Commercial, Electricity, Industry, Residential, Transport) in the calculation for the regional cap (still using R_E type for per-region limits)."
+          ],
+          "key_attributes_concepts": [
+            "Economy-Wide Regional Emission Caps (via UC)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_008 (UC_NUC_MaxCAP)",
+          "objective": [
+            "Set an absolute maximum limit on the total installed nuclear power capacity within each region, potentially varying over time.",
+            "Use data extraction ('fill') features within the scenario definition to get the base year nuclear capacity.",
+            "Define a User Constraint targeting all nuclear power processes (existing and new).",
+            "Use the UC attribute `CAP` with LimType=UP to set the maximum allowed total nuclear capacity (GW) in specific future years (e.g., constant for REG1, staged increases for REG2), using interpolation rules (e.g., rule 15) for intermediate years."
+          ],
+          "key_attributes_concepts": [
+            "Absolute Capacity Constraints via UC (UC_ATTR: CAP, LimType=UP)",
+            "Technology-Specific Capacity Limits",
+            "Time-Varying Constraints via UC"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "009",
+      "folder_name": "DemoS_009",
+      "short_description": "SubRES sophistication (CHP, district heating) and Trans files",
+      "description": "Introduces sophisticated technologies via shared repositories: Iron & Steel production (with material flows) and Combined Heat & Power (CHP) integrated with District Heating. Demonstrates advanced use of base-year and repository transformation files.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_009 (Base)",
+          "objective": [
+            "Define an Iron & Steel production sector within a technology repository file, including processes and material commodities (e.g., Iron Ore, Finished Steel - defined with the MAT commodity set).",
+            "Define a Combined Heat & Power (CHP) and District Heating (DH) system within another repository file.",
+            "Model CHP plants (assigned to CHP process set) producing both Electricity (ELC) and Heat (HET), using CHP-specific attributes like CEH (heat/electricity loss/gain coefficient) and CHPR (heat-to-power ratio).",
+            "Model district heating network/processes consuming HET to meet end-use heat demands (e.g., residential space heating DRSH).",
+            "Introduce Past Investments (PASTI attribute) in the base-year electricity input files as an alternative method to define the existing capacity and vintage structure of certain technologies (e.g., hydro).",
+            "Utilize a base-year transformation file to modify or supplement base-year data without editing the original files (e.g., define time-slice specific availability factors AF for existing wind/solar; define an interpolation rule for NCAP_BND for hydro since PASTI is now used).",
+            "Utilize a repository transformation file to control the regional availability of specific repository technologies (e.g., make new hydro plants available only in certain regions using availability attributes like AVA_NewCap)."
+          ],
+          "key_attributes_concepts": [
+            "Complex Industrial Process Modeling",
+            "Material Commodity Flows (MAT set)",
+            "Combined Heat and Power Modeling (CHP set, CEH, CHPR)",
+            "District Heating Systems",
+            "Past Investments for Vintage Stock (PASTI)",
+            "Base-Year Data Transformation",
+            "Repository Technology Availability Control"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_009d (IND_NewRes)",
+          "objective": [
+            "Activate the Iron & Steel sector defined in its repository and adjust the aggregate industrial demand accordingly.",
+            "Within the scenario definition, update the original aggregate industrial demand (DIDM1) by applying a reduction factor (e.g., multiply by 0.9) to crudely account for the energy now explicitly modeled by the steel sector.",
+            "Define the demand level for the new finished steel commodity (DIIS) and specify the retirement profile (e.g., STOCK in 2050) for the steelmaking processes within this scenario."
+          ],
+          "key_attributes_concepts": [
+            "Activating Repository Sectors",
+            "Adjusting Aggregate Sector Demands",
+            "Defining New Material Demands"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_009e (UC_DH_MinProd)",
+          "objective": [
+            "Mandate a minimum market share for district heating in meeting residential space heating demand using a User Constraint.",
+            "Define a UC targeting the residential space heat demand (DRSH).",
+            "Use LimType=LO (Lower bound).",
+            "Specify the minimum required penetration percentage (e.g., 10% in 2020, 15% in 2050) as the right-hand side value (UC_RHSRTS).",
+            "Relate the heat delivered by district heating processes (identified by consuming the DH heat commodity, PSet_CI=RSDHET) to the total DRSH demand. This requires comparing the flow (UC_ATTR=`FLO`) of RSDHET into DH devices against the total DRSH demand (specified via table-level UC_COMPRD=DRSH)."
+          ],
+          "key_attributes_concepts": [
+            "User Constraint on Market Penetration (LimType=LO)",
+            "Comparing Process Flow to Total Demand via UC (UC_ATTR: FLO, UC_COMPRD)"
+          ]
+        }
+      ]
+    },
+      {
+      "demo_number": "010",
+      "folder_name": "DemoS_010",
+      "short_description": "Demand projections setup",
+      "description": "Focuses on preparing the necessary input data structures for projecting future energy service demands based on external drivers (like GDP, population) and applying sensitivity/calibration factors.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_010 (Demand Projection Setup)",
+          "objective": [
+            "Define time series data for various potential demand drivers (e.g., GDP index, Population index, Industrial Output index).",
+            "Define different sensitivity and/or calibration series (e.g., a 'Constant' series with value 1, a 'Low Growth' sensitivity series).",
+            "Create an allocation mapping that assigns a specific driver, a sensitivity series, and a calibration series to each end-use demand in each region.",
+            "(Note: This demo primarily sets up the *inputs*. The actual calculation D(t) = D(t-1) * (1 + (Driver(t)/Driver(t-1)-1 + Calibration(t)) * Sensitivity(t)) is typically performed by pre-processing tools or specific model interfaces based on these structured inputs)."
+          ],
+          "key_attributes_concepts": [
+            "Demand Driver Definition",
+            "Sensitivity/Calibration Series Definition",
+            "Allocation of Drivers/Series to Demands"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "011",
+      "folder_name": "DemoS_011",
+      "short_description": "User SETS in scenario templates",
+      "description": "Demonstrates how to define custom groups (SETS) of processes or commodities and leverage these sets within scenario definitions, particularly user constraints.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_011 (Base)",
+          "objective": [
+            "Define user-named sets of processes (e.g., 'PP_RENEW' including all renewable power plants based on their TIMES set membership ELE and input commodities CI like *RNW, *WIN etc.).",
+            "Define user-named sets of commodities (e.g., 'NRG_SOLID' including all commodities whose description CD contains *SOLID*).",
+            "These set definitions are typically stored in dedicated input files or sections."
+          ],
+          "key_attributes_concepts": [
+            "User-Defined Set Definition (Processes, Commodities)",
+            "Set Definition Logic (Based on TIMES Sets, Names, IO, Descriptions)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_011 (Bounds-UC-wSets)",
+          "objective": [
+            "Apply a constraint using a previously defined user set.",
+            "Define a User Constraint to enforce a minimum renewable share in power generation.",
+            "Instead of listing all individual renewable power processes, target the constraint using the user-defined process set 'PP_RENEW' (e.g., PSet_Set = PP_RENEW).",
+            "Specify the minimum required share (e.g., 10% in 2020) and relate the output of the PP_RENEW set to the total electricity generation."
+          ],
+          "key_attributes_concepts": [
+            "Using User-Defined Sets in Scenarios",
+            "Applying Constraints to Groups (via PSet_Set/CSet_Set)"
+          ]
+        }
+      ]
+    },
+    {
+      "demo_number": "012",
+      "folder_name": "DemoS_012",
+      "short_description": "More modelling techniques",
+      "description": "Introduces several advanced modeling features: commodity aggregation, discrete/lumpy investments, taxes and subsidies, and cross-regional constraints.",
+      "scenarios": [
+        {
+          "scenario_name": "DemoS_012 (Base)",
+          "objective": [
+            "Define an aggregated commodity (e.g., TOTCO2) that represents the sum of emissions from multiple sectoral CO2 commodities (e.g., AGRCO2, ELCCO2, etc.) using specific commodity aggregation rules/tables. This simplifies applying constraints or taxes to total emissions."
+          ],
+          "key_attributes_concepts": [
+            "Commodity Aggregation"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_012 (NUC_DiscInv)",
+          "objective": [
+            "Model investments in a specific technology (new nuclear plants) as discrete, 'lumpy' additions rather than continuous capacity.",
+            "Assign the target process (ELCNNUC01) to a special discrete investment process set (e.g., DSCINV) in its definition.",
+            "Within this scenario, define the allowable discrete capacity increments (e.g., 1 GW) and potentially the years/conditions under which these increments can be added using the NCAP_DISC attribute.",
+            "Enable the discrete investment solution algorithm in the model solver settings."
+          ],
+          "key_attributes_concepts": [
+            "Discrete (Lumpy) Investments (DSCINV set)",
+            "Allowable Capacity Increments (NCAP_DISC)",
+            "MIP Solver Requirement"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_012a (TRADSL_Tax)",
+          "objective": [
+            "Apply a tax to a specific flow: the consumption of diesel fuel (TRADSL) by transport processes (T*).",
+            "Use the FLO_TAX attribute, specifying the tax amount per unit of TRADSL consumed by T* processes in specific years/regions."
+          ],
+          "key_attributes_concepts": [
+            "Flow Tax/Tariff (FLO_TAX)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_012b (CO2_Tax)",
+          "objective": [
+            "Apply a tax to the net emissions of the aggregated CO2 commodity.",
+            "Use the COM_TAXNET attribute for the aggregated TOTCO2 commodity, specifying the tax value per unit of net emission in specific years."
+          ],
+          "key_attributes_concepts": [
+            "Commodity Net Balance Tax (COM_TAXNET)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_012c (Solar_Subsidies)",
+          "objective": [
+            "Apply a subsidy to the output of specific technologies (solar power plants).",
+            "Use the FLO_SUB attribute, specifying the subsidy amount (as a negative cost) per unit of electricity (ELC) produced by processes consuming solar energy (ELCSOL)."
+          ],
+          "key_attributes_concepts": [
+            "Flow Subsidy (FLO_SUB)"
+          ]
+        },
+        {
+          "scenario_name": "DemoS_012d (UC_CO2_Regions)",
+          "objective": [
+            "Impose a CO2 emission cap that applies to the *sum* of emissions across *all* regions, rather than constraining each region individually.",
+            "Define a User Constraint using the R_S constraint type (Sum across regions).",
+            "Specify the upper limit for the total, summed net emissions (UC_COMNET) of the aggregated TOTCO2 commodity across all regions for specific years."
+          ],
+          "key_attributes_concepts": [
+            "Cross-Regional Summed Constraints (R_S Type)"
+          ]
+        }
+      ]
+    }
+  ]

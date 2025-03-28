@@ -1,0 +1,83 @@
+$ONEMPTY
+$ONEPS
+$ONWARNING
+$SET RUN_NAME 'DEMOS_012D'
+$SET SCENARIO_NAME 'uc_co2_regions'
+
+
+SET UNITS_COM
+
+/
+'UCU'
+/;
+
+SET COM_TMAP
+
+/
+'REG1'.'NRG'.'AU_CO2BND_AllRegions-'
+'REG1'.'NRG'.'AU_CO2BND_AllRegions_'
+'REG2'.'NRG'.'AU_CO2BND_AllRegions-'
+'REG2'.'NRG'.'AU_CO2BND_AllRegions_'
+/;
+
+SET COM_UNIT
+
+/
+'REG1'.'AU_CO2BND_AllRegions-'.'UCU'
+'REG1'.'AU_CO2BND_AllRegions_'.'UCU'
+'REG2'.'AU_CO2BND_AllRegions-'.'UCU'
+'REG2'.'AU_CO2BND_AllRegions_'.'UCU'
+/;
+
+SET TOP_IRE
+
+/
+'IMPEXP'.'AU_CO2BND_AllRegions-'.'REG1'.'AU_CO2BND_AllRegions-'.'IMPNRGZ'
+'IMPEXP'.'AU_CO2BND_AllRegions-'.'REG2'.'AU_CO2BND_AllRegions-'.'IMPNRGZ'
+'IMPEXP'.'AU_CO2BND_AllRegions_'.'REG1'.'AU_CO2BND_AllRegions_'.'IMPNRGZ'
+'IMPEXP'.'AU_CO2BND_AllRegions_'.'REG2'.'AU_CO2BND_AllRegions_'.'IMPNRGZ'
+/;
+
+SET COM_DESC
+
+/
+'REG1'.'AU_CO2BND_AllRegions-' 'Negative dummy var for UC: AU_CO2BND_AllRegions'
+'REG1'.'AU_CO2BND_AllRegions_' 'Positive dummy var for UC: AU_CO2BND_AllRegions'
+'REG2'.'AU_CO2BND_AllRegions-' 'Negative dummy var for UC: AU_CO2BND_AllRegions'
+'REG2'.'AU_CO2BND_AllRegions_' 'Positive dummy var for UC: AU_CO2BND_AllRegions'
+/;
+
+SET UC_R_SUM
+
+/
+'REG1'.'AU_CO2BND_AllRegions'
+'REG2'.'AU_CO2BND_AllRegions'
+/;
+
+PARAMETER
+
+UC_COMNET ' '/
+'AU_CO2BND_AllRegions'.LHS.'REG1'.2020.'TOTCO2'.ANNUAL 1
+'AU_CO2BND_AllRegions'.LHS.'REG1'.2050.'TOTCO2'.ANNUAL 1
+'AU_CO2BND_AllRegions'.LHS.'REG2'.2020.'TOTCO2'.ANNUAL 1
+'AU_CO2BND_AllRegions'.LHS.'REG2'.2050.'TOTCO2'.ANNUAL 1
+/;
+
+PARAMETER
+
+UC_IRE ' '/
+'AU_CO2BND_AllRegions'.LHS.'REG1'.2005.'IMPNRGZ'.'AU_CO2BND_AllRegions-'.ANNUAL.IMP -1
+'AU_CO2BND_AllRegions'.LHS.'REG1'.2005.'IMPNRGZ'.'AU_CO2BND_AllRegions_'.ANNUAL.IMP 1
+'AU_CO2BND_AllRegions'.LHS.'REG2'.2005.'IMPNRGZ'.'AU_CO2BND_AllRegions-'.ANNUAL.IMP -1
+'AU_CO2BND_AllRegions'.LHS.'REG2'.2005.'IMPNRGZ'.'AU_CO2BND_AllRegions_'.ANNUAL.IMP 1
+/;
+
+PARAMETER
+
+UC_RHSTS ' '/
+'AU_CO2BND_AllRegions'.0.ANNUAL.UP 5
+'AU_CO2BND_AllRegions'.2020.ANNUAL.UP 4078637.46791321
+'AU_CO2BND_AllRegions'.2050.ANNUAL.UP 4632567.88837235
+/;
+
+

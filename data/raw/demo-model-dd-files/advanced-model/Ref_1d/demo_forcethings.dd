@@ -1,0 +1,466 @@
+$ONEMPTY
+$ONEPS
+$ONWARNING
+$SET RUN_NAME 'REF_1D'
+$SET SCENARIO_NAME 'demo_forcethings'
+
+
+SET UNITS_COM
+
+/
+'UCU'
+/;
+
+SET COM_GMAP
+
+/
+'DE'.'ELCTEGAS00_NRGO'.'ECurtWin'
+'IT'.'ELCTEGAS00_NRGO'.'ECurtWin'
+'UK'.'ELCTEGAS00_NRGO'.'ECurtWin'
+/;
+
+SET COM_TMAP
+
+/
+'AT'.'NRG'.'uc_forceoffshore-'
+'AT'.'NRG'.'uc_forceoffshore_'
+'AT'.'NRG'.'uc_forceonshore-'
+'AT'.'NRG'.'uc_forceonshore_'
+'BE'.'NRG'.'uc_forceoffshore-'
+'BE'.'NRG'.'uc_forceoffshore_'
+'BE'.'NRG'.'uc_forceonshore-'
+'BE'.'NRG'.'uc_forceonshore_'
+'DE'.'NRG'.'uc_forceoffshore-'
+'DE'.'NRG'.'uc_forceoffshore_'
+'DE'.'NRG'.'uc_forceonshore-'
+'DE'.'NRG'.'uc_forceonshore_'
+'ES'.'NRG'.'uc_forceoffshore-'
+'ES'.'NRG'.'uc_forceoffshore_'
+'ES'.'NRG'.'uc_forceonshore-'
+'ES'.'NRG'.'uc_forceonshore_'
+'FR'.'NRG'.'uc_forceoffshore-'
+'FR'.'NRG'.'uc_forceoffshore_'
+'FR'.'NRG'.'uc_forceonshore-'
+'FR'.'NRG'.'uc_forceonshore_'
+'IT'.'NRG'.'uc_forceoffshore-'
+'IT'.'NRG'.'uc_forceoffshore_'
+'IT'.'NRG'.'uc_forceonshore-'
+'IT'.'NRG'.'uc_forceonshore_'
+'NL'.'NRG'.'uc_forceoffshore-'
+'NL'.'NRG'.'uc_forceoffshore_'
+'NL'.'NRG'.'uc_forceonshore-'
+'NL'.'NRG'.'uc_forceonshore_'
+'REG1'.'NRG'.'uc_forceoffshore-'
+'REG1'.'NRG'.'uc_forceoffshore_'
+'REG1'.'NRG'.'uc_forceonshore-'
+'REG1'.'NRG'.'uc_forceonshore_'
+'REG2'.'NRG'.'uc_forceoffshore-'
+'REG2'.'NRG'.'uc_forceoffshore_'
+'REG2'.'NRG'.'uc_forceonshore-'
+'REG2'.'NRG'.'uc_forceonshore_'
+'UK'.'NRG'.'uc_forceoffshore-'
+'UK'.'NRG'.'uc_forceoffshore_'
+'UK'.'NRG'.'uc_forceonshore-'
+'UK'.'NRG'.'uc_forceonshore_'
+/;
+
+SET COM_UNIT
+
+/
+'AT'.'uc_forceoffshore-'.'UCU'
+'AT'.'uc_forceoffshore_'.'UCU'
+'AT'.'uc_forceonshore-'.'UCU'
+'AT'.'uc_forceonshore_'.'UCU'
+'BE'.'uc_forceoffshore-'.'UCU'
+'BE'.'uc_forceoffshore_'.'UCU'
+'BE'.'uc_forceonshore-'.'UCU'
+'BE'.'uc_forceonshore_'.'UCU'
+'DE'.'uc_forceoffshore-'.'UCU'
+'DE'.'uc_forceoffshore_'.'UCU'
+'DE'.'uc_forceonshore-'.'UCU'
+'DE'.'uc_forceonshore_'.'UCU'
+'ES'.'uc_forceoffshore-'.'UCU'
+'ES'.'uc_forceoffshore_'.'UCU'
+'ES'.'uc_forceonshore-'.'UCU'
+'ES'.'uc_forceonshore_'.'UCU'
+'FR'.'uc_forceoffshore-'.'UCU'
+'FR'.'uc_forceoffshore_'.'UCU'
+'FR'.'uc_forceonshore-'.'UCU'
+'FR'.'uc_forceonshore_'.'UCU'
+'IT'.'uc_forceoffshore-'.'UCU'
+'IT'.'uc_forceoffshore_'.'UCU'
+'IT'.'uc_forceonshore-'.'UCU'
+'IT'.'uc_forceonshore_'.'UCU'
+'NL'.'uc_forceoffshore-'.'UCU'
+'NL'.'uc_forceoffshore_'.'UCU'
+'NL'.'uc_forceonshore-'.'UCU'
+'NL'.'uc_forceonshore_'.'UCU'
+'REG1'.'uc_forceoffshore-'.'UCU'
+'REG1'.'uc_forceoffshore_'.'UCU'
+'REG1'.'uc_forceonshore-'.'UCU'
+'REG1'.'uc_forceonshore_'.'UCU'
+'REG2'.'uc_forceoffshore-'.'UCU'
+'REG2'.'uc_forceoffshore_'.'UCU'
+'REG2'.'uc_forceonshore-'.'UCU'
+'REG2'.'uc_forceonshore_'.'UCU'
+'UK'.'uc_forceoffshore-'.'UCU'
+'UK'.'uc_forceoffshore_'.'UCU'
+'UK'.'uc_forceonshore-'.'UCU'
+'UK'.'uc_forceonshore_'.'UCU'
+/;
+
+SET TOP
+
+/
+'DE'.'ELCTEGAS00'.'ECurtWin'.OUT
+'IT'.'ELCTEGAS00'.'ECurtWin'.OUT
+'UK'.'ELCTEGAS00'.'ECurtWin'.OUT
+/;
+
+SET TOP_IRE
+
+/
+'IMPEXP'.'uc_forceoffshore-'.'BE'.'uc_forceoffshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore-'.'DE'.'uc_forceoffshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore-'.'ES'.'uc_forceoffshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore-'.'FR'.'uc_forceoffshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore-'.'IT'.'uc_forceoffshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore-'.'NL'.'uc_forceoffshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore-'.'UK'.'uc_forceoffshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore_'.'BE'.'uc_forceoffshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore_'.'DE'.'uc_forceoffshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore_'.'ES'.'uc_forceoffshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore_'.'FR'.'uc_forceoffshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore_'.'IT'.'uc_forceoffshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore_'.'NL'.'uc_forceoffshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceoffshore_'.'UK'.'uc_forceoffshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'AT'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'BE'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'DE'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'ES'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'FR'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'IT'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'NL'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore-'.'UK'.'uc_forceonshore-'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'AT'.'uc_forceonshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'BE'.'uc_forceonshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'DE'.'uc_forceonshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'ES'.'uc_forceonshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'FR'.'uc_forceonshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'IT'.'uc_forceonshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'NL'.'uc_forceonshore_'.'IMPNRGZ'
+'IMPEXP'.'uc_forceonshore_'.'UK'.'uc_forceonshore_'.'IMPNRGZ'
+/;
+
+SET COM_DESC
+
+/
+'AT'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'AT'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'AT'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'AT'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'BE'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'BE'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'BE'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'BE'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'DE'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'DE'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'DE'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'DE'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'ES'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'ES'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'ES'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'ES'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'FR'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'FR'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'FR'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'FR'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'IT'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'IT'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'IT'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'IT'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'NL'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'NL'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'NL'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'NL'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'REG1'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'REG1'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'REG1'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'REG1'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'REG2'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'REG2'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'REG2'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'REG2'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+'UK'.'uc_forceoffshore-' 'Negative dummy var for UC: uc_forceoffshore'
+'UK'.'uc_forceoffshore_' 'Positive dummy var for UC: uc_forceoffshore'
+'UK'.'uc_forceonshore-' 'Negative dummy var for UC: uc_forceonshore'
+'UK'.'uc_forceonshore_' 'Positive dummy var for UC: uc_forceonshore'
+/;
+
+SET UC_R_SUM
+
+/
+'AT'.'uc_forceonshore'
+'BE'.'uc_forceoffshore'
+'BE'.'uc_forceonshore'
+'DE'.'uc_forceoffshore'
+'DE'.'uc_forceonshore'
+'ES'.'uc_forceoffshore'
+'ES'.'uc_forceonshore'
+'FR'.'uc_forceoffshore'
+'FR'.'uc_forceonshore'
+'IT'.'uc_forceoffshore'
+'IT'.'uc_forceonshore'
+'NL'.'uc_forceoffshore'
+'NL'.'uc_forceonshore'
+'UK'.'uc_forceoffshore'
+'UK'.'uc_forceonshore'
+/;
+
+PARAMETER
+
+FLO_SHAR ' '/
+'AT'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+'BE'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+'DE'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+'ES'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+'FR'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+'IT'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+'NL'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+'UK'.2005.'ELCTECOA00'.'ELC'.'ELCTECOA00_NRGO'.ANNUAL.FX 1
+/;
+
+PARAMETER
+
+UC_CAP ' '/
+'uc_forceoffshore'.LHS.'BE'.2030.'E_WOF_shal_Inter_C6_BEL' 1
+'uc_forceoffshore'.LHS.'BE'.2030.'E_WOF_shal_Near_C5_BEL' 1
+'uc_forceoffshore'.LHS.'BE'.2030.'E_WOF_shal_Near_C6_BEL' 1
+'uc_forceoffshore'.LHS.'BE'.2030.'E_WOF_tran_Inter_C6_BEL' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_shal_Far_C7_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_shal_Inter_C5_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_shal_Inter_C6_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_shal_Inter_C7_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_shal_Near_C4_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_shal_Near_C5_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_shal_Near_C6_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_tran_Far_C7_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_tran_Inter_C5_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_tran_Inter_C6_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_tran_Inter_C7_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_tran_Near_C5_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_tran_Near_C6_DEU' 1
+'uc_forceoffshore'.LHS.'DE'.2030.'E_WOF_tran_Near_C7_DEU' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Far_C3_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Far_C6_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Inter_C1_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Inter_C2_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Inter_C3_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Inter_C4_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Inter_C5_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Inter_C6_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Near_C1_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Near_C2_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Near_C3_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Near_C4_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Near_C5_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_deep_Near_C6_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_shal_Inter_C5_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_shal_Near_C2_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_shal_Near_C3_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_shal_Near_C4_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_shal_Near_C5_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_tran_Inter_C5_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_tran_Near_C1_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_tran_Near_C2_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_tran_Near_C3_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_tran_Near_C4_ESP' 1
+'uc_forceoffshore'.LHS.'ES'.2030.'E_WOF_tran_Near_C5_ESP' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Far_C4_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Far_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Far_C6_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Inter_C2_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Inter_C3_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Inter_C4_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Inter_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Inter_C6_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Near_C2_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Near_C3_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Near_C4_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Near_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_deep_Near_C6_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Far_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Inter_C3_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Inter_C4_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Inter_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Inter_C6_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Near_C2_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Near_C3_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Near_C4_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Near_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_shal_Near_C6_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Far_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Far_C6_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Inter_C2_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Inter_C3_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Inter_C4_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Inter_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Inter_C6_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Near_C2_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Near_C3_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Near_C4_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Near_C5_FRA' 1
+'uc_forceoffshore'.LHS.'FR'.2030.'E_WOF_tran_Near_C6_FRA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Far_C2_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Far_C3_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Inter_C1_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Inter_C2_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Inter_C3_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Near_C1_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Near_C2_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_deep_Near_C3_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_shal_Inter_C1_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_shal_Inter_C3_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_shal_Near_C1_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_shal_Near_C2_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_shal_Near_C3_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_tran_Inter_C1_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_tran_Inter_C3_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_tran_Near_C1_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_tran_Near_C2_ITA' 1
+'uc_forceoffshore'.LHS.'IT'.2030.'E_WOF_tran_Near_C3_ITA' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_deep_Far_C6_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_shal_Far_C6_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_shal_Far_C7_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_shal_Inter_C5_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_shal_Inter_C6_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_shal_Near_C5_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_shal_Near_C6_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_tran_Far_C6_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_tran_Far_C7_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_tran_Inter_C6_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_tran_Inter_C7_NLD' 1
+'uc_forceoffshore'.LHS.'NL'.2030.'E_WOF_tran_Near_C6_NLD' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Far_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Far_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Far_C8_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Inter_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Inter_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Inter_C8_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Near_C5_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Near_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Near_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_deep_Near_C8_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Far_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Far_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Inter_C5_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Inter_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Inter_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Near_C5_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Near_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_shal_Near_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Far_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Far_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Inter_C5_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Inter_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Inter_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Inter_C8_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Near_C5_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Near_C6_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Near_C7_GBR' 1
+'uc_forceoffshore'.LHS.'UK'.2030.'E_WOF_tran_Near_C8_GBR' 1
+'uc_forceonshore'.LHS.'AT'.2030.'E_WON_Near_C1_AUT' 1
+'uc_forceonshore'.LHS.'AT'.2030.'E_WON_Near_C2_AUT' 1
+'uc_forceonshore'.LHS.'AT'.2030.'E_WON_Near_C3_AUT' 1
+'uc_forceonshore'.LHS.'BE'.2030.'E_WON_Near_C3_BEL' 1
+'uc_forceonshore'.LHS.'BE'.2030.'E_WON_Near_C4_BEL' 1
+'uc_forceonshore'.LHS.'BE'.2030.'E_WON_Near_C5_BEL' 1
+'uc_forceonshore'.LHS.'DE'.2030.'E_WON_Near_C2_DEU' 1
+'uc_forceonshore'.LHS.'DE'.2030.'E_WON_Near_C3_DEU' 1
+'uc_forceonshore'.LHS.'DE'.2030.'E_WON_Near_C4_DEU' 1
+'uc_forceonshore'.LHS.'DE'.2030.'E_WON_Near_C5_DEU' 1
+'uc_forceonshore'.LHS.'DE'.2030.'E_WON_Near_C6_DEU' 1
+'uc_forceonshore'.LHS.'DE'.2030.'E_WON_Trans_C6_DEU' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Near_C1_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Near_C2_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Near_C3_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Near_C4_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Near_C5_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Near_C6_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Trans_C1_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Trans_C2_ESP' 1
+'uc_forceonshore'.LHS.'ES'.2030.'E_WON_Trans_C3_ESP' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Far_C1_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Near_C1_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Near_C2_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Near_C3_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Near_C4_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Near_C5_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Near_C6_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Trans_C1_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Trans_C2_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Trans_C3_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Trans_C4_FRA' 1
+'uc_forceonshore'.LHS.'FR'.2030.'E_WON_Trans_C5_FRA' 1
+'uc_forceonshore'.LHS.'IT'.2030.'E_WON_Near_C1_ITA' 1
+'uc_forceonshore'.LHS.'IT'.2030.'E_WON_Near_C2_ITA' 1
+'uc_forceonshore'.LHS.'IT'.2030.'E_WON_Near_C3_ITA' 1
+'uc_forceonshore'.LHS.'IT'.2030.'E_WON_Near_C4_ITA' 1
+'uc_forceonshore'.LHS.'IT'.2030.'E_WON_Trans_C2_ITA' 1
+'uc_forceonshore'.LHS.'IT'.2030.'E_WON_Trans_C4_ITA' 1
+'uc_forceonshore'.LHS.'NL'.2030.'E_WON_Near_C4_NLD' 1
+'uc_forceonshore'.LHS.'NL'.2030.'E_WON_Near_C5_NLD' 1
+'uc_forceonshore'.LHS.'NL'.2030.'E_WON_Near_C6_NLD' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Far_C7_GBR' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Far_C8_GBR' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Near_C5_GBR' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Near_C6_GBR' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Near_C7_GBR' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Trans_C6_GBR' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Trans_C7_GBR' 1
+'uc_forceonshore'.LHS.'UK'.2030.'E_WON_Trans_C8_GBR' 1
+/;
+
+PARAMETER
+
+UC_IRE ' '/
+'uc_forceoffshore'.LHS.'BE'.2005.'IMPNRGZ'.'uc_forceoffshore-'.ANNUAL.IMP -1
+'uc_forceoffshore'.LHS.'BE'.2005.'IMPNRGZ'.'uc_forceoffshore_'.ANNUAL.IMP 1
+'uc_forceoffshore'.LHS.'DE'.2005.'IMPNRGZ'.'uc_forceoffshore-'.ANNUAL.IMP -1
+'uc_forceoffshore'.LHS.'DE'.2005.'IMPNRGZ'.'uc_forceoffshore_'.ANNUAL.IMP 1
+'uc_forceoffshore'.LHS.'ES'.2005.'IMPNRGZ'.'uc_forceoffshore-'.ANNUAL.IMP -1
+'uc_forceoffshore'.LHS.'ES'.2005.'IMPNRGZ'.'uc_forceoffshore_'.ANNUAL.IMP 1
+'uc_forceoffshore'.LHS.'FR'.2005.'IMPNRGZ'.'uc_forceoffshore-'.ANNUAL.IMP -1
+'uc_forceoffshore'.LHS.'FR'.2005.'IMPNRGZ'.'uc_forceoffshore_'.ANNUAL.IMP 1
+'uc_forceoffshore'.LHS.'IT'.2005.'IMPNRGZ'.'uc_forceoffshore-'.ANNUAL.IMP -1
+'uc_forceoffshore'.LHS.'IT'.2005.'IMPNRGZ'.'uc_forceoffshore_'.ANNUAL.IMP 1
+'uc_forceoffshore'.LHS.'NL'.2005.'IMPNRGZ'.'uc_forceoffshore-'.ANNUAL.IMP -1
+'uc_forceoffshore'.LHS.'NL'.2005.'IMPNRGZ'.'uc_forceoffshore_'.ANNUAL.IMP 1
+'uc_forceoffshore'.LHS.'UK'.2005.'IMPNRGZ'.'uc_forceoffshore-'.ANNUAL.IMP -1
+'uc_forceoffshore'.LHS.'UK'.2005.'IMPNRGZ'.'uc_forceoffshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'AT'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'AT'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'BE'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'BE'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'DE'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'DE'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'ES'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'ES'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'FR'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'FR'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'IT'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'IT'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'NL'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'NL'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+'uc_forceonshore'.LHS.'UK'.2005.'IMPNRGZ'.'uc_forceonshore-'.ANNUAL.IMP -1
+'uc_forceonshore'.LHS.'UK'.2005.'IMPNRGZ'.'uc_forceonshore_'.ANNUAL.IMP 1
+/;
+
+PARAMETER
+
+UC_RHST ' '/
+'uc_forceoffshore'.2030.LO 5
+'uc_forceonshore'.2030.LO 5
+/;
+
+
