@@ -1,4 +1,0 @@
-google-generativeai
-python-dotenv==1.0.1
-pandas>=2.0.0
-pytest>=7.0.0 

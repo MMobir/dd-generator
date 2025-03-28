@@ -1,0 +1,2658 @@
+{
+  "parameters": [
+    {
+      "Name": "ACT_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s", "bd"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Units of activity [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Since inter-/extrapolation default is MIG, the bound must be explicitly specified for each period, unless an inter-/extrapolation option is set. If the bound is specified for a timeslice s above the process timeslice resolution (prc_tsl), the bound is applied to the sum of the activity variables according to the timeslice tree. Standard aggregation.",
+      "Description": "Bound on the overall activity a process.",
+      "Affected Equations/Variables": "Activity limit constraint (EQ(l)_ACTBND) when s is above prc_tsl. Direct bound on activity variable (VAR_ACT) when at the prc_tsl level."
+    },
+    {
+      "Name": "ACT_COST",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "OBJ_ACOST, CST_ACTC, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per unit of activity [open]; default value: none; Default i/e: STD",
+      "Details/Notes": null,
+      "Description": "Variable costs associated with the activity of a process.",
+      "Affected Equations/Variables": "Applied to the activity variable (VAR_ACT) as a component of the objective function (EQ_OBJVAR). May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "ACT_CSTPL",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "ACT_MINLD, ACT_LOSPL",
+      "Units/Ranges/Defaults": "Monetary unit per unit of activity [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Used as an alternative or supplement to using ACT_LOSPL(r,y,p,'FX'). When used as an alternative, the fuel increase at the minimum operating level that should be included in the cost penalty must be embedded in the ACT_CSTPL coefficient.",
+      "Description": "Partial load cost penalty, defined as an additional cost per activity at the minimum operating level, corresponding to the efficiency loss at that load level. Added as an extra term to variable costs in the objective and reporting.",
+      "Affected Equations/Variables": "Generates an additional term in EQ_OBJVAR for the increase in operating cost."
+    },
+    {
+      "Name": "ACT_CSTRMP",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "bd", "cur"],
+      "Related Sets/Parameters": "ACT_UPS",
+      "Units/Ranges/Defaults": "Currency unit per unit of capacity (change in load) [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can be used for standard processes in basic, advanced and discrete unit commitment extensions. Can also be used for load-shifting processes for defining the cost of shifting loads per unit of demand load by one hour.",
+      "Description": "Defines ramp-up (L=UP) or ramp-down (L=LO) cost per unit of load change (in capacity units). For load-shifting processes defines the cost of shifting one unit of load by one hour, forward (UP) or backward (LO).",
+      "Affected Equations/Variables": "Activates generation of EQ_ACTRMPC. Generates an additional term in EQ_OBJVAR for the increase in operating cost."
+    },
+    {
+      "Name": "ACT_CSTSD",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "upt", "bd", "cur"],
+      "Related Sets/Parameters": "ACT_CSTUP, ACT_SDTIME, ACT_MAXNON",
+      "Units/Ranges/Defaults": "Currency units per unit of started-up capacity [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Activates the advanced unit commitment option. In the case of the shut-down costs, only the tuple (upt, bd) = (HOT, LO) is a valid instance for this parameter. Requires the parameter ACT_MAXNON to be defined as well.",
+      "Description": "Defines start-up (bd=UP) and shutdown costs (bd=LO) per unit of started-up capacity, differentiated by start-up type (upt). The start-up type of a power plant depends on its non-operational time after shut-down, as defined by using ACT_MAXNON.",
+      "Affected Equations/Variables": "Generates an additional term in EQ_OBJVAR for the increase in operating cost."
+    },
+    {
+      "Name": "ACT_CSTUP",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "tslvl", "cur"],
+      "Related Sets/Parameters": "ACT_MINLD, ACT_UPS",
+      "Units/Ranges/Defaults": "Monetary unit per unit of capacity [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "The tslvl level refers to the timeslice cycle for which the start-up cost is defined. Only applicable when the min. stable operating level has been defined with ACT_MINLD.",
+      "Description": "Cost of process start-up per unit of started-up capacity. Added as an extra term to variable costs in the objective and reporting.",
+      "Affected Equations/Variables": "Activates generation of EQL_ACTUPS eqs. Generates an additional term in the variable operating costs included in EQ_OBJVAR."
+    },
+    {
+      "Name": "ACT_CUM",
+      "Category": "User Input",
+      "Indexes": ["r", "p", "y1", "y2", "bd"],
+      "Related Sets/Parameters": "FLO_CUM",
+      "Units/Ranges/Defaults": "Activity unit [0,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "The years y1 and y2 may be any years of the set allyear; where y1 may also be 'BOH' for first year of first period and y2 may be 'EOH' for last year of last period.",
+      "Description": "Bound on the cumulative amount of annual process activity between the years y1 and y2, within a region.",
+      "Affected Equations/Variables": "Generates an instance of the cumulative constraint (EQ_CUMFLO)"
+    },
+    {
+      "Name": "ACT_EFF",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Activity unit per flow unit [0,∞); Default value: none; Default group efficiency =1 when values are specified only for individual commodities. Default i/e: STD",
+      "Details/Notes": "The group cg may be a single commodity, group, or commodity type on the shadow side, or a single commodity in the PCG; cg='ACT' refers to the default shadow group. If no group efficiency is defined, shadow group is assumed to be the commodity type. Individual commodity efficiencies are multiplied with the shadow group efficiency (default=1). Levelized to the timeslice level of the flow variables in the shadow group. Direct inheritance. Weighted aggregation.",
+      "Description": "Activity efficiency for process, i.e. amount of activity per unit of commodity flows in the group cg. For more information on usage, see Section 6.3 for details about EQE_ACTEFF.",
+      "Affected Equations/Variables": "Generates instances of the activity efficiency constraint (EQE_ACTEFF)"
+    },
+    {
+      "Name": "ACT_FLO",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Flow unit per activity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Inherited/aggregated to the timeslice levels of the the process flow (cg=com) or the process activity (when cg=genuine group). Direct inheritance. Weighted aggregation.",
+      "Description": "Flow of commodities in cg in proportion to the process activity, in timeslice s. Non-vintaged variant available for vintaged processes by using a negative FLO_FUNCX.",
+      "Affected Equations/Variables": "Establishes a transformation relationship (EQ_PTRANS) between the flows in the PCG and one or more input (or output) commodities."
+    },
+    {
+      "Name": "ACT_LOSPL",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "bd"],
+      "Related Sets/Parameters": "ACT_MINLD, ACT_CSTPL",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default values: FX: none, LO: default value is ACT_MINLD or 0.1 if that is not defined, UP: 0.6; Default i/e: STD",
+      "Details/Notes": "Endogenous partial load modeling can only be used for processes that have their efficiency modelled by the ACT_EFF parameter, which must be defined on the shadow side of the process. For other processes, the ACT_CSTPL parameter can be used for modeling a cost penalty at partial loads.",
+      "Description": "Partial load efficiency parameters. 1) (bd='FX'): Proportional increase in specific fuel consumption at minimum operating level 2) (bd='LO'): Minimum operating level of partial load operation 3) (bd='UP'): Fraction of feasible load range above the minimum operating level, below which the efficiency losses are assumed to occur.",
+      "Affected Equations/Variables": "Generates instances of the partial load efficiency constraint EQ_ACTPL."
+    },
+    {
+      "Name": "ACT_LOSSD",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "upt", "bd"],
+      "Related Sets/Parameters": "ACT_LOSPL, ACT_MINLD, ACT_SDTIME, ACT_EFF",
+      "Units/Ranges/Defaults": "Dimensionless [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can only be used when the advanced unit commitment option is used for the process (therefore, defining both ACT_CSTSD and ACT_MAXNON is required). Requires also that ACT_EFF has been used for defining the process efficiency (on the shadow side of the process).",
+      "Description": "Used for modeling endogenous partial load efficiency losses during the start-up and shut-down phase. ·With bd=UP defines increase in specific fuel consumption at the start up load level defined by the ratio ACT_MINLD / ACT_SDTIME(upt,'UP') for start-up type upt; ·With bd=LO defines the increase in specific fuel consumption at the start up load level defined by the ratio ACT_MINLD / ACT_SDTIME('HOT', 'LO').",
+      "Affected Equations/Variables": "Activates generation of EQ_SUDPLL"
+    },
+    {
+      "Name": "ACT_MAXNON",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "upt"],
+      "Related Sets/Parameters": "ACT_CSTSD, ACT_SDTIME",
+      "Units/Ranges/Defaults": "hours [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can only be used when the advanced unit commitment option is used for the process (thus defining ACT_CSTSD is required)",
+      "Description": "Max. non-operational time before transition to next stand-by condition, by start-up type, in hours ·Defines the max. non-operational time before a subsequent start-up of type upt.",
+      "Affected Equations/Variables": "Activates generation of EQ_SUDUPT"
+    },
+    {
+      "Name": "ACT_MINLD",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "ACT_UPS, ACT_CSTUP, ACT_CSTPL, ACT_LOSPL",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can only be used for standard processes (not IRE or STG). Must be defined if ACT_CSTUP or ACT_TIME is specified.",
+      "Description": "Minimum stable operating level of a dispatchable process.",
+      "Affected Equations/Variables": "Generates instances of equations EQ_CAPLOAD and EQE_ACTUPS."
+    },
+    {
+      "Name": "ACT_SDTIME",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "upt", "bd"],
+      "Related Sets/Parameters": "ACT_CSTSD, ACT_MAXNON",
+      "Units/Ranges/Defaults": "hours [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can only be used when ACT_CSTSD is specified for the process (advanced unit commitment option). When specifying the duration of the shut-down phase, only the tuple (upt,bd)=(HOT,LO) is valid",
+      "Description": "Defines the duration of start-up (bd=UP) and shut-down (bd=LO) phases, by start-up type, in hours.",
+      "Affected Equations/Variables": "Activates generation of EQ_SUDTIME, and used also in the equations EQ_ACTPL, EQ_SDSLANT, EQ_SDMINON, EQ_SUDPLL"
+    },
+    {
+      "Name": "ACT_TIME",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "lim"],
+      "Related Sets/Parameters": "ACT_MINLD, ACT_CSTUP, ACT_UPS, STG_SIFT",
+      "Units/Ranges/Defaults": "Hours [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can be used for standard processes when start-up costs have been modeled, using both ACT_MINLD and ACT_CSTUP at the DAYNITE/WEEKLY level. The lim type 'FX' is not supported for this use, and is ignored. Can also be used for load-shifting storage processes, for defining the maximum delay/advance of load shift, or the time-window for load balancing (cf. Sect. 4.3.9).",
+      "Description": "1) Minimum online (UP) / offline (LO) hours of a process with start-up costs modeled (lim=LO/UP) 2) Maximum number of start-up cycles within process time-slice cycles (lim=N). 3) Maximum delay or advance of load shift (lim=UP/LO/FX) or load balancing time (lim=N) for a load-shifting storage.",
+      "Affected Equations/Variables": "Generates instances of EQL_ACTUPC. For load-shifting storage processes, generates instances of EQ_SLSIFT."
+    },
+    {
+      "Name": "ACT_UPS",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s", "bd"],
+      "Related Sets/Parameters": "ACT_MINLD, ACT_CSTUP, ACT_CSTPL, ACT_LOSPL",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Inherited/aggregated to the timeslice levels of the process activity. Direct inheritance. Weighted aggregation. The ramp rates can only be specified with bd=LO/UP.",
+      "Description": "Maximum ramp-rate (down/up) of process activity as a fraction of nominal on-line capacity per hour.",
+      "Affected Equations/Variables": "Generates instances of equation EQ_ACTRAMP."
+    },
+    {
+      "Name": "B",
+      "Category": "User Input",
+      "Indexes": ["t"],
+      "Related Sets/Parameters": "M, D, E, COEF_CPT, rtp_vintyr",
+      "Units/Ranges/Defaults": "Year; default value: none",
+      "Details/Notes": "Required for each milestone year, but is auto-generated if not specified",
+      "Description": "Beginning year of period t.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "BS_BNDPRS",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "b", "s", "lim"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Capacity unit of the process [0,∞); default value: none",
+      "Details/Notes": "Not levelized (inherited or aggregated), but applied only directly on the timeslice s specified. See the ABS documentation for details",
+      "Description": "Absolute bound on the reserve provision b from process p.",
+      "Affected Equations/Variables": "EQ_BS27"
+    },
+    {
+      "Name": "BS_CAPACT",
+      "Category": "User Input",
+      "Indexes": ["r"],
+      "Related Sets/Parameters": "PRC_CAPACT",
+      "Units/Ranges/Defaults": "Flow unit / capacity unit; (0,∞); default value: PRC_CAPACT",
+      "Details/Notes": "Applied also for the reporting of reserves in terms of power levels. See the ABS documentation for details",
+      "Description": "Conversion factor from exogenous reserve demand from capacity to activity / commodity flow units",
+      "Affected Equations/Variables": "EQ_BS04"
+    },
+    {
+      "Name": "BS_DELTA",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "b", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "dimensionless [0,∞); default value: 1",
+      "Details/Notes": "Levelized to COM_TSL of b. Calibration parameters for probabilistic reserve demand b, in region r, and timeslice s. See the ABS documentation for details",
+      "Description": "Calibration parameters for probabilistic reserve demand",
+      "Affected Equations/Variables": "EQ_BS03"
+    },
+    {
+      "Name": "BS_DEMDET",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "rsp", "b", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Unit for EXOGEN: capacity unit; Unit for WMAXSI: dimensionless (fraction of capacity); Default value: none",
+      "Details/Notes": "rsp='EXOGEN': Exogenous reserve demand for reserve b, in region r, timeslice s. rsp='WMAXSI': Weight of the contribution of the largest system element in deterministic reserve demand b, in region r, timeslice s. See the ABS documentation for details",
+      "Description": "Parameters for deterministic demands of reserves (rsp = EXOGEN or WMAXSI)",
+      "Affected Equations/Variables": "EQ_BS04"
+    },
+    {
+      "Name": "BS_DETWT",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "b"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "dimensionless [0,1]; default value: none",
+      "Details/Notes": "See the ABS documentation for details.",
+      "Description": "Weight of the deterministic component in the formulation for endogenous requirements of reserve b in region r",
+      "Affected Equations/Variables": "EQ_BS03"
+    },
+    {
+      "Name": "BS_LAMBDA",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "b"],
+      "Related Sets/Parameters": "BS_DELTA",
+      "Units/Ranges/Defaults": "dimensionless (0,1]; default value: none",
+      "Details/Notes": "Required. If not defined, then the demand for reserve b cannot be calculated. See the ABS documentation for details.",
+      "Description": "Fudge factors for dependencies in the reserve requirements calculated for reserve b in region r, in year datayear",
+      "Affected Equations/Variables": "EQ_BS03"
+    },
+    {
+      "Name": "BS_MAINT",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "hours (if over 24 hours, continuous over whole season) (0,∞); default value: none",
+      "Details/Notes": "Levelized to PRC_TSL. If defined on DAYNITE or WEEKLY level, requires start-ups explicitly enabled on that level (using ACT_CSTUP/ACT_CSTSD).",
+      "Description": "For endogenous maintenance scheduling, defines minimum continuous maintenance time of process p",
+      "Affected Equations/Variables": "EQ_BS27, EQ_BS28"
+    },
+    {
+      "Name": "BS_OMEGA",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "b", "s"],
+      "Related Sets/Parameters": "BS_DELTA, BS_LAMBDA",
+      "Units/Ranges/Defaults": "Unit: dimensionless {1,2,3}; default value: none",
+      "Details/Notes": "Required for enabling reserve provision formulation. Levelized to COM_TSL of b. See the ABS documentation for details",
+      "Description": "Indicator denoting if the demand for reserve b is the weighted sum of the deterministic and probabilistic component ( ω=2), the maximum of the two (ω=1), or their difference ( ω=3)",
+      "Affected Equations/Variables": "EQ_BS03"
+    },
+    {
+      "Name": "BS_RMAX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Unit: dimensionless (fraction of capacity) [0, 1]; default value: none",
+      "Details/Notes": "Required for enabling reserve provision from any non-storage processes. Levelized to PRC_TSL. See the ABS documentation for details",
+      "Description": "Maximum contribution of process p, in timeslice s to the provision of reserve commodity b.",
+      "Affected Equations/Variables": "EQ_BS11, EQ_BS19"
+    },
+    {
+      "Name": "BS_RTYPE",
+      "Category": "User Input",
+      "Indexes": ["r", "b"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Unit: dimensionless {±1, ±2, ±3, ±4}; default value: none",
+      "Details/Notes": "Required for enabling reserve provision calculations. See the ABS documentation for details",
+      "Description": "Type of reserve commodity b, positive or negative ± 1–4: ±1 : FCR reserve, ±2 : AFRR reserve, ±3 : MFRR reserve, ±4 : RR reserve",
+      "Affected Equations/Variables": "EQ_BS00, EQ_BS01, EQ_BS11, EQ_BS18, EQ_BS19, EQ_BS26"
+    },
+    {
+      "Name": "BS_SHARE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "b", "grp", "lim"],
+      "Related Sets/Parameters": "BS_OMEGA",
+      "Units/Ranges/Defaults": "Unit: dimensionless [0, 1]; default value: none",
+      "Details/Notes": "The group grp can be defined by GR_GENMAP, or implicitly for any single process prc=grp. See the ABS documentation for details",
+      "Description": "Maximum (bd=UP) or minimum (bd=LO) share of process group grp in the demand for reserve b, in region r, where demand is measured as defined by BS_OMEGA",
+      "Affected Equations/Variables": "EQ_BS01"
+    },
+    {
+      "Name": "BS_SIGMA",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "b", "grp", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Unit: dimensionless (0,∞); default value: none",
+      "Details/Notes": "Levelized to finest ts-level. See the ABS documentation for details",
+      "Description": "Standard deviation of forecast error for the imbalance source grp, in region r, timeslice s, used for calculating the demand for reserve b",
+      "Affected Equations/Variables": "EQ_BS03"
+    },
+    {
+      "Name": "BS_STIME",
+      "Category": "User Input",
+      "Indexes": ["r", "p", "b", "bd"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Unit: hours (0,∞); default value: none",
+      "Details/Notes": "Required that 'UP' ≥ 'LO'. See the ABS documentation for details",
+      "Description": "Defines the times for reserve provision from storage process p for reserve b in region r(in hours): ·bd='LO': Time required to ramp up in order to provide reserve b ·bd='UP': Duration of provision for reserve b including time to ramp up",
+      "Affected Equations/Variables": "EQ_BS22, EQ_BS23"
+    },
+    {
+      "Name": "CAP_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "bd"],
+      "Related Sets/Parameters": "PAR_CAPLO, PAR_CAPUP",
+      "Units/Ranges/Defaults": "Capacity unit [0,∞); default value: none",
+      "Details/Notes": "Since inter-/extrapolation is default is MIG, a bound must be specified for each period desired, if no explicit inter-/extrapolation option is given. Relaxed if upper bound less than existing non-retirable capacity.",
+      "Description": "Bound on investment in new capacity. Imposes an indirect limit on the capacity transfer equation (EQ_CPT) by means of a direct bound on the capacity variable (VAR_CAP).",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "CM_CONST",
+      "Category": "User Input",
+      "Indexes": ["item"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Constant specific unit [open]; See Appendix for defaults",
+      "Details/Notes": "See Appendix on Climate Module for details.",
+      "Description": "Various climate module constants, e.g. phi and sigma values between reservoirs.",
+      "Affected Equations/Variables": "EQ_CLITOT, EQ_CLICONC, EQ_CLITEMP, EQ_CLIBEOH"
+    },
+    {
+      "Name": "CM_EXOFORC",
+      "Category": "User Input",
+      "Indexes": ["year"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Forcing unit [open]; default value: none",
+      "Details/Notes": "Default values are provided. See Appendix on Climate Module for details.",
+      "Description": "Radiative forcing from exogenous sources",
+      "Affected Equations/Variables": "EQ_CLITOT"
+    },
+    {
+      "Name": "CM_GHGMAP",
+      "Category": "User Input",
+      "Indexes": ["r", "c", "cm_var"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Units of climate module emissions per units of regional emissions [0,∞); default value: none",
+      "Details/Notes": "The global emissions in the climate module (cm_var) are 'CO2-GtC' (GtC), 'CH4-Mt' (Mt) and 'N2O-Mt' (Mt). See Appendix on Climate Module for details.",
+      "Description": "Mapping and conversion of regional GHG emissions to global emissions in the climate module",
+      "Affected Equations/Variables": "EQ_CLITOT"
+    },
+    {
+      "Name": "CM_HISTORY",
+      "Category": "User Input",
+      "Indexes": ["year", "item"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Climate variable unit [0,∞); default value: none",
+      "Details/Notes": "Default values are provided until 2010. See Appendix on Climate Module for details.",
+      "Description": "Calibration values for CO2 and forcing",
+      "Affected Equations/Variables": "EQ_CLITOT, EQ_CLICONC, EQ_CLITEMP, EQ_CLIBEOH"
+    },
+    {
+      "Name": "CM_LINFOR",
+      "Category": "User Input",
+      "Indexes": ["datayear", "item", "lim"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Forcing unit per concentration unit [open]; default value: none",
+      "Details/Notes": "With lim types LO/UP, CO2 forcing function can be automatically linearized between the concentration levels given. For CH4 and N2O, lim types FX/N must be used (N=concentration multiplier, FX=constant term). See Appendix on Climate Module for details.",
+      "Description": "Parameters of linearized forcing functions",
+      "Affected Equations/Variables": "EQ_CLITOT"
+    },
+    {
+      "Name": "CM_MAXC",
+      "Category": "User Input",
+      "Indexes": ["datayear", "item"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Climate variable unit [0,∞); default value: none",
+      "Details/Notes": "Since no default inter-/extrapolation, bounds must be explicitly specified for each desired year, unless an explicit inter-/extrapolation option is set. See Appendix on Climate Module for details.",
+      "Description": "Maximum level of climate variable",
+      "Affected Equations/Variables": "EQ_CLIMAX"
+    },
+    {
+      "Name": "COM_AGG",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c1", "c2"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Commodity units [open]; default value: none",
+      "Details/Notes": "When commodity lim_type is LO and commodity type is not DEM, VAR_COMNET of c1 is aggregated to c2; When commodity lim_type is FX/N or commodity type is DEM, VAR_COMPRD of c1 is aggregated to c2.",
+      "Description": "Aggregation of commodity NET/PRD production to the production side of the balance of another commodity.",
+      "Affected Equations/Variables": "Adds a term in EQ(l)_COMBAL and EQ(l)_COMPRD."
+    },
+    {
+      "Name": "COM_BNDNET",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "bd"],
+      "Related Sets/Parameters": "rhs_combal, rcs_combal",
+      "Units/Ranges/Defaults": "Commodity unit [open]; default value: none; Default i/e: MIG",
+      "Details/Notes": "Remark: All VAR_COMNET variables are by default non-negative, i.e. have lower bounds of zero. Since inter-/extrapolation default is MIG, a bound must be specified for each period desired, if no explicit inter-/extrapolation option is given. If the bound is specified for a timeslice s above the commodity timeslice resolution (com_tsl), the bound is applied to the sum of the net commodity variables (VAR_COMNET) below it, according to the timeslice tree. Standard aggregation.",
+      "Description": "Limit on the net amount of a commodity (variable VAR_COMNET) within a region for a particular timeslice.",
+      "Affected Equations/Variables": "The balance constraint is set to an equality (EQE_COMBAL). Either the finer timeslice variables are summed (EQ(l)_BNDNET) or the bound applied direct to the commodity net variable(VAR_COMNET) when at the commodity level (com_tsl)."
+    },
+    {
+      "Name": "COM_BNDPRD",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "bd"],
+      "Related Sets/Parameters": "rhs_comprd, rcs_comprd",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Remark: All VAR_COMPRD variables are by default non-negative, i.e. have lower bounds of zero. Since inter-/extrapolation default is MIG, a bound must be specified for each period desired, if no explicit inter-/extrapolation option is given. If the bound is specified for a timeslice s being above the commodity timeslice resolution (com_tsl), the bound is applied to the sum of the commodity production variables (VAR_COMPRD) below it, according to the timeslice tree. Standard aggregation.",
+      "Description": "Limit on the amount of a commodity produced (variable VAR_COMPRD) within a region for a particular timeslice.",
+      "Affected Equations/Variables": "The balance constraint is set to an equality (EQE_COMBAL). Finer timeslice variables summed (EQ(l)_BNDPRD). or the bound is applied direct to the commodity production variable (VAR_COMPRD) when at the commodity level (com_tsl)."
+    },
+    {
+      "Name": "COM_BPRICE",
+      "Category": "User Input",
+      "Indexes": ["r", "t", "c", "s", "cur"],
+      "Related Sets/Parameters": "COM_ELAST, COM_STEP, COM_VOC",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [open]; default value: none",
+      "Details/Notes": "The control parameter $SET TIMESED ‘YES’ to activate elastic demands must be set.",
+      "Description": "Base price of a demand commodity for the elastic demand formulation.",
+      "Affected Equations/Variables": "Controls the inclusion of the elastic demand variable (VAR_ELAST) in the commodity balance equation(EQ(l)_COMBAL). Applied to the elastic demand variable (VAR_ELAST) in the objective function (EQ_OBJELS)."
+    },
+    {
+      "Name": "COM_CSTNET",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_COMNT, CST_COMC, CST_PVC, rhs_combal, rcs_combal",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Cost on the net amount of a commodity within a region for a particular timeslice.",
+      "Affected Equations/Variables": "Forces the net commodity variable (VAR_COMNET) to be included in the equality balance constraint (EQE_COMBAL). Applied to said variable in the cost component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "COM_CSTPRD",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_COMPD, CST_COMC, CST_PVC, rhs_comprd, rcs_comprd",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Cost on the production of a commodity, within a region for a particular timeslice.",
+      "Affected Equations/Variables": "Forces the commodity production variable (VAR_COMPRD) to be included in the equality balance constraint (EQE_COMBAL). Applied to said variable in the cost component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "COM_CUMNET",
+      "Category": "User Input",
+      "Indexes": ["r", "y1", "y2", "bd"],
+      "Related Sets/Parameters": "bohyear, eohyear, rhs_combal, rcs_combal, rtc_cumnet",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "The years y1 and y2 may be any years of the set allyear; where y1 may also be ‘BOH’ for first year of first period and y2 may be ‘EOH’ for last year of last period.",
+      "Description": "Bound on the cumulative net amount of a commodity between the years y1 and y2, within a region over timeslices.",
+      "Affected Equations/Variables": "Forces the net commodity variable (VAR_COMNET) to be included in the equality balance constraint (EQE_COMBAL). Generates the cumulative commodity constraint (EQ(l)_CUMNET)."
+    },
+    {
+      "Name": "COM_CUMPRD",
+      "Category": "User Input",
+      "Indexes": ["r", "y1", "y2", "bd"],
+      "Related Sets/Parameters": "bohyear, eohyear, rhs_comprd, rcs_comprd, rtc_cumprd",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "The years y1 and y2 may be any years of the set allyear; where y1 may also be ‘BOH’ for first year of first period and y2 may be ‘EOH’ for last year of last period.",
+      "Description": "Bound on the cumulative production of a commodity between the years y1 and y2 within a region over timeslices.",
+      "Affected Equations/Variables": "Forces the net commodity variable (VAR_COMPRD) to be included in the balance equation (EQE_COMBAL). The cumulative constraint is generated (EQ(l)_CUMPRD)."
+    },
+    {
+      "Name": "COM_ELAST",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "lim"],
+      "Related Sets/Parameters": "COM_BPRICE, COM_STEP, COM_VOC, COM_AGG",
+      "Units/Ranges/Defaults": "Dimensionless [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "The control parameter $SET TIMESED YES must be set to activate elastic demands. An elasticity is required for each direction the demand is permitted to move. The index lim = 'LO' corresponds to demand decrease, while lim = 'UP' denotes the direction for demand increase. A different value may be provided for each direction, thus curves may be asymmetric. Substitution elasticities can be defined with lim='N', among a group of demands aggregated by COM_AGG.",
+      "Description": "Elasticity of demand indicating how much the demand rises/falls in response to a unit change in the marginal cost of meeting a demand that is elastic. See also Appendix D for additional details on defining demand functions.",
+      "Affected Equations/Variables": "Controls the inclusion of the elastic demand variable (VAR_ELAST) in the commodity balance equation(EQ(l)_COMBAL). Applied to the elastic demand variable (VAR_ELAST) in the objective function costs (EQ_OBJELS)."
+    },
+    {
+      "Name": "COM_ELASTX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "bd"],
+      "Related Sets/Parameters": "COM_ELAST",
+      "Units/Ranges/Defaults": "Integer scalar [1,999]; default value: none; Default i/e: MIG",
+      "Details/Notes": "Provided when shaping of elasticity based upon demand level is desired. Note: Shape index 1 is reserved for constant 1.",
+      "Description": "Shape index for the elasticity of demand",
+      "Affected Equations/Variables": "Affects the demand elasticities applied in EQ_OBJELS"
+    },
+    {
+      "Name": "COM_FR",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s"],
+      "Related Sets/Parameters": "COM_PROJ, com_ts, com_tsl, RTCS_TSFR",
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: timeslice duration (G_YRFR); Default i/e: STD",
+      "Details/Notes": "Normally defined only for demand commodities (com_type = 'DEM'), but can be applied to any commodity for defining load profiles. Affects timeslice resolution at which a commodity is tracked (RTCS_TSFR), and thereby may affect when a process cannot operate (rtps_off). Weighted inheritance. Weighted aggregation.",
+      "Description": "Fraction of the annual demand (COM_PROJ) or commodity flow occurring in timeslice s; describes the shape of the load curve.",
+      "Affected Equations/Variables": "Applied to the annual demand (COM_PROJ) as the RHS of the balance equation (EQ(l)_COMBAL). Enters the peaking equation (EQ_PEAK), if a peaking commodity. Applied to the bounds of elastic demand step variables (VAR_ELAST). Applied via RTFCS_FR in all equations to flows having a timeslice level coarser than target level."
+    },
+    {
+      "Name": "COM_IE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Decimal fraction (0,∞); default value: 1; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Infrastructure or transmission efficiency of a commodity.",
+      "Affected Equations/Variables": "Overall efficiency applied to the total production of a commodity in the commodity balance equation (EQ(l)_COMBAL)."
+    },
+    {
+      "Name": "COM_MSHGV",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c"],
+      "Related Sets/Parameters": "NCAP_MSPRF",
+      "Units/Ranges/Defaults": "Unit: dimensionless (0,∞); default value: none",
+      "Details/Notes": "Required for all markets modeled with the logit market sharing mechanism",
+      "Description": "In the logit market sharing mechanism, defines heterogeneity value for market c in region r, between the investment choices",
+      "Affected Equations/Variables": "EQ_MSNCAPB"
+    },
+    {
+      "Name": "COM_PKFLX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s"],
+      "Related Sets/Parameters": "com_peak, com_pkts, COM_PKRSV, FLO_PKCOI",
+      "Units/Ranges/Defaults": "Scalar [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Difference between the average demand and the peak demand in timeslice s, expressed as fraction of the average demand.",
+      "Affected Equations/Variables": "Applied to the total consumption of a commodity to raise the capacity needed to satisfy the peaking constraint (EQ_PEAK)."
+    },
+    {
+      "Name": "COM_PKRSV",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c"],
+      "Related Sets/Parameters": "com_peak, com_pkts, COM_PKFLX, FLO_PKCOI",
+      "Units/Ranges/Defaults": "Scalar [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Requires that commodity c is also requested to have peaking constraints, by defining COM_PEAK or COM_PKTS",
+      "Description": "Peak reserve margin as fraction of peak demand, e.g. if COM_PKRSV = 0.2, the total installed capacity must exceed the peak load by 20%.",
+      "Affected Equations/Variables": "Applied to the total consumption of a commodity to raise the capacity needed to satisfy the peaking constraint (EQ_PEAK)."
+    },
+    {
+      "Name": "COM_PROJ",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c"],
+      "Related Sets/Parameters": "COM_FR",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "In standard usage, only applicable to demand commodities (com_type = ‘DEM’). In advanced usage, may also be specified for other commodities for defining an exogenous demand. Demand is allocated to sub-annual timeslices according to COM_FR.",
+      "Description": "Projected annual demand for a commodity.",
+      "Affected Equations/Variables": "Serves as the RHS (after COM_FR applied) of the commodity balance constraint (EQ(l)_COMBAL). Enters the peaking equation (EQ_PEAK), if a peaking commodity. Applied when setting the upper bound of an elastic demand step (VAR_ELAST)."
+    },
+    {
+      "Name": "COM_STEP",
+      "Category": "User Input",
+      "Indexes": ["r", "c", "bd"],
+      "Related Sets/Parameters": "COM_BPRICE, COM_ELAST",
+      "Units/Ranges/Defaults": "Integer number [1,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "The control parameter $SET TIMESED ‘YES’ must be set.",
+      "Description": "Number of steps to use for the approximation of change of producer/consumer surplus when using the linearized elastic demand formulations.",
+      "Affected Equations/Variables": "Controls the instance of the elastic demand variable (VAR_ELAST)."
+    },
+    {
+      "Name": "COM_VOC",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "bd"],
+      "Related Sets/Parameters": "COM_BPRICE, COM_STEP, COM_ELAST",
+      "Units/Ranges/Defaults": "Dimensionless [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "The control parameter $SET TIMESED ‘YES’ to be set to activate elastic demands must be set. A number is required for each direction the demand is permitted to move. The index bd = LO corresponds to the direction of decreasing the demand, while bd = UP denotes the direction for demand increase. A different value may be provided for each direction, thus curves may be asymmetric.",
+      "Description": "Possible variation of demand in both directions when using the elastic demand formulation.",
+      "Affected Equations/Variables": "Applied when setting the bound of an elastic demand step (VAR_ELAST). Applied to the elasticity variable in the objective function costs (EQ_OBJELS)."
+    },
+    {
+      "Name": "COM_SUBNET",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_COMNT, CST_COMX, CST_PVC, rhs_combal, rcs_combal",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Subsidy on the net amount of a commodity within a region for a particular timeslice.",
+      "Affected Equations/Variables": "Forces the net commodity variable (VAR_COMNET) to be included in the equality balance constraint (EQE_COMBAL). Applied (-) to said variable in the cost component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "COM_SUBPRD",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_COMPD, CST_COMX, CST_PVC, rhs_comprd, rcs_comprd",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Subsidy on the production of a commodity within a region for a particular timeslice.",
+      "Affected Equations/Variables": "Forces the commodity production variable (VAR_COMPRD) to be included in the equality balance constraint (EQE_COMBAL). Applied (-) to said variable in the cost component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "COM_TAXNET",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_COMNT, CST_COMX, CST_PVC, rhs_combal, rcs_combal",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Tax on the net amount of a commodity within a region for a particular timeslice.",
+      "Affected Equations/Variables": "Forces the net commodity variable (VAR_COMNET) to be included in the equality balance constraint (EQE_COMBAL). Applied to said variable in the cost component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "COM_TAXPRD",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_COMPD, CST_COMX, CST_PVC, rhs_comprd, rcs_comprd",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Tax on the production of a commodity within a region for a particular timeslice.",
+      "Affected Equations/Variables": "Forces the commodity production variable (VAR_COMPRD) to be included in the equality balance constraint (EQE_COMBAL). Applied to said variable in the cost component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "DAM_BQTY",
+      "Category": "User Input",
+      "Indexes": ["r", "c"],
+      "Related Sets/Parameters": "DAM_COST",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "Only effective when DAM_COST has been defined for commodity c.",
+      "Description": "Base quantity of emissions for damage cost accounting",
+      "Affected Equations/Variables": "EQ_DAMAGE, EQ_OBJDAM"
+    },
+    {
+      "Name": "DAM_COST",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "cur"],
+      "Related Sets/Parameters": "DAM_BQTY",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Damage costs are by default endogenous (included in the objective). To set them exogenous, use $SET DAMAGE NO",
+      "Description": "Marginal damage cost of emissions at Base quantity.",
+      "Affected Equations/Variables": "EQ_DAMAGE, EQ_OBJDAM"
+    },
+    {
+      "Name": "DAM_ELAST",
+      "Category": "User Input",
+      "Indexes": ["r", "c", "lim"],
+      "Related Sets/Parameters": "DAM_COST, DAM_BQTY",
+      "Units/Ranges/Defaults": "Dimensionless [0,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "Only effective when DAM_COST has been defined for commodity c.",
+      "Description": "Elasticity of damage cost in the lower or upper direction from Base quantity.",
+      "Affected Equations/Variables": "EQ_OBJDAM"
+    },
+    {
+      "Name": "DAM_STEP",
+      "Category": "User Input",
+      "Indexes": ["r", "c", "lim"],
+      "Related Sets/Parameters": "DAM_COST, DAM_BQTY",
+      "Units/Ranges/Defaults": "Integer number [1,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "Only effective when DAM_COST has been defined for commodity c.",
+      "Description": "Number of steps for linearizing damage costs in the lower or upper direction from Base quantity.",
+      "Affected Equations/Variables": "EQ_DAMAGE, EQ_OBJDAM"
+    },
+    {
+      "Name": "DAM_VOC",
+      "Category": "User Input",
+      "Indexes": ["r", "c", "lim"],
+      "Related Sets/Parameters": "DAM_COST, DAM_BQTY",
+      "Units/Ranges/Defaults": "Decimal fraction LO: [0,1]; UP: [0, ∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "Only effective when DAM_COST is defined for c. Step sizes proportional to the Base quantity can be defined with lim='N'.",
+      "Description": "Variance of emissions in the lower or upper direction from Base quantity as a fraction of Base quantity.",
+      "Affected Equations/Variables": "EQ_OBJDAM"
+    },
+    {
+      "Name": "E",
+      "Category": "User Input",
+      "Indexes": ["t"],
+      "Related Sets/Parameters": "B, D, M, COEF_CPT, rtp_vintyr",
+      "Units/Ranges/Defaults": "Year; default value: none",
+      "Details/Notes": "For each model year period",
+      "Description": "End year of period t, used in determining the length of each period",
+      "Affected Equations/Variables": "Affects EQ(l)_CPT, EQ_OBJINV."
+    },
+    {
+      "Name": "FLO_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg", "s", "bd"],
+      "Related Sets/Parameters": [],
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default: none; Default i/e: MIG",
+      "Details/Notes": "If the bound is specified for a timeslice s being above the flow timeslice resolution (rtpcs_varf), the bound is applied to the sum of the flow variables (VAR_FLO) according to the timeslice tree, otherwise directly to the flow variable. No aggregation.",
+      "Description": "Bound on the flow of a commodity or the sum of flows within a commodity group.",
+      "Affected Equations/Variables": "Flow activity limit constraint (EQ(l)_FLOBND) when s is above rtpcs_varf Direct bound on activity variable (VAR_FLO) when at the rtpcs_varf level."
+    },
+    {
+      "Name": "FLO_COST",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_FCOST, CST_FLOC, CST_PVC",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [open]; default: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation",
+      "Description": "Variable cost of a process associated with the production/ consumption of a commodity.",
+      "Affected Equations/Variables": "Applied to the flow variable (VAR_FLO) when entering the objective function (EQ_OBJVAR). May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "FLO_CUM",
+      "Category": "User Input",
+      "Indexes": ["r", "p", "c", "y1", "y2", "bd"],
+      "Related Sets/Parameters": "ACT_CUM",
+      "Units/Ranges/Defaults": "Flow unit [0,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "The years y1 and y2 may be any years of the set allyear; where y1 may also be 'BOH' for first year of first period and y2 may be 'EOH' for last year of last period.",
+      "Description": "Bound on the cumulative amount of annual process flow between the years y1 and y2, within a region.",
+      "Affected Equations/Variables": "Generates an instance of the cumulative constraint (EQ_CUMFLO)"
+    },
+    {
+      "Name": "FLO_DELIV",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_FDELV, CST_FLOC, CST_PVC",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [open]; default: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Cost of delivering (consuming) a commodity to a process.",
+      "Affected Equations/Variables": "Applied to the flow variable (VAR_FLO) when entering the objective function (EQ_OBJVAR). May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "FLO_EFF",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg", "c", "s"],
+      "Related Sets/Parameters": "FLO_EMIS, PRC_ACTFLO",
+      "Units/Ranges/Defaults": "Commodity unit of c / commodity unit of cg [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Inherited/aggregated to the timeslice levels of the flow variables of the commodities in group cg. All parameters with the same process (p) and target commodity (c) are combined in the same transformation equation. By using cg='ACT', the attribute will be defined per unit of activity, by applying it on all PCG flows with the value divided by any user-defined PRC_ACTFLO. FLO_EFF defined for an individual flow will override any value for a group.",
+      "Description": "Defines the amount of commodity flow of commodity (c) per unit of other process flow(s) or activity (cg).",
+      "Affected Equations/Variables": "Generates process transformation equation (EQ_PTRANS) between one or more input (or output) commodities and one output (or input) commodities."
+    },
+    {
+      "Name": "FLO_EMIS",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg", "com", "s"],
+      "Related Sets/Parameters": "FLO_EFF",
+      "Units/Ranges/Defaults": "Commodity unit of c / commodity unit of cg [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "See FLO_EFF. If com is of type ENV and is not in the process topology, it is added to it as an output flow.",
+      "Description": "Defines the amount of emissions (c) per unit of process flow(s) or activity (cg).",
+      "Affected Equations/Variables": "See FLO_EFF."
+    },
+    {
+      "Name": "FLO_FR",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "bd"],
+      "Related Sets/Parameters": [],
+      "Units/Ranges/Defaults": "Decimal fraction [0,1] / [0, ∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "FLO_FR may be specified as lower, upper or fixed bounds, in contrast to COM_FR. Can be specified for any flow variable having a subannual timeslice resolution. Weighted aggregation. Direct inheritance, if defined at the ANNUAL level.",
+      "Description": "1) Bounds the flow of commodity (c) entering or leaving process (p) in a timeslice, in proportion to annual flow. 2) If specified also at the ANNUAL level, bounds the flow level in proportion to the average level under the parent timeslice",
+      "Affected Equations/Variables": "A share equation (EQ(l)_FLOFR) limiting the amount of commodity (c) is generated according to the bound type (bd = l indicator)."
+    },
+    {
+      "Name": "FLO_FUNC",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg1", "cg2", "s"],
+      "Related Sets/Parameters": "FLO_SUM, FLO_FUNCX, COEF_PTRAN, rpc_ffunc, rpcg_ptran",
+      "Units/Ranges/Defaults": "Commodity unit of cg2/commodity unit of cg1 [open]; default value: see details; Default i/e: STD",
+      "Details/Notes": "If for the same indexes the parameter FLO_SUM is specified but no FLO_FUNC, the FLO_FUNC is set to 1. Important factor in determining the level at which a process operates in that the derived transformation parameter (COEF_PTRAN) is inherited/aggregated to the timeslice levels of the flow variables associated with the commodities in the group cg1.",
+      "Description": "A key parameter describing the basic operation of or within a process. Sets the ratio between the sum of flows in commodity group cg2 to the sum of flows in commodity group cg1, thereby defining the efficiency of producing cg2 from cg1 (subject to any FLO_SUM). cg1 and cg2 may be also single commodities.",
+      "Affected Equations/Variables": "Establishes the basic transformation relationship (EQ_PTRANS) between one or more input (or output) commodities and one or more output (or input) commodities. Establishes the relationship between storage charging / discharging and a related commodity flow (VAR_FLO) in the auxiliary storage flow equation (EQ_STGAUX)."
+    },
+    {
+      "Name": "FLO_FUNCX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg1", "cg2"],
+      "Related Sets/Parameters": "FLO_FUNC, FLO_SUM, COEF_PTRAN",
+      "Units/Ranges/Defaults": "Integer scalar [1,999]; default value: none; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon age is desired. Vintaged processes only (or for NCAP_COM flows). Note: Shape index 1 is reserved for constant 1. ACT_EFF(cg): cg1=cg, cg2='ACT'; ACT_FLO(cg): cg1='ACT', cg2=cg; FLO_EMIS(cg,c): cg1=cg2=c; FLO_EFF(cg,c): cg1=cg2=c; FLO_FUNC(cg1,cg2): cgN=cgN; NCAP_COM(com): cg1='CAPFLO', cg2=com",
+      "Description": "Age-based shaping curve (SHAPE) to be applied to the flow parameters (ACT_EFF/ACT_FLO/ FLO_FUNC/FLO_SUM/ FLO_EMIS/FLO_EFF/ NCAP_COM)",
+      "Affected Equations/Variables": "Applied to the flow variable (VAR_FLO) in a transformation equation (EQ_PTRANS / EQE_ACTEFF) to account for changes in the transformation efficiency according to the age of each process vintage."
+    },
+    {
+      "Name": "FLO_MARK",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "bd"],
+      "Related Sets/Parameters": "PRC_MARK",
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: none; Default i/e: STD",
+      "Details/Notes": "The same given fraction is applied to all timeslices of the commodity (this could be generalized to allow time-slice-specific fractions, if deemed useful). If an ANNUAL level market-share is desired for a timesliced commodity, PRC_MARK can be used instead.",
+      "Description": "Process-wise market share in total commodity production.",
+      "Affected Equations/Variables": "The individual process flow variables (VAR_FLO, VAR_IN, VAR_STGIN/OUT) are constrained (EQ(l)_FLOMRK) to a fraction of the total production of a commodity (VAR_COMPRD). Forces the commodity production variable (VAR_COMPRD) to be included in the equality balance constraint (EQE_COMBAL)."
+    },
+    {
+      "Name": "FLO_PKCOI",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s"],
+      "Related Sets/Parameters": "COM_PKRSV, COM_PKFLX, com_peak, com_pkts",
+      "Units/Ranges/Defaults": "Scalar [open]; default value: 1; Default i/e: STD",
+      "Details/Notes": "FLO_PKCOI is specified for individual processes p consuming the peak commodity c. Direct inheritance. Weighted aggregation. Used when the timeslices are not necessarily fine enough to pick up the actual peak within the peak timeslices.",
+      "Description": "Factor that permits attributing more (or less) demand to the peaking equation (EQ_PEAK) than the average demand calculated by the model, to handle the situation where peak usage is typically higher (or lower) due to coincidental (or non-coincidental) loads at the time of the peak demand.",
+      "Affected Equations/Variables": "Applied to the flow variable (VAR_FLO) to adjust the amount of a commodity consumed when considering the average demand contributing to the peaking constraint (EQ_PEAK)."
+    },
+    {
+      "Name": "FLO_SHAR",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "cg", "s", "bd"],
+      "Related Sets/Parameters": [],
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: none; Default i/e: MIG over milestoneyears, STD over pastyears",
+      "Details/Notes": "Direct inheritance. Weighted aggregation. A common example of using FLO_SHAR is to specify the power-to-heat ratio of CHP plants in the backpressure point. For example, for a heat output of a CHP technology, the FLO_SHAR parameter would have the value CHPR/(1+CHPR), with CHPR being the heat-to-power ratio.",
+      "Description": "Share of flow commodity c based upon the sum of individual flows defined by the commodity group cg belonging to process p.",
+      "Affected Equations/Variables": "When the commodity is an input an EQ(l)_INSHR equation is generated. When the commodity is an output an EQ(l)_OUTSHR equation is generated."
+    },
+    {
+      "Name": "FLO_SUB",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_FSUB, CST_FLOX, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Subsidy on a process flow.",
+      "Affected Equations/Variables": "Applied with a minus sign to the flow variable (VAR_FLO) when entering the objective function (EQ_OBJVAR). May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "FLO_SUM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg1", "c", "cg2", "s"],
+      "Related Sets/Parameters": "FLO_FUNC, FLO_FUNCX, COEF_PTRANS, fs_emis, rpc_emis, rpc_ffunc, rpcg_ptran",
+      "Units/Ranges/Defaults": "Commodity unit of cg2/commodity unit of c [open]; default value: see details; Default i/e: STD",
+      "Details/Notes": "If a FLO_SUM is specified and no corresponding FLO_FUNC, the FLO_FUNC is set to 1. If FLO_FUNC is specified for a true commodity group cg1, and no FLO_SUM is specified for the commodities in cg1, these FLO_SUM are set to 1. The derived parameter COEF_PTRANS is inherited/aggregated to the timeslice level of the flow variable of the commodity c.",
+      "Description": "Multiplier applied for commodity c of group cg1 corresponding to the flow rate based upon the sum of individual flows defined by the commodity group cg2 of process p. Most often used to define the emission rate, or to adjust the overall efficiency of a technology based upon fuel consumed.",
+      "Affected Equations/Variables": "The FLO_SUM multiplier is applied along with FLO_FUNC parameter in the transformation coefficient (COEF_PTRANS), which is applied to the flow variable (VAR_FLO) in the transformation equation (EQ_PTRANS)."
+    },
+    {
+      "Name": "FLO_TAX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "cur"],
+      "Related Sets/Parameters": "OBJ_FTAX, CST_FLOX, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per commodity unit [0,∞); default: none; Default i/e: STD",
+      "Details/Notes": "Direct inheritance. Weighted aggregation.",
+      "Description": "Tax on a process flow.",
+      "Affected Equations/Variables": "Applied to the flow variable (VAR_FLO) when entering the objective function (EQ_OBJVAR). May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "G_CUREX",
+      "Category": "User Input",
+      "Indexes": ["cur1", "cur2"],
+      "Related Sets/Parameters": "R_CUREX",
+      "Units/Ranges/Defaults": "Scalar (0,∞); Default value: none",
+      "Details/Notes": "The target currency cur2 must have a discount rate defined with G_DRATE.",
+      "Description": "Conversion factor from currency cur1 to currency cur2, with cur2 to be used in the objective function.",
+      "Affected Equations/Variables": "Affects cost coefficients in EQ_OBJ"
+    },
+    {
+      "Name": "G_CYCLE",
+      "Category": "User Input",
+      "Indexes": ["tslvl"],
+      "Related Sets/Parameters": "TS_CYCLE",
+      "Units/Ranges/Defaults": "Number of cycles [1,∞); Default values: · 1 for ANNUAL · 1 for SEASON · 52 for WEEKLY · 365 for DAYNITE",
+      "Details/Notes": "Not recommended to be changed; use TS_CYCLE instead, whenever the timeslice cycles are different from the default, because changing G_CYCLE would change the meaning of storage availability factors.",
+      "Description": "Defines the total number of cycles on level tslvl, in a year. Provides default values for TS_CYCLE (see entry for that).",
+      "Affected Equations/Variables": "Affects interpretation of availability factors for the storage level, whenever capacity represents the maximum nominal output level (EQ(l)_CAPACT, EQL_CAPFLO)."
+    },
+    {
+      "Name": "G_DRATE",
+      "Category": "User Input",
+      "Indexes": ["r", "allyear", "cur"],
+      "Related Sets/Parameters": "OBJ_DISC, OBJ_DCEOH, NCAP_DRATE, COR_SALVI, COR_SALVD, COEF_PVT, VDA_DISC",
+      "Units/Ranges/Defaults": "Decimal fraction (0,1]; default value = none; Default i/e: STD",
+      "Details/Notes": "A value must be provided for each region. Interpolation is dense (all individual years included).",
+      "Description": "System-wide discount rate in region r for each time-period.",
+      "Affected Equations/Variables": "The discount rate is taken into consideration when constructing the objective function discounting multiplier (OBJ_DISC), which is applied in each components of the objective function (EQ_OBJVAR, EQ_OBJINV, EQ_OBJFIX, EQ_OBJSALV, EQ_OBJELS)."
+    },
+    {
+      "Name": "G_DYEAR",
+      "Category": "User Input",
+      "Indexes": [],
+      "Related Sets/Parameters": "OBJ_DISC, COEF_PVT",
+      "Units/Ranges/Defaults": "Year [BOTIME,EOTIME]; default value = M(MIYR_1), i.e. the first milestone year",
+      "Details/Notes": null,
+      "Description": "Base year for discounting.",
+      "Affected Equations/Variables": "The year to which all costs are to be discounted is taken into consideration when constructing the objective function discounting multiplier (OBJ_DISC), which is applied in each of the components of the objective function (EQ_OBJVAR, EQ_OBJINV, EQ_OBJFIX, EQ_OBJSALV, EQ_OBJELS)."
+    },
+    {
+      "Name": "G_RFRIR",
+      "Category": "User Input",
+      "Indexes": ["r", "allyear"],
+      "Related Sets/Parameters": "G_DRATE, NCAP_DRATE, COR_SALVI, COR_SALVD",
+      "Units/Ranges/Defaults": "Decimal fraction (0,1]; default value = none; Default i/e: STD",
+      "Details/Notes": "Optional parameter. If value is not provided, G_DRATE is assumed as the risk-free rate. By providing G_RFRIR, the technology-specific risk premiums can be kept unchanged over any sensitivity analyses with different G_DRATE values.",
+      "Description": "Risk-free real interest rate in region r for each time-period. Provides the reference rate for NCAP_DRATE, such that the risk premium will be calculated against the risk-free rate.",
+      "Affected Equations/Variables": "The rate is taken into consideration when constructing the objective function coefficients for investment costs. EQ_OBJINV, EQ_OBJSALV"
+    },
+    {
+      "Name": "G_ILEDNO",
+      "Category": "User Input",
+      "Indexes": [],
+      "Related Sets/Parameters": "NCAP_ILED",
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: 0.1",
+      "Details/Notes": "Only provided when the costs associated with the lead-time for new capacity (NCAP_ILED) are not to be included in the objective function. Not taken into account if the OBLONG switch or any alternative objective formulation is used.",
+      "Description": "If the ratio of lead-time (NCAP_ILED) to the period duration (D) is below this threshold then the lead-time consideration will be ignored in the objective function",
+      "Affected Equations/Variables": "Prevents the investment costs associated with investment lead-times from energy the investment component of the objective function (EQ_OBJINV)."
+    },
+    {
+      "Name": "G_NOINTERP",
+      "Category": "User Input",
+      "Indexes": [],
+      "Related Sets/Parameters": "All parameters that are normally subjected to interpolation / extrapolation",
+      "Units/Ranges/Defaults": "Binary indicator [0 or 1]; default value = 0",
+      "Details/Notes": "Only provide when interpolation / extrapolation is to be turned off for all parameters. Interpolation of cost parameters is always done.",
+      "Description": "Switch for generally turning-on (= 0 ) and turning-off (= 1 ) sparse inter- / extrapolation.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "G_OFFTHD",
+      "Category": "User Input",
+      "Indexes": ["datayear"],
+      "Related Sets/Parameters": "PRC_NOFF, PRC_AOFF, PRC_FOFF, COM_OFF",
+      "Units/Ranges/Defaults": "Scalar [0,1]; Default value: 0; Default i/e: 5",
+      "Details/Notes": "Setting G_OFFTHD=1 will make the *_OFF attributes effective only for periods fully included in the OFF range specified.",
+      "Description": "Threshold for considering an *_OFF attribute disabling a process/commodity variable in period.",
+      "Affected Equations/Variables": "Affects availability of VAR_NCAP, VAR_ACT, VAR_FLO, VAR_COMNET/PRD"
+    },
+    {
+      "Name": "G_OVERLAP",
+      "Category": "User Input",
+      "Indexes": [],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Scalar [0,100]; Default value: TIMESTEP/2",
+      "Details/Notes": "Used only when time-stepped solution is activated with the TIMESTEP control variable.",
+      "Description": "Overlap of stepped solutions (in years).",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "G_TLIFE",
+      "Category": "User Input",
+      "Indexes": [],
+      "Related Sets/Parameters": "NCAP_TLIFE",
+      "Units/Ranges/Defaults": "Scalar [1,∞); default value = 10",
+      "Details/Notes": null,
+      "Description": "Default value for the technical lifetime of a process if not provided by the user.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "G_YRFR",
+      "Category": "User Input",
+      "Indexes": ["all_r", "s"],
+      "Related Sets/Parameters": "RTCS_TSFR, RS_STGPRD",
+      "Units/Ranges/Defaults": "Fraction [0,1]; default value: none; only for the ANNUAL timeslice a value of 1 is predefined",
+      "Details/Notes": "Must be provided for each region and timeslice.",
+      "Description": "Duration of timeslice s as fraction of a year. Used for shaping the load curve and lining up timeslice duration for inter-regional exchanges.",
+      "Affected Equations/Variables": "Applied to various variables (VAR_NCAP+PASTI, VAR_COMX, VAR_IRE, VAR_FLO, VAR_SIN/OUT) in the commodity balance equation (EQ(l)_COMBAL)."
+    },
+    {
+      "Name": "IRE_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "s", "all_r", "ie", "bd"],
+      "Related Sets/Parameters": "top_ire",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Only applicable for inter-regional exchange processes (IRE). If the bound is specified for a timeslice (s) being above the commodity (c) timeslice resolution, the bound is applied to the sum of the imports/exports according to the timeslice tree. Standard aggregation.",
+      "Description": "Bound on the total import (export) of commodity (c) from (to) region all_r in (out of) region r.",
+      "Affected Equations/Variables": "Controls the instances for which the trade bound constraint (EQ(l)_IREBND) is generated, and the RHS."
+    },
+    {
+      "Name": "IRE_CCVT",
+      "Category": "User Input",
+      "Indexes": ["r1", "c1", "r2", "c2"],
+      "Related Sets/Parameters": "IRE_TSCVT, top_ire",
+      "Units/Ranges/Defaults": "Scalar (0,∞); Default value: 1 if commodity names are the same in both regions; I/e: N/A",
+      "Details/Notes": "Required for mapping commodities involved in inter-regional exchanges between two regions whenever commodities traded are in different units in the regions.",
+      "Description": "Conversion factor between commodity units in region r1 and region r2. Expresses the amount of commodity c2 in region r2 equivalent to 1 unit of commodity c1 in region r1.",
+      "Affected Equations/Variables": "The conversion factor is applied to the flow variable (VAR_IRE) in the inter-regional balance constraint (EQ_IRE). Similarly, applied to the flow variable (VAR_IRE) when an inter-regional exchange is bounded in the limit constraint (EQ(l)_IREBND). Similarly, applied to the flow variable (VAR_IRE) when an exchange with an external region is bounded (EQ(l)_XBND)."
+    },
+    {
+      "Name": "IRE_FLO",
+      "Category": "User Input",
+      "Indexes": ["r1", "datayear", "p", "c1", "r2", "c2", "s2"],
+      "Related Sets/Parameters": "top_ire",
+      "Units/Ranges/Defaults": "Commodity unit c2/commodity unit c1 [0,∞); default value: 1; Default i/e: STD",
+      "Details/Notes": "Only applicable for inter-regional exchange processes (IRE) between two internal regions. Note that for each direction of trade a separate IRE_FLO needs to be specified. Similar to FLO_FUNC for standard processes. Direct inheritance. Weighted aggregation.",
+      "Description": "Efficiency of exchange process from commodity c1 in region r1 to commodity c2 in the region2 in timeslice s2; the timeslice s2 refers to the r2 region.",
+      "Affected Equations/Variables": "Applied to the exchange flow variable (VAR_IRE) in the inter-regional trade equation (EQ_IRE). Applied to the exchange flow variable (VAR_IRE) when a bound on inter-regional trade is to be applied (EQ(l)_IREBND)."
+    },
+    {
+      "Name": "IRE_FLOSUM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c1", "s", "ie", "c2", "io"],
+      "Related Sets/Parameters": "top_ire",
+      "Units/Ranges/Defaults": "Commodity unit c2/commodity unit c1 [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Only applicable for inter-regional exchange processes (IRE). Since the efficiency IRE_FLO can only be used for exchange between internal regions, IRE_FLOSUM may be used to define an efficiency for an import/export with an external region by specifying the same commodity for c1 and c2 and the value 1-efficiency as auxiliary consumption. Direct inheritance. Weighted aggregation.",
+      "Description": "Auxiliary consumption (io = IN, owing to the commodity entering the process) or production/ emission (io = OUT, owing to the commodity leaving the process) of commodity c2 due to the IMPort / EXPort (index ie) of the commodity c1 in region r",
+      "Affected Equations/Variables": "The multiplier is applied to the flow variable (VAR_IRE) associated with an inter-regional exchange in the commodity balance constraint (EQ(l)_COMBAL). If a flow share (FLO_SHAR) is provided for an inter-regional exchange process then the multiplier is applied to the flow variable (VAR_IRE) in the share constraint (EQ(l)_IN/OUTSHR). If a cost is provided for the flow (FLO_COST or FLO_DELIV) then the factor is applied to the flow variable (VAR_IRE) in the variable component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "IRE_PRICE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "all_r", "ie", "cur"],
+      "Related Sets/Parameters": "OBJ_IPRIC, CST_COMC, CST_PVP, top_ire",
+      "Units/Ranges/Defaults": "Monetary unit / commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Only applicable for inter-regional exchange processes (IRE). Ignored if all_r is an internal region. Direct inheritance. Weighted aggregation.",
+      "Description": "IMPort/EXPort price (index ie) for to/from an internal region of a commodity (c) originating from/heading to an external region all_r.",
+      "Affected Equations/Variables": "The price of the exchange commodity is applied to the trade flow variable (VAR_IRE) in the variable costs component of the objective function (EQ_OBJVAR)."
+    },
+    {
+      "Name": "IRE_TSCVT",
+      "Category": "User Input",
+      "Indexes": ["r1", "s1", "r2", "s2"],
+      "Related Sets/Parameters": "IRE_CCVT, top_ire",
+      "Units/Ranges/Defaults": "Scalar (0,∞); default value: 1 if timeslice tree and names are the same in both regions; I/e: N/A",
+      "Details/Notes": "Used for mapping timeslices in different regions. Required if timeslice definitions are different in the regions.",
+      "Description": "Matrix for mapping timeslices; the value for (r1,s1,r2,s2) gives the fraction of timeslice s2 in region r2 that falls in timeslice s1 in region r1.",
+      "Affected Equations/Variables": "The conversion factor is applied to the flow variable (VAR_IRE) in the inter-regional balance constraint (EQ_IRE). Similarly, applied to the flow variable (VAR_IRE) when an inter-regional exchange is bounded in the limit constraint (EQ(l)_IREBND). Similarly, applied to the flow variable (VAR_IRE) when an exchange with an external region is bounded (EQ(l)_XBND)."
+    },
+    {
+      "Name": "IRE_XBND",
+      "Category": "User Input",
+      "Indexes": ["all_r", "datayear", "c", "s", "ie", "bd"],
+      "Related Sets/Parameters": "top_ire",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Only applicable for inter-regional exchange processes (IRE). Provide whenever a trade flow is to be constrained. Note that the limit is either imposed by summing lower or splitting higher flow variables (VAR_IRE) when specified at other than the actual flow level (as determined by the commodity and process levels (COM_TSL/ PRC_TSL )).",
+      "Description": "Bound on the total IMPort (EXPort) (index ie) of commodity c in region all_r with all sources (destinations).",
+      "Affected Equations/Variables": "The trade limit equation EQ(l)_XBND generated either sums lower flow variables (VAR_IRE) or splits (according to the timeslice tree) coarser variables."
+    },
+    {
+      "Name": "MULTI",
+      "Category": "User Input",
+      "Indexes": ["j", "allyear"],
+      "Related Sets/Parameters": "NCAP_AFM, NCAP_FOMM, NCAP_FSUBM, NCAP_FTAXM",
+      "Units/Ranges/Defaults": "Scalar [open]; default value: none; I/e: Full dense interpolation and extrapolation",
+      "Details/Notes": "Only provided when the related shaping parameters are to be used.",
+      "Description": "Multiplier table used for any shaping parameters (*_*M) to adjust the corresponding technical data as function of the year; the table contains different multiplier curves identified by the index j.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_AF",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s", "bd"],
+      "Related Sets/Parameters": "NCAP_AFA, NCAP_AFS, NCAP_AFM, NCAP_AFX, COEF_AF",
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: 1; Default i/e: STD. Remark: In special cases values >1 can also be used (when PRC_CAPACT does not represent the max. technical level of activity per unit of capacity).",
+      "Details/Notes": "NCAP_AF, NCAP_AFA and NCAP_AFS can be applied simultaneously. Direct inheritance. Weighted aggregation. (Important remark: No inheritance/aggregation if any value is specified at process timeslices.)",
+      "Description": "Availability factor relating a unit of production (process activity) in timeslice s to the current installed capacity.",
+      "Affected Equations/Variables": "The corresponding capacity-activity constraint (EQ(l)_CAPACT) will be generated for any timeslice s. If the process timeslice level (PRC_TSL) is below said level, the activity variables will be summed."
+    },
+    {
+      "Name": "NCAP_AFA",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "bd"],
+      "Related Sets/Parameters": "NCAP_AF, NCAP_AFS, NCAP_AFM, NCAP_AFX, COEF_AF",
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: none; Default i/e: STD. Remark: In special cases values >1 can also be used (when PRC_CAPACT has been chosen not to represent the max. technical level of activity per unit of capacity).",
+      "Details/Notes": "Provided when ‘ANNUAL’ level process operation is to be controlled. NCAP_AF, NCAP_AFA and NCAP_AFS can be applied simultaneously. NCAP_AFA is always assumed to be non-vintage dependent, even if the process is defined as a vintaged one; for vintage dependent annual availability NCAP_AFS with s=’ANNUAL’ can be used.",
+      "Description": "Annual availability factor relating the annual activity of a process to the installed capacity.",
+      "Affected Equations/Variables": "The corresponding capacity-activity constraint (EQ(l)_CAPACT) will be generated for the ‘ANNUAL’ timeslice. If the process timeslice level (PRC_TSL) is below said level, the activity variables will be summed."
+    },
+    {
+      "Name": "NCAP_AFC",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg", "tsl"],
+      "Related Sets/Parameters": "NCAP_AFCS",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "If the commodities are in the PCG, constraint is applied to the flows in the PCG as a whole (linear combination of flows). Independent equations are generated for commodities not in the PCG, or when NCAP_AFC(r,’0’,p,’ACT’,tsl) =–1 is also specified.",
+      "Description": "Commodity-specific availability of capacity for commodity group cg, at given timeslice level. Applies also matching NCAP_AF / AFS / AFA as a multiplier, unless the independent option is used.",
+      "Affected Equations/Variables": "Generates instances of EQ(l)_CAFLAC (thereby disabling EQ(l)_CAPACT generation), or EQL_CAPFLO."
+    },
+    {
+      "Name": "NCAP_AFCS",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg", "ts"],
+      "Related Sets/Parameters": "NCAP_AFC",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "See NCAP_AFC. NCAP_AFCS is similar to NCAP_AFC but is defined on individual timeslices. Overrides NCAP_AFC.",
+      "Description": "Commodity-specific availability of capacity for commodity group cg, timeslice-specific.",
+      "Affected Equations/Variables": "See NCAP_AFC."
+    },
+    {
+      "Name": "NCAP_AFM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_AF, NCAP_AFA, NCAP_AFS, MULTI, COEF_AF",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0 (no multiplier applied); Default extrapolation: MIG",
+      "Details/Notes": "Provided when multiplication of NCAP_AF / NCAP_AFS based upon year is desired. Note: Multiplier index 1 is reserved for constant 1.",
+      "Description": "Period sensitive multiplier curve (MULTI) to be applied to the availability factor parameters (NCAP_AF/AFA/AFS) of a process.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_AFS",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s", "bd"],
+      "Related Sets/Parameters": "NCAP_AF, NCAP_AFA, NCAP_AFM, NCAP_AFSX, COEF_AF",
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: none; Default i/e: STD",
+      "Details/Notes": "NCAP_AF, NCAP_AFA and NCAP_AFS can be applied simultaneously. Direct inheritance. Weighted aggregation. (Important remark: No inheritance/aggregation if any value is specified at process timeslices.)",
+      "Description": "Availability factor relating the activity of a process in a timeslice s being at or above the process timeslice level (prc_tsl) to the installed capacity. If for example the process timeslice level is ‘DAYNITE’ and NCAP_AFS is specified for timeslices on the ‘SEASONAL’ level, the sum of the ‘DAYNITE’ activities within a season are restricted, but not the ‘DAYNITE’ activities directly.",
+      "Affected Equations/Variables": "The corresponding capacity-activity constraint (EQ(l)_CAPACT)"
+    },
+    {
+      "Name": "NCAP_AFSX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "bd"],
+      "Related Sets/Parameters": "NCAP_AFS, SHAPE, COEF_AF",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon age is desired.",
+      "Description": "Age-based shaping curve (SHAPE) to be applied to the seasonal availability factor parameters (NCAP_AFS) of a process.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_AFX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_AF, NCAP_AFA, NCAP_AFS, SHAPE, COEF_AF",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon age is desired.",
+      "Description": "Age-based shaping curve (SHAPE) to be applied to the availability factor parameters (NCAP_AF/AFA/AFS) of a process.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "bd"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Capacity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Provided for each process to have its overall installed capacity (VAR_NCAP) limited in a period.",
+      "Description": "Bound on the permitted level on investment in new capacity",
+      "Affected Equations/Variables": "Imposes an indirect limit on the capacity transfer equation (EQ_CPT) by means of a direct bound on the new investments capacity variable (VAR_NCAP)."
+    },
+    {
+      "Name": "NCAP_BPME",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_CDME",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "The parameter is only taken into account when the process is of type CHP, and NCAP_CDME has been also defined.",
+      "Description": "Back pressure mode efficiency (or total efficiency in full CHP mode).",
+      "Affected Equations/Variables": "Process transformation equation, either EQE_ACTEFF or EQ_PTRANS"
+    },
+    {
+      "Name": "NCAP_CDME",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_BPME",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "The parameter can only be used for standard processes having electricity output in the PCG.",
+      "Description": "Condensing mode efficiency",
+      "Affected Equations/Variables": "Process transformation equation, either EQE_ACTEFF or EQ_PTRANS"
+    },
+    {
+      "Name": "NCAP_CEH",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_CHPR, ACT_EFF",
+      "Units/Ranges/Defaults": "Decimal fraction [–1,∞]; default value: none; Default i/e: STD",
+      "Details/Notes": "The parameter is only taken into account when the process is defined to be of type CHP.",
+      "Description": "Coefficient of electricity to heat along the iso-fuel line in a pass-out CHP technology.",
+      "Affected Equations/Variables": "Process transformation equation, either EQE_ACTEFF or EQ_PTRANS"
+    },
+    {
+      "Name": "NCAP_CHPR",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "lim"],
+      "Related Sets/Parameters": "FLO_SHAR",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: 1; Default i/e: STD",
+      "Details/Notes": "The parameter is only taken into account when the process is defined to be of type CHP.",
+      "Description": "Heat-to-power ratio of a CHP technology (fixed / minimum / maximum ratio). If no ratio equations should be generated, one can define any I/E value with lim='N'.",
+      "Affected Equations/Variables": "Activates the generation of output share equations, implemented with EQ(l)_OUTSHR"
+    },
+    {
+      "Name": "NCAP_CLAG",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "io"],
+      "Related Sets/Parameters": "NCAP_CLED, NCAP_COM",
+      "Units/Ranges/Defaults": "Years [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a delay in commodity output after commissioning new capacity.",
+      "Description": "Lagtime of a commodity after new capacity is installed.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) in the commodity balance (EQ(l)_COMBAL) of the investment period or previous periods."
+    },
+    {
+      "Name": "NCAP_CLED",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c"],
+      "Related Sets/Parameters": "NCAP_ICOM, COEF_ICOM",
+      "Units/Ranges/Defaults": "Years [open]; default value: = NCAP_ILED; Default i/e: STD",
+      "Details/Notes": "Provided when a commodity must be available prior to availability of a process.",
+      "Description": "Lead time requirement for a commodity during construction (NCAP_ICOM), prior to the initial availability of the capacity.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) in the commodity balance (EQ(l)_COMBAL) of the investment period or previous periods."
+    },
+    {
+      "Name": "NCAP_COM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "io"],
+      "Related Sets/Parameters": "rpc_capflo, rpc_conly",
+      "Units/Ranges/Defaults": "Commodity unit per capacity unit [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when the consumption or production of a commodity is tied to the level of the installed capacity.",
+      "Description": "Emission (or land-use) of commodity c associated with the capacity of a process for each year said capacity exists.",
+      "Affected Equations/Variables": "Applied to the capacity variable (VAR_CAP) in the commodity balance (EQ_COMBAL)."
+    },
+    {
+      "Name": "NCAP_COST",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "OBJ_ICOST, OBJSCC, CST_INVC, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided whenever there is a cost associated with putting new capacity in place.",
+      "Description": "Investment costs of new installed capacity according to the installation year.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) when entering the objective function (EQ_OBJINV). May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "NCAP_CPX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "prc"],
+      "Related Sets/Parameters": "COEF_CPT",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon age is desired.",
+      "Description": "Defines a shape index for shaping the capacity transfer coefficients by the age of each process vintage. As a result, the capacity will have a survival rate as a function of age.",
+      "Affected Equations/Variables": "Impacts all calculations that are dependent upon the availability of capacity (VAR_NCAP), most directly the capacity transfer (EQ_CPT), and capacity availability equations (EQ(l)_CAPACT)."
+    },
+    {
+      "Name": "NCAP_DCOST",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "NCAP_DLAG, COR_SALVD, OBJ_DCOST, CST_DECC, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there are decommissioning costs associated with a process.",
+      "Description": "Cost of dismantling a facility after the end of its lifetime.",
+      "Affected Equations/Variables": "Applied to the current capacity subject to decommissioning (VAR_NCAP+NCAP_PASTI) when entering the objective function (EQ_OBJNV)."
+    },
+    {
+      "Name": "NCAP_DELIF",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_DLIFE, COR_SALVD, DUR_MAX, OBJ_CRFD, SALV_DEC",
+      "Units/Ranges/Defaults": "Years (0,∞); default value: NCAP_DLIFE; Default i/e: STD",
+      "Details/Notes": "Provided when the timeframe for paying for decommission is different from that of the actual decommissioning.",
+      "Description": "Economic lifetime of the decommissioning activity.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) when entering the salvage portion of the objective function (EQ_OBJSALV)."
+    },
+    {
+      "Name": "NCAP_DISC",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "unit"],
+      "Related Sets/Parameters": "rp_dscncap",
+      "Units/Ranges/Defaults": "Capacity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Used for lumpy investments.",
+      "Description": "Size of capacity units that can be added.",
+      "Affected Equations/Variables": "Applied to the lumpy investment integer variable (VAR_DNCAP) in the discrete investment equation (EQ_DSCNCAP) to set the corresponding standard investment variable level (VAR_NCAP)."
+    },
+    {
+      "Name": "NCAP_DLAG",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "COEF_OCOM, DUR_MAX, OBJ_DLAGCY",
+      "Units/Ranges/Defaults": "Years [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a lag in the decommissioning of a process (e.g., to allow the nuclear core to reduce its radiation).",
+      "Description": "Number of years delay before decommissioning can begin after the lifetime of a technology has ended.",
+      "Affected Equations/Variables": "Delay applied to a decommissioning flow (VAR_FLO) in the balance equation (EQ(l)_COMBAL) as production. Delay applied to the current capacity subject to decommissioning (VAR_NCAP+NCAP_PASTI) when entering the objective function components (EQ_OBJINV, EQ_OBJFIX, EQ_OBJSALV)."
+    },
+    {
+      "Name": "NCAP_DLAGC",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "NCAP_DLAG, OBJ_DLAGC, CST_DECC, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a cost during any lag in the decommissioning (e.g., security).",
+      "Description": "Cost occurring during the lag time after the technical lifetime of a process has ended and before its decommissioning starts.",
+      "Affected Equations/Variables": "Cost during delay applied to the current capacity subject to decommissioning (VAR_NCAP+NCAP_PASTI) when entering the objective function components (EQ_OBJFIX, EQ_OBJSALV)."
+    },
+    {
+      "Name": "NCAP_DLIFE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "DUR_MAX",
+      "Units/Ranges/Defaults": "Years (0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when a process has a decommissioning phase.",
+      "Description": "Technical time for dismantling a facility after the end its technical lifetime, plus any lag time (NCAP_DLAG).",
+      "Affected Equations/Variables": "Decommissioning time impacting (VAR_NCAP+NCAP_PASTI) when entering the objective function components (EQ_OBJINV, EQ_OBJSALV)."
+    },
+    {
+      "Name": "NCAP_DRATE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "G_DRATE, COR_SALVI, COR_SALVD",
+      "Units/Ranges/Defaults": "Percent (0,∞); default value: G_DRATE; Default i/e: STD",
+      "Details/Notes": "Provided if the cost of borrowing for a process is different from the standard discount rate.",
+      "Description": "Technology specific discount rate.",
+      "Affected Equations/Variables": "Discount rate applied to investments (VAR_NCAP+NCAP_PASTI) when entering the objective function components (EQ_OBJINV, EQ_OBJSALV)."
+    },
+    {
+      "Name": "NCAP_ELIFE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_TLIFE, COR_SALVI, OBJ_CRF",
+      "Units/Ranges/Defaults": "years (0,∞); default value: NCAP_TLIFE; Default i/e: STD",
+      "Details/Notes": "Provided only when the economic lifetime differs from the technical lifetime (NCAP_TLIFE).",
+      "Description": "Economic lifetime of a process.",
+      "Affected Equations/Variables": "Economic lifetime of a process when costing investment (VAR_NCAP+NCAP_PASTI) or capacity in the objective function components (EQ_OBJINV, EQ_OBJSALV, EQ_OBJFIX)."
+    },
+    {
+      "Name": "NCAP_FDR",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "prc"],
+      "Related Sets/Parameters": "NCAP_COST",
+      "Units/Ranges/Defaults": "Decimal fraction (0,∞); default value:none; Default i/e: STD",
+      "Details/Notes": "Provided when the effect of functional depreciation is considered significant to justify accelerated decrease in salvage value.",
+      "Description": "Defines an annual rate of additional depreciation in the salvage value.",
+      "Affected Equations/Variables": "Affects the salvage value coefficients in EQ_OBJSALV"
+    },
+    {
+      "Name": "NCAP_FOM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "OBJ_FOM, CST_FIXC, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a fixed cost associated with the installed capacity.",
+      "Description": "Fixed operating and maintenance cost per unit of capacity according to the installation year.",
+      "Affected Equations/Variables": "Fixed operating and maintenance costs associated with total installed capacity (VAR_NCAP+NCAP_PASTI) when entering the objective function components (EQ_OBJFIX)."
+    },
+    {
+      "Name": "NCAP_FOMM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_FOM, MULTI",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon the period is desired.",
+      "Description": "Period sensitive multiplier curve (MULTI) applied to the fixed operating and maintenance costs (NCAP_FOM).",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_FOMX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_FOM, SHAPE",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon age is desired.",
+      "Description": "Age-based shaping curve (SHAPE) to be applied to the fixed operating and maintenance cost.",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_FSUB",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "OBJ_FSB, CST_FIXX, CST_PVP",
+      "Units/Ranges/Defaults": "Monetary unit per capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a subsidy for associated with the level of installed capacity.",
+      "Description": "Subsidy per unit of installed capacity.",
+      "Affected Equations/Variables": "Fixed subsidy associated with total installed capacity (VAR_NCAP+NCAP_PASTI) when entering the objective function component (EQ_OBJFIX) with a minus sign."
+    },
+    {
+      "Name": "NCAP_FSUBM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_FSUB, MULTI",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon the period is desired.",
+      "Description": "Period sensitive multiplier curve (MULTI) applied to the subsidy (NCAP_FSUB).",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_FSUBX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_FSUB, SHAPE",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon age is desired.",
+      "Description": "Age-based shaping curve (SHAPE) to be applied to the fixed subsidy (NCAP_FSUB).",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_FTAX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "OBJ_FTX, CST_FIXX, CST_PVP",
+      "Units/Ranges/Defaults": "monetary unit per capacity unit [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a fixed tax based upon the level of the installed capacity.",
+      "Description": "Tax per unit of installed capacity.",
+      "Affected Equations/Variables": "Fixed tax associated with total installed capacity (VAR_NCAP+NCAP_PASTI) when entering the objective function components (EQ_OBJFIX)."
+    },
+    {
+      "Name": "NCAP_FTAXM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_FTAX, MULTI",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon the period is desired.",
+      "Description": "Period sensitive multiplier curve (MULTI) applied to the tax (NCAP_FTAX).",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_FTAXX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_FTAX, SHAPE",
+      "Units/Ranges/Defaults": "Integer number; Default value: 0; Default extrapolation: MIG",
+      "Details/Notes": "Provided when shaping based upon age is desired.",
+      "Description": "Age-based shaping curve (SHAPE) to be applied to the fixed tax (NCAP_FTAX).",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "NCAP_ICOM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c"],
+      "Related Sets/Parameters": "NCAP_CLED, rpc_capflo, rpc_conly",
+      "Units/Ranges/Defaults": "Commodity unit per capacity unit [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when a commodity is needed in the period in which the new capacity is to be available,",
+      "Description": "Amount of commodity (c) required for the construction of new capacity.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) in the appropriate commodity balance constraints (EQ(l)_COMBAL)."
+    },
+    {
+      "Name": "NCAP_ILED",
+      "Category": "User Input",
+      "Indexes": ["r", "t", "p"],
+      "Related Sets/Parameters": "NCAP_ICOM, NCAP_COST, COEF_CPT, COEF_ICOM, DUR_MAX",
+      "Units/Ranges/Defaults": "Years [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a delay between when the investment decision occurs and when the capacity (new capacity or past investment) is initially available.",
+      "Description": "Lead time between investment decision and actual availability of new capacity (= construction time).",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) balance constraints (EQ(l)_COMBAL) as part of consumption, if there is an associated flow (NCAP_ICOM). Used as to distinguish between small and large investments (VAR_NCAP) and thus influences the way the investment and fixed costs are treated in the objective function (EQ_OBJINV, EQ_OBJFIX, EQ_OBJSALV)."
+    },
+    {
+      "Name": "NCAP_ISPCT",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_ISUB, OBJ_ISUB, CST_INVX",
+      "Units/Ranges/Defaults": "Decimal fraction (−∞,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when defining an investment subsidy in proportion to the investment cost. Requires that NCAP_COST is defined.",
+      "Description": "Unit investment subsidy as a fraction of unit investment costs, in the same currency unit, per unit of new capacity.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) when entering the objective function (EQ_OBJINV) with a minus sign."
+    },
+    {
+      "Name": "NCAP_ISUB",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "OBJ_ISUB, OBJSCC, CST_INVX, CST_SALV, CST_PVP",
+      "Units/Ranges/Defaults": "monetary unit per capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a subsidy for new investments in a period.",
+      "Description": "Subsidy per unit of new installed capacity.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) when entering the objective function (EQ_OBJINV) with a minus sign. May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "NCAP_ITAX",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cur"],
+      "Related Sets/Parameters": "OBJ_ITAX, OBJSCC, CST_INVX, CST_SALV, CST_PVP",
+      "Units/Ranges/Defaults": "monetary unit per capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a tax associated with new investments in a period.",
+      "Description": "Tax per unit of new installed capacity",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) when entering the objective function (EQ_OBJNV). May appear in user constraints (EQ_UC*) if specified in UC_NAME."
+    },
+    {
+      "Name": "NCAP_MSPRF",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "p", "lim"],
+      "Related Sets/Parameters": "COM_MSHGV",
+      "Units/Ranges/Defaults": "Unit: dimensionless (0,∞); Default value: none; Default i/e: STD",
+      "Details/Notes": "Optional parameter for the logit market sharing mechanism, for process p supplying market c.",
+      "Description": "In the logit market sharing mechanism, defines preference weights (lim='N') and intangible costs (lim='LO')",
+      "Affected Equations/Variables": "EQ_MSNCAPB"
+    },
+    {
+      "Name": "NCAP_OCOM",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c"],
+      "Related Sets/Parameters": "NCAP_VALU, rpc_capflo, rpc_conly",
+      "Units/Ranges/Defaults": "Commodity unit per capacity unit [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when there is a commodity release associated with the decommissioning.",
+      "Description": "Amount of commodity c per unit of capacity released during the dismantling of a process.",
+      "Affected Equations/Variables": "Applied to the investment variable (VAR_NCAP) in the appropriate commodity constraints (EQ(l)_COMBAL) as part of production in the appropriate period."
+    },
+    {
+      "Name": "NCAP_OLIFE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_TLIFE",
+      "Units/Ranges/Defaults": "Years (0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Requires that early retirements are enabled and the process is vintaged.",
+      "Description": "Maximum operating lifetime of a process, in terms of full-load years.",
+      "Affected Equations/Variables": "EQL_SCAP"
+    },
+    {
+      "Name": "NCAP_PASTI",
+      "Category": "User Input",
+      "Indexes": ["r", "pastyear", "p"],
+      "Related Sets/Parameters": "NCAP_PASTY, OBJ_PASTI, PAR_PASTI, PRC_RESID",
+      "Units/Ranges/Defaults": "capacity unit [0,∞); default value: none",
+      "Details/Notes": "Past investment can also be specified for milestone years, e.g. if the milestone year is a historic year, so that capacity additions are known or if planned future investments are already known.",
+      "Description": "Investment in new capacity made before the beginning of the model horizon (in the year specified by pastyear).",
+      "Affected Equations/Variables": "EQ(l)_COMBAL, EQ_CPT, EQ_OBJINV, EQ_OBJSALV, EQ_OBJFIX"
+    },
+    {
+      "Name": "NCAP_PASTY",
+      "Category": "User Input",
+      "Indexes": ["r", "pastyear", "p"],
+      "Related Sets/Parameters": "NCAP_PASTI",
+      "Units/Ranges/Defaults": "Years [1,999]; default value: none",
+      "Details/Notes": "Provided to spread a single past investment (NCAP_PASTI) back over several years (e.g., cars in the period before the 1st milestoneyr were bought over the previous 15 years). If overlaps with other past investments, the capacity values are added.",
+      "Description": "Number of years to go back to calculate a linear build-up of past investments",
+      "Affected Equations/Variables": "{See NCAP_PASTI}"
+    },
+    {
+      "Name": "NCAP_PKCNT",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s"],
+      "Related Sets/Parameters": "com_peak, com_pkts, prc_pkaf, prc_pkno",
+      "Units/Ranges/Defaults": "Decimal fraction [0,1]; default value: 1; Default i/e: STD",
+      "Details/Notes": "If the indicator PRC_PKAF is specified, the NCAP_PKCNT is set equal to the availabilities NCAP_AF. Direct inheritance. Weighted aggregation.",
+      "Description": "Fraction of capacity that can contribute to peaking equations.",
+      "Affected Equations/Variables": "Applied to investments in capacity (VAR_NCAP, NCAP_PASTI) in the peaking constraint (EQ_PEAK)."
+    },
+    {
+      "Name": "NCAP_SEMI",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_DISC",
+      "Units/Ranges/Defaults": "Capacity unit (0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Upper bound for the capacity must be defined by NCAP_BND; if not defined, assumed to be equal to the lower bound. Requires MIP.",
+      "Description": "Semi-continuous new capacity, lower bound. (See Section 5.9)",
+      "Affected Equations/Variables": "Applied to the semi-continuous investment variable VAR_SNCAP in the discrete investment equation EQ_DSCNCAP"
+    },
+    {
+      "Name": "NCAP_START",
+      "Category": "User Input",
+      "Indexes": ["r", "p"],
+      "Related Sets/Parameters": "PRC_NOFF",
+      "Units/Ranges/Defaults": "Year [1000, ∞); default value: none",
+      "Details/Notes": "NCAP_START(r,p)=y is equivalent to PRC_NOFF(r,p,BOH,y–1).",
+      "Description": "Start year for new investments",
+      "Affected Equations/Variables": "Affects the availability of investment variable (VAR_NCAP)"
+    },
+    {
+      "Name": "NCAP_TLIFE",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_ELIFE, COEF_CPT, COEF_RPTI, DUR_MAX",
+      "Units/Ranges/Defaults": "Years (0,∞); default value: G_TLIFE; Default i/e: STD",
+      "Details/Notes": "Expected for all technologies that have investment costs. Values below 0.5 cannot be well accounted in the objective function, and should thus be avoided (they are automatically resetted to 1).",
+      "Description": "Technical lifetime of a process.",
+      "Affected Equations/Variables": "Impacts all calculations that are dependent upon the availability of investments (VAR_NCAP) including capacity transfer (EQ_CPT), commodity flow (EQ(l)_COMBAL), costs (EQ_OBJINV, EQ_OBJFIX, EQ_OBJVAR, EQ_OBJSALV)."
+    },
+    {
+      "Name": "NCAP_VALU",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "cur"],
+      "Related Sets/Parameters": "NCAP_OCOM",
+      "Units/Ranges/Defaults": "Monetary unit / commodity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Provided when a released commodity has a value.",
+      "Description": "Value of a commodity released at decommissioning (NCAP_OCOM).",
+      "Affected Equations/Variables": "Applied to the investment related (VAR_NCAP, NCAP_PASTI) release flow at decommissioning in the objective function (EQ_OBJSALV)."
+    },
+    {
+      "Name": "PRC_ACTFLO",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "cg"],
+      "Related Sets/Parameters": "PRC_CAPACT, prc_actunt, prc_spg, rpc_aire",
+      "Units/Ranges/Defaults": "Commodity unit / activity unit (0,∞); default value: 1; Default i/e: STD",
+      "Details/Notes": "Only (rarely) provided when either the activity and flow variables of a process are in different units, or if there is a conversion efficiency between the activity and the flow(s) in the PCG. The group (cg) can be the whole PCG or any individual commodity in the PCG, or 'ACT' (=PCG).",
+      "Description": "1) Conversion factor from units of activity to units of those flow variables that define the activity (primary commodity group), or, 2) Conversion multiplier representing the amount of flow(s) in the cg per 1 unit of activity.",
+      "Affected Equations/Variables": "Applied to the primary commodity (prc_pcg) flow variables (VAR_FLO, VAR_IRE) to relate overall activity (VAR_ACT in EQ_ACTFLO). When the Reduction algorithm activated it is applied to the activity variable (VAR_ACT) in those cases where the flow variable (VAR_FLO) can be replaced by the activity variable (e.g. the activity is defined by one commodity flow)."
+    },
+    {
+      "Name": "PRC_CAPACT",
+      "Category": "User Input",
+      "Indexes": ["r", "p"],
+      "Related Sets/Parameters": "PRC_ACTFLO, PRC_ACTUNT",
+      "Units/Ranges/Defaults": "Activity unit / capacity unit (0,∞); default value: 1; Default i/e: none",
+      "Details/Notes": null,
+      "Description": "Conversion factor from capacity unit to activity unit assuming that the capacity is used for one year.",
+      "Affected Equations/Variables": "Applied along with the availability factor (NCAP_AF) to the investment (VAR_NCAP + NCAP_PASTI) in the utilization equations (EQ(l)_CAPACT, EQ(l)_CAFLAC). Applied to the investment (VAR_NCAP + NCAP_PASTI) in the peak constraint (EQ_PEAK). Applied to the investment (VAR_NCAP + NCAP_PASTI) in the capacity utilization constraint for CHP plants (ECT_AFCHP) and peak constraint in the IER extension (see Part III)."
+    },
+    {
+      "Name": "PRC_GMAP",
+      "Category": "User Input",
+      "Indexes": ["r", "prc", "item"],
+      "Related Sets/Parameters": "GR_GENMAP",
+      "Units/Ranges/Defaults": "Dimensionless (∞,∞); default value: none; Default i/e: none",
+      "Details/Notes": "Provided when process groupings are needed for custom processing e.g. in a TIMES code extension.",
+      "Description": "User-defined grouping of processes by group indicator item.",
+      "Affected Equations/Variables": "None"
+    },
+    {
+      "Name": "PRC_MARK",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "item", "c", "bd"],
+      "Related Sets/Parameters": "FLO_MARK",
+      "Units/Ranges/Defaults": "Decimal fraction [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Combined limit on commodity production is derived as the sum of the process-specific productions multiplied by the inverse values of PRC_MARK. The constraint is applied to the annual production of commodity. Item can be any desired label identifying the group.",
+      "Description": "Process group-wise market share, which defines a constraint for the combined market share of multiple processes in the total commodity production.",
+      "Affected Equations/Variables": "EQ(l)_FLOMRK, VAR_COMPRD"
+    },
+    {
+      "Name": "PRC_REFIT",
+      "Category": "User Input",
+      "Indexes": ["r", "prc", "p"],
+      "Related Sets/Parameters": "PRC_RCAP",
+      "Units/Ranges/Defaults": "Dimensionless [–3,3]; default value: none",
+      "Details/Notes": "Requires that early retirements are allowed in the model. The parameter value determines the type of the refurbishment option",
+      "Description": "Defines a mapping of host process prc to a retrofit or lifetime extension option p in region r, where p is another process representing the refurbishment option. The value of the parameter determines the type of the refurbishment option (see column on the left).",
+      "Affected Equations/Variables": "Activates generation of the retrofit / lifetime extension equations (EQL_REFIT)"
+    },
+    {
+      "Name": "PRC_RESID",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_PASTI",
+      "Units/Ranges/Defaults": "Capacity unit [0,∞); default value: none; Default i/e: 1",
+      "Details/Notes": "If only a single data point is specified, linear decay of the specified residual capacity over technical lifetime is assumed. Used as an alternative to NCAP_PASTI, not to use both for the same process.",
+      "Description": "Residual existing capacity stock of process (p) still available in the year specified (datayear). PRC_RESID is most useful for describing the stock of capacity with mixed vintages, while NCAP_PASTI is suited for capacities of a certain vintages, such as an individual power plants.",
+      "Affected Equations/Variables": "EQ(l)_CAPACT, EQ(l)_CAFLAC, EQL_CAPFLO, EQ(l)_CPT, VAR_CAP"
+    },
+    {
+      "Name": "R_CUREX",
+      "Category": "User Input",
+      "Indexes": ["r", "cur1", "cur2"],
+      "Related Sets/Parameters": "G_CUREX",
+      "Units/Ranges/Defaults": "Scalar (0,∞); Default value: none",
+      "Details/Notes": "The target currency cur2 must have a discount rate defined with G_DRATE.",
+      "Description": "Conversion factor from currency cur1 to currency cur2 in region r, in order to use cur2 in the objective function.",
+      "Affected Equations/Variables": "Affects cost coefficients in EQ_OBJ"
+    },
+    {
+      "Name": "RCAP_BLK",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "PRC_RCAP, RCAP_BND",
+      "Units/Ranges/Defaults": "Capacity unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Only effective when lumpy early capacity retirements are active (RETIRE=MIP). Requires MIP.",
+      "Description": "Retirement block size.",
+      "Affected Equations/Variables": "EQ_DSCRET, VAR_DRCAP, VAR_SCAP"
+    },
+    {
+      "Name": "RCAP_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "bd"],
+      "Related Sets/Parameters": "PRC_RCAP, RCAP_BLK",
+      "Units/Ranges/Defaults": "Capacity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Unless the control variable DSCAUTO=YES, requires that PRC_RCAP is defined for process p.",
+      "Description": "Bound on the retired amount of capacity in a period (same bound for all vintages).",
+      "Affected Equations/Variables": "VAR_RCAP, VAR_SCAP"
+    },
+    {
+      "Name": "REG_BDNCAP",
+      "Category": "User Input",
+      "Indexes": ["all_r", "bd"],
+      "Related Sets/Parameters": "REG_FIXT",
+      "Units/Ranges/Defaults": "Year [1000, ∞); default value: none",
+      "Details/Notes": "Only taken into account when a previous solution is loaded by using the LPOINT control variable. If several bound types are specified, one can use NCAP_BND(r,'0',p,'N')=±1 for assigning only an UP/LO bound for any process p.",
+      "Description": "Defines the year up to which capacities are to be bounded by previous solution, by model region. One can choose FX/UP/LO bounds, as well as lower bounds only for selected processes.",
+      "Affected Equations/Variables": "VAR_NCAP"
+    },
+    {
+      "Name": "REG_BNDCST",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "agg", "cur", "bd"],
+      "Related Sets/Parameters": "REG_CUMCST",
+      "Units/Ranges/Defaults": "Monetary unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "The cost aggregations (agg) supported are listed in the set COSTAGG (see Table 1).",
+      "Description": "Bound on regional costs by type of cost aggregation.",
+      "Affected Equations/Variables": "EQ_BNDCST, VAR_CUMCST"
+    },
+    {
+      "Name": "REG_CUMCST",
+      "Category": "User Input",
+      "Indexes": ["r", "y1", "y2", "agg", "cur", "bd"],
+      "Related Sets/Parameters": "REG_BNDCST",
+      "Units/Ranges/Defaults": "Monetary unit [0,∞); default value: none; Default i/e: N/A",
+      "Details/Notes": "The cost aggregations (agg) supported are listed in the set COSTAGG (see Table 1).",
+      "Description": "Cumulative bound on regional costs by type of cost aggregation.",
+      "Affected Equations/Variables": "EQ_BNDCST, VAR_CUMCST"
+    },
+    {
+      "Name": "REG_FIXT",
+      "Category": "User Input",
+      "Indexes": ["all_r"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Year [1000, ∞); default value: none",
+      "Details/Notes": "Only taken into account when the first periods are fixed by using the FIXBOH control variable.",
+      "Description": "Defines the year up to which periods are fixed to previous solution, by region–",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "RPT_OPT",
+      "Category": "User Input",
+      "Indexes": ["item", "j"],
+      "Related Sets/Parameters": "none",
+      "Units/Ranges/Defaults": "Integer value [open]; default value: none",
+      "Details/Notes": "See Part III, Table 15 for a list and descriptions of available options.",
+      "Description": "Miscellaneous reporting options",
+      "Affected Equations/Variables": "none"
+    },
+    {
+      "Name": "SHAPE",
+      "Category": "User Input",
+      "Indexes": ["j", "age"],
+      "Related Sets/Parameters": "FLO_FUNCX, FLO_SUMX, NCAP_AFX, NCAP_FOMX, NCAP_FSUBX, NCAP_FTAXX",
+      "Units/Ranges/Defaults": "Scalar [open]; default value: none; I/e: Full dense interpolation",
+      "Details/Notes": "Provided for each age dependent shaping curve that is to be applied.",
+      "Description": "Multiplier table used for any shaping parameters (*_*X) to adjust the corresponding technical data as function of the age;",
+      "Affected Equations/Variables": "{See Related Parameters}"
+    },
+    {
+      "Name": "STG_CHRG",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s"],
+      "Related Sets/Parameters": "prc_nstts, prc_stgips, prc_stgtss",
+      "Units/Ranges/Defaults": "Storage unit [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Only applicable to storage processes (STG): timeslice storage, inter-period storage or night storage devices.",
+      "Description": "Annual exogenous charging of a storage technology in a particular timeslice s.",
+      "Affected Equations/Variables": "Exogenous charging of storage enters storage equations (EQ_STGTSS, EQ_STGIPS) as right-hand side constant."
+    },
+    {
+      "Name": "STG_EFF",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "prc_nstts, prc_stgips, prc_stgtss",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: 1; Default i/e: STD",
+      "Details/Notes": "Only applicable to storage processes (STG): timeslice storage, inter-period storage or night storage devices.",
+      "Description": "Efficiency of storage process.",
+      "Affected Equations/Variables": "Applied to the storage output flow (VAR_SOUT) in the commodity balance (EQ(l)_COMBAL) for the stored commodity."
+    },
+    {
+      "Name": "STG_LOSS",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "s"],
+      "Related Sets/Parameters": "prc_nstts, prc_stgips, prc_stgtss",
+      "Units/Ranges/Defaults": "Decimal fraction [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Only applicable to storage processes (STG): timeslice storage, inter-period storage or night storage devices.",
+      "Description": "STG_LOSS>0 defines the loss in proportion to the initial storage level during one year’s storage time. STG_LOSS<0 defines an equilibrium loss, i.e. how much the annual losses would be if the storage level is kept constant. Annual loss of a storage process per unit of average energy stored.",
+      "Affected Equations/Variables": "Timeslice storage process (EQ_STGTSS): applied to the average storage level (VAR_ACT) between two consecutive timeslices. Inter-period storage process (EQ_STGIPS): applied to the average storage level from the pre-period (VAR_ACT) and the net inflow (VAR_SIN-VAR_SOUT) of the current period."
+    },
+    {
+      "Name": "STG_MAXCYC",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p"],
+      "Related Sets/Parameters": "NCAP_AF",
+      "Units/Ranges/Defaults": "Number of cycles [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can only be used for genuine storage processes. The limit can be exceeded by paying for additional replacement capacity, with a penalty cost equal to the investment annuity.",
+      "Description": "Defines the maximum number of storage cycles over the lifetime. Sets a limit for the total discharge divided by storage capacity.",
+      "Affected Equations/Variables": "Activates generation of the cycle limit/penalty equations (EQL_STGCCL)."
+    },
+    {
+      "Name": "STG_SIFT",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "prc", "com", "ts"],
+      "Related Sets/Parameters": "ACT_TIME",
+      "Units/Ranges/Defaults": "Decimal fraction [0,∞); default value: none; Default i/e: STD",
+      "Details/Notes": "Can only be used for a timeslice storage process.",
+      "Description": "Defines process prc as a load-shifting process, and limits the load shifting of demand com in timeslice ts to at most the fraction specified by the parameter value.",
+      "Affected Equations/Variables": "Activates generation of load shifting constraints (EQ(l)_SLSIFT)."
+    },
+    {
+      "Name": "STGIN_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "bd"],
+      "Related Sets/Parameters": "prc_nstts, prc_stgips, prc_stgtss",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Only applicable to storage processes (STG): timeslice storage, inter-period storage or night storage devices.",
+      "Description": "Bound on the input flow of a storage process in a timeslice s.",
+      "Affected Equations/Variables": "Storage input bound constraint (EQ(l)_STGIN) when s is above prc_tsl of the storage process. Direct bound on storage input flow (VAR_SIN) when at the prc_tsl level."
+    },
+    {
+      "Name": "STGOUT_BND",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "p", "c", "s", "bd"],
+      "Related Sets/Parameters": "prc_nstts, prc_stgips, prc_stgtss",
+      "Units/Ranges/Defaults": "Commodity unit [0,∞); default value: none; Default i/e: MIG",
+      "Details/Notes": "Only applicable to storage processes (STG): timeslice storage, inter-period storage or night storage devices.",
+      "Description": "Bound on the output flow of a storage process in a timeslice s.",
+      "Affected Equations/Variables": "Storage output bound constraint (EQ(l)_STGOUT) when s is above prc_tsl of the storage process. Direct bound on storage output flow variable (VAR_SOUT) when at the prc_tsl level."
+    },
+    {
+      "Name": "TL_CCAP0",
+      "Category": "User Input",
+      "Indexes": ["r", "teg"],
+      "Related Sets/Parameters": "(Alias: CCAP0), PAT, CCOST0",
+      "Units/Ranges/Defaults": "Capacity unit [open]; default value: none",
+      "Details/Notes": "Requires using ETL. For learning technologies teg when ETL is used.",
+      "Description": "Initial cumulative capacity of a learning technology.",
+      "Affected Equations/Variables": "Cumulative investment constraint (EQ_CUINV) and cumulative capacity variable (VAR_CCAP) in endogenous technological learning formulation."
+    },
+    {
+      "Name": "TL_CCAPM",
+      "Category": "User Input",
+      "Indexes": ["r", "teg"],
+      "Related Sets/Parameters": "(Alias: CCAPM), CCOSTM",
+      "Units/Ranges/Defaults": "Capacity unit [open]; default value: none",
+      "Details/Notes": "Requires using ETL. For learning technologies teg when ETL is used.",
+      "Description": "Maximum cumulative capacity.",
+      "Affected Equations/Variables": "Core ETL equations."
+    },
+    {
+      "Name": "TL_CLUSTER",
+      "Category": "User Input",
+      "Indexes": ["r", "teg", "prc"],
+      "Related Sets/Parameters": "(Alias: CLUSTER), TL_MRCLUST",
+      "Units/Ranges/Defaults": "Decimal fraction [0-1]; default value: none",
+      "Details/Notes": "Requires using ETL (MIP). Provided to model clustered endogenous technology learning. Each of the learning parameters must also be specified for the key learning technology.",
+      "Description": "Indicator that a technology (teg) is a learning component that is part of another technology (prc) in region r; teg is also called key component.",
+      "Affected Equations/Variables": "EQ_CLU"
+    },
+    {
+      "Name": "TL_MRCLUST",
+      "Category": "User Input",
+      "Indexes": ["r", "teg", "reg", "p"],
+      "Related Sets/Parameters": "TL_CLUSTER",
+      "Units/Ranges/Defaults": "Decimal fraction [0-1]; default value: none",
+      "Details/Notes": "Requires using ETL (MIP).",
+      "Description": "Mapping for multi-region clustering between learning key components (teg) and processes (p) that utilize the key component.",
+      "Affected Equations/Variables": "EQ_MRCLU"
+    },
+    {
+      "Name": "TL_PRAT",
+      "Category": "User Input",
+      "Indexes": ["r", "teg"],
+      "Related Sets/Parameters": "(Alias: PRAT), ALPH, BETA, CCAPK, CCOST0, PAT, PBT",
+      "Units/Ranges/Defaults": "Scalar [0,1]; default value none",
+      "Details/Notes": "Requires using ETL. Provided for learning technologies (teg) when ETL is used.",
+      "Description": "Progress ratio indicating the drop in the investment cost each time there is a doubling of the installed capacity.",
+      "Affected Equations/Variables": "Fundamental factor to describe the learning curve and thus effects nearly all equations and variables related to endogenous technology learning (ETL)."
+    },
+    {
+      "Name": "TL_SC0",
+      "Category": "User Input",
+      "Indexes": ["r", "teg"],
+      "Related Sets/Parameters": "(Alias: SC0)",
+      "Units/Ranges/Defaults": "Monetary unit / capacity unit [open]; default value: none",
+      "Details/Notes": "Requires using ETL. For learning technologies teg when ETL is used.",
+      "Description": "Initial specific investment costs.",
+      "Affected Equations/Variables": "Defines together with CCAP0 initial point of learning curve and affects thus the core equations and variables of endogenous technological learning (ETL)."
+    },
+    {
+      "Name": "TL_SEG",
+      "Category": "User Input",
+      "Indexes": ["r", "teg"],
+      "Related Sets/Parameters": "(Alias: SEG)",
+      "Units/Ranges/Defaults": "Integer [1-6]; default value: none",
+      "Details/Notes": "Requires using ETL. For learning technologies teg when ETL is used.",
+      "Description": "Number of segments.",
+      "Affected Equations/Variables": "Influences the piecewise linear approximation of the cumulative cost curve (EQ_COS, EQ_LA1, EQ_LA2)."
+    },
+    {
+      "Name": "TS_CYCLE",
+      "Category": "User Input",
+      "Indexes": ["r", "ts"],
+      "Related Sets/Parameters": "G_CYCLE",
+      "Units/Ranges/Defaults": "Number of days [1,∞); Default values: 365 for ts=ANNUAL, 7 for any ts above the WEEKLY level, 1 for any ts above the DAYNITE level",
+      "Details/Notes": "Recommended to be used whenever timeslice cycles are different from the default, instead of changing G_CYCLE.",
+      "Description": "Defines the length of the timeslice cycles under timeslice ts, in days, and thereby also the number of timeslice cycles under each parent.",
+      "Affected Equations/Variables": "Affects the calculation of actual timeslice lengths and number of timeslice cycles in various equations, notably storage and dispatching equations."
+    },
+    {
+      "Name": "UC_ACT",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "p", "s"],
+      "Related Sets/Parameters": "uc_n, uc_gmap_p",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints. Direct inheritance. Weighted aggregation.",
+      "Description": "Coefficient of the activity variable VAR_ACT in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_CAP",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "p"],
+      "Related Sets/Parameters": "uc_n, uc_gmap_p",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints.",
+      "Description": "Coefficient of the activity variable VAR_CAP in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_CLI",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "item"],
+      "Related Sets/Parameters": [],
+      "Units/Ranges/Defaults": "Dimensionless [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Used in user constraints. Climate variable can be at least any of CO2-GTC, CO2-ATM, CO2-UP, CO2-LO, FORCING, DELTA-ATM, DELTA-LO (for carbon). See Appendix on Climate Module for details.",
+      "Description": "Multiplier of climate variable in user constraint",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_COMCON",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "c", "s"],
+      "Related Sets/Parameters": "uc_n, uc_gmap_c",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints. No inheritance/aggregation (might be changed in the future).",
+      "Description": "Coefficient of the commodity consumption variable VAR_COMCON in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_COMNET",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "c", "s"],
+      "Related Sets/Parameters": "uc_n, uc_gmap_c",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints. No inheritance/aggregation (might be changed in the future).",
+      "Description": "Coefficient of the net commodity production variable VAR_COMNET in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_COMPRD",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "c", "s"],
+      "Related Sets/Parameters": "uc_n, uc_gmap_c",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints. No inheritance/aggregation (might be changed in the future).",
+      "Description": "Coefficient of the total commodity production variable VAR_COMPRD in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_CUMACT",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "r", "p", "y1", "y2"],
+      "Related Sets/Parameters": "ACT_CUM",
+      "Units/Ranges/Defaults": "Dimensionless [open]; default value: none; I/e: N/A",
+      "Details/Notes": "Used in cumulative user constraints only.",
+      "Description": "Multiplier of cumulative process activity variable in user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UC, EQ(l)_UCR, VAR_CUMFLO"
+    },
+    {
+      "Name": "UC_CUMCOM",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "r", "type", "c", "y1", "y2"],
+      "Related Sets/Parameters": "COM_CUMNET, COM_CUMPRD",
+      "Units/Ranges/Defaults": "Dimensionless [open]; default value: none; I/e: N/A",
+      "Details/Notes": "Used in cumulative user constraints only. Type=NET/PRD determines the variable referred to (CUMNET/ CUMPRD).",
+      "Description": "Multiplier of cumulative commodity variable in user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UC, EQ(l)_UCR, VAR_CUMCOM"
+    },
+    {
+      "Name": "UC_CUMFLO",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "r", "p", "c", "y1", "y2"],
+      "Related Sets/Parameters": "FLO_CUM",
+      "Units/Ranges/Defaults": "Dimensionless [open]; default value: none; I/e: N/A",
+      "Details/Notes": "Used in cumulative user constraints only.",
+      "Description": "Multiplier of cumulative process flow variable in user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UC, EQ(l)_UCR, VAR_CUMFLO"
+    },
+    {
+      "Name": "UC_FLO",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "p", "c", "s"],
+      "Related Sets/Parameters": "uc_n",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints. Direct inheritance. Weighted aggregation.",
+      "Description": "Coefficient of the flow VAR_FLO variable in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_IRE",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "p", "c", "s"],
+      "Related Sets/Parameters": "uc_n",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints. Direct inheritance. Weighted aggregation.",
+      "Description": "Coefficient of the trade variable VAR_IRE in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_NCAP",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "p"],
+      "Related Sets/Parameters": "uc_n, uc_gmap_p",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default: i/e: STD",
+      "Details/Notes": "Used in user constraints.",
+      "Description": "Coefficient of the investment variable VAR_NCAP in a user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_RHS",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "lim"],
+      "Related Sets/Parameters": "uc_n, uc_r_sum, uc_t_sum, uc_ts_sum",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default i/e: none",
+      "Details/Notes": "Used in user constraints.",
+      "Description": "RHS constant with bound type of bd (lim) of a user constraint.",
+      "Affected Equations/Variables": "RHS (right-hand side) constant of a user constraint, which is summing over regions (uc_r_sum), periods (uc_t_sum) and timeslices (uc_ts_sum) (EQ(l)_UC)."
+    },
+    {
+      "Name": "UC_RHSR",
+      "Category": "User Input",
+      "Indexes": ["r", "uc_n", "lim"],
+      "Related Sets/Parameters": "uc_n, uc_r_each, uc_t_sum, uc_ts_sum",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default i/e: none",
+      "Details/Notes": "Used in user constraints.",
+      "Description": "RHS constant with bound type of bd (lim) of a user constraint.",
+      "Affected Equations/Variables": "RHS constant of user constraints, which are generated for each region (uc_r_each) and are summing over periods (uc_t_sum) and timeslices (uc_ts_sum) (EQ(l)_UCR)."
+    },
+    {
+      "Name": "UC_RHSRT",
+      "Category": "User Input",
+      "Indexes": ["r", "uc_n", "datayear", "lim"],
+      "Related Sets/Parameters": "uc_n, uc_r_each, uc_t_each, uc_t_succ, uc_ts_sum",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default i/e: MIG",
+      "Details/Notes": "Used in user constraints.",
+      "Description": "RHS constant with bound type of bd (lim) of a user constraint.",
+      "Affected Equations/Variables": "RHS constant of user constraints, which are generated for each region (uc_r_each) and period (uc_t_each) and are summing over timeslices (uc_ts_sum) (EQ(l)_UCRT). If dynamic, constraints will be generated between two successive periods (EQ(l)_UCRSU)."
+    },
+    {
+      "Name": "UC_RHSRTS",
+      "Category": "User Input",
+      "Indexes": ["r", "uc_n", "datayear", "s", "lim"],
+      "Related Sets/Parameters": "uc_n, uc_r_each, uc_t_each, uc_t_succ, uc_ts_each",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default i/e: MIG",
+      "Details/Notes": "Used in user constraints. No inheritance / aggregation, unless the target timeslice level is specified by UC_TSL.",
+      "Description": "RHS constant with bound type of bd (lim) of a user constraint.",
+      "Affected Equations/Variables": "RHS constant of user constraints, which are generated for each specified region (uc_r_each), period (uc_t_each) and timeslice (uc_ts_each) (EQ(l)_UCRTS). If dynamic, constraints will be generated between two successive periods (EQ(l)_UCRSUS)."
+    },
+    {
+      "Name": "UC_RHST",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "datayear", "lim"],
+      "Related Sets/Parameters": "uc_n, uc_r_sum, uc_t_each, uc_t_succ, uc_ts_sum",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default i/e: MIG",
+      "Details/Notes": "Used in user constraints.",
+      "Description": "RHS constant with bound type of bd (lim) of a user constraint.",
+      "Affected Equations/Variables": "RHS constant of user constraints, which are generated for each specified period (uc_t_each) and are summing over regions (uc_r_sum) and timeslices (uc_ts_sum) (EQ(l)_UCT). If dynamic, constraints will be generated between two successive periods (EQ(l)_UCSU)."
+    },
+    {
+      "Name": "UC_RHSTS",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "datayear", "s", "lim"],
+      "Related Sets/Parameters": "uc_n, uc_r_sum, uc_t_each, uc_t_succ, uc_ts_each",
+      "Units/Ranges/Defaults": "None [open]; default value: none; Default i/e: MIG",
+      "Details/Notes": "Used in user constraints. No inheritance/aggregation. Binding user constraints are defined using bound types lim=UP/LO/FX. Non-binding (free) user constraints can be defined using the lim type lim=N.",
+      "Description": "RHS constant with bound type of bd (lim) of a user constraint.",
+      "Affected Equations/Variables": "RHS constant of user constraints, which are generated for each period (uc_t_each) and timeslice (uc_ts_each) and are summing over regions (uc_r_sum) (EQ(l)_UCTS). If dynamic, constraints will be generated between two successive periods (EQ(l)_UCSUS)."
+    },
+    {
+      "Name": "UC_TIME",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "r", "datayear"],
+      "Related Sets/Parameters": [],
+      "Units/Ranges/Defaults": "Dimensionless [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Used in user constraints.",
+      "Description": "Multiplier for the number of years in model periods (static UCs), or between milestone years (dynamic UCs)",
+      "Affected Equations/Variables": "Adds a time constant to the RHS side. EQ(l)_UCXXX"
+    },
+    {
+      "Name": "UC_UCN",
+      "Category": "User Input",
+      "Indexes": ["uc_n", "side", "r", "datayear", "ucn"],
+      "Related Sets/Parameters": "UC_RHSRT",
+      "Units/Ranges/Defaults": "Dimensionless [open]; default value: none; Default i/e: STD",
+      "Details/Notes": "Only taken into account if the user constraint is by region & period, and summing over timeslices and the RHS side is activated (EQ(l)_UCRSU).",
+      "Description": "Multiplier of user constraint variable in another user constraint.",
+      "Affected Equations/Variables": "EQ(l)_UCRSU, VAR_UCRT"
+    },
+    {
+      "Name": "VDA_EMCB",
+      "Category": "User Input",
+      "Indexes": ["r", "datayear", "c", "com"],
+      "Related Sets/Parameters": "FLO_EMIS, FLO_EFF",
+      "Units/Ranges/Defaults": "Emission units per flow units; default value: none; Default i/e: STD",
+      "Details/Notes": "Available in the VEDA shell. Any process-specific FLO_EMIS / FLO_EFF with the commodities c and com will override VDA_EMCB.",
+      "Description": "Emissions (com) from the combustion of commodity (c) in region (r).",
+      "Affected Equations/Variables": "EQ_PTRANS"
+    },
+    {
+      "Name": "ALPH",
+      "Category": "Internal",
+      "Indexes": ["r", "kp", "teg"],
+      "Instances": "For learning technologies teg when ETL is used.",
+      "Description": "Axis intercept on cumulative cost axis for description of linear equation valid for segment kp.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": null, "Affected Equations/Variables": "EQ_COS"
+    },
+    {
+      "Name": "BETA",
+      "Category": "Internal",
+      "Indexes": ["r", "kp", "teg"],
+      "Instances": "For learning technologies teg when ETL is used.",
+      "Description": "Slope of cumulative cost curve in segment kp ( = specific investment cost).",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": null, "Affected Equations/Variables": "EQ_COS"
+    },
+    {
+      "Name": "CCAPK",
+      "Category": "Internal",
+      "Indexes": ["r", "kp", "teg"],
+      "Instances": "For learning technologies teg when ETL is used.",
+      "Description": "Cumulative capacity at kinkpoint kp.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": null, "Affected Equations/Variables": "EQ_LA1, EQ_LA2"
+    },
+    {
+      "Name": "CCOSTK",
+      "Category": "Internal",
+      "Indexes": ["r", "kp", "teg"],
+      "Instances": "For learning technologies teg when ETL is used.",
+      "Description": "Cumulative investment cost at kinkpoint kp.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": null, "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CCOSTM",
+      "Category": "Internal",
+      "Indexes": ["r", "teg"],
+      "Instances": "For learning technologies teg when ETL is used.",
+      "Description": "Maximum cumulative cost based on CCAPM.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "CCAPM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "COEF_AF",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "t", "p", "s", "bd"],
+      "Instances": "For each technology, at the level of process operation (PRC_TSL).",
+      "Description": "Availability coefficient of the capacity (new investment variable VAR_NCAP plus still existing past investments NCAP_PASTI) in EQ(l)_CAPACT; COEF_AF is derived from the availability input parameters NCAP_AF, NCAP_AFA and NCAP_AFS taking into account any specified MULTI or SHAPE multipliers.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_AF, NCAP_AFA, NCAP_AFS, MULTI, SHAPE", "Affected Equations/Variables": "EQ(l)_CAPACT"
+    },
+    {
+      "Name": "COEF_CPT",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "t", "p"],
+      "Instances": "For each technology the amount of an investment (VAR_NCAP) available in the period.",
+      "Description": "Fraction of capacity built in period v that is available in period t; might be smaller than 1 due to NCAP_ILED in vintage period or the fact that the lifetime ends within a period.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_ILED, NCAP_TLIFE, D, B, E, M", "Affected Equations/Variables": "EQ(l)_CPT, EQ_OBJINV"
+    },
+    {
+      "Name": "COEF_ICOM",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "t", "p", "c"],
+      "Instances": "Whenever there is a commodity required during construction, the consuming being taken from the balance constraint (EQ(l)_COMBAL). Applied to the investment variable (VAR_NCAP) of period v in the commodity balance (EQ(l)_COMBAL) of period t. The duration during which the commodity is produced starts in the year B(v)+NCAP_ILED(v)–NCAP_CLED(v) and ends in the year B(v)+NCAP_ILED(v)–1.",
+      "Description": "Coefficient for commodity requirement during construction in period t due to investment decision in period v (see also NCAP_ICOM).",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_ICOM, NCAP_CLED, NCAP_ILED", "Affected Equations/Variables": "EQ(l)_COMBAL"
+    },
+    {
+      "Name": "COEF_OCOM",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "t", "p", "c"],
+      "Instances": "Whenever there is a commodity released during decommissioning, the production being added to the balance constraint (EQ(l)_COMBAL). Applied to the investment variable (VAR_NCAP) of period v in the commodity balance (EQ(l)_COMBAL) of period t. The release occurs during the decommissioning lifetime NCAP_DLIFE.",
+      "Description": "Coefficient for commodity release during decommissioning time in period t due to investment made in period v.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_OCOM, NCAP_DLIFE", "Affected Equations/Variables": "EQ(l)_COMBAL, EQ_OBJSALV"
+    },
+    {
+      "Name": "COEF_PTRAN",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "t", "p", "cg", "c", "com_grp"],
+      "Instances": "For each flow through a process.",
+      "Description": "Coefficient of flow variable of commodity c belonging to commodity group cg in EQ_PTRANS equation between the commodity groups cg and com_grp.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "FLO_FUNC, FLO_SUM", "Affected Equations/Variables": "EQ_PTRANS"
+    },
+    {
+      "Name": "COEF_PVT",
+      "Category": "Internal",
+      "Indexes": ["r", "t"],
+      "Instances": "For each region, the present value of the time in each period.",
+      "Description": "Coefficient for the present value of periods, used primarily for undiscounting the solution marginals.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "G_DRATE, G_DYEAR", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "COEF_RPTI",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "p"],
+      "Instances": "For each technology whose technical life (NCAP_TLIFE) is shorter than the period.",
+      "Description": "Number of repeated investment of process p in period v when the technical lifetime minus the construction time is shorter than the period duration; Rounded to the next largest integer number.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_TLIFE, NCAP_ILED, D", "Affected Equations/Variables": "EQ_OBJINV"
+    },
+    {
+      "Name": "COR_SALVD",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "p", "cur"],
+      "Instances": "For each technology existing past the end of the modelling horizon with decommissioning costs, adjustment in the objective function.",
+      "Description": "Correction factor for decommissioning costs taking into account technical discount rates and economic decommissioning times.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_DRATE, G_DRATE, NCAP_DELIF, NCAP_DLIFE, D, M", "Affected Equations/Variables": "EQ_OBJSALV"
+    },
+    {
+      "Name": "COR_SALVI",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "p", "cur"],
+      "Instances": "For each process extending past the end of the modelling horizon adjustment in the objective function.",
+      "Description": "Correction factor for investment costs taking into account technical discount rates, economic lifetimes and a user-defined discount shift (triggered by the control switch MIDYEAR (see Section 6.2 EQ_OBJ)).",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_DRATE, G_DRATE, NCAP_ELIFE, D, M, MIDYEAR", "Affected Equations/Variables": "EQ_OBJSALV"
+    },
+    {
+      "Name": "D",
+      "Category": "Internal",
+      "Indexes": ["t"],
+      "Instances": "For each period, D(t) = E(t)–B(t)+1.",
+      "Description": "Duration of period t.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "E, B", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "DUR_MAX",
+      "Category": "Internal",
+      "Indexes": [],
+      "Instances": "For the model.",
+      "Description": "Maximum of NCAP_ILED + NCAP_TLIFE + NCAP_DLAG + NCAP_DLIFE + NCAP_DELIF over all regions, periods and processes.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_ILED, NCAP_TLIFE, NCAP_DLAG, NCAP_DLIFE, NCAP_DELIF", "Affected Equations/Variables": "eachyear"
+    },
+    {
+      "Name": "LEAD",
+      "Category": "Internal",
+      "Indexes": ["t"],
+      "Instances": "For each milestone year.",
+      "Description": "Time between milestone years t–1 and t, in years. For the first milestone year t1, LEAD(t1)=M(t1)–B(t1)+1.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "M, B", "Affected Equations/Variables": "BUILDUP modifier"
+    },
+    {
+      "Name": "M",
+      "Category": "Internal",
+      "Indexes": ["v"],
+      "Instances": "For each period, if the duration of the period is even, the middle year of the period is B(t) + D(t)/2 – 1, if the period is uneven, the middle year is B(t) + [D(t)/2 – 0.5].",
+      "Description": "Middle year of period t.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "B, D", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "MINYR",
+      "Category": "Internal",
+      "Indexes": [],
+      "Instances": "For the model",
+      "Description": "Minimum year over t = M(t) – D(t) +1; used in objective function.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "M, D", "Affected Equations/Variables": "eachyear, eohyears, EQ_OBJ"
+    },
+    {
+      "Name": "MIYR_V1",
+      "Category": "Internal",
+      "Indexes": [],
+      "Instances": "For the model",
+      "Description": "First year of model horizon.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": null, "Affected Equations/Variables": null
+    },
+    {
+      "Name": "MIYR_VL",
+      "Category": "Internal",
+      "Indexes": [],
+      "Instances": "For the model",
+      "Description": "Last year of model horizon.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": null, "Affected Equations/Variables": "eachyear, eohyears"
+    },
+    {
+      "Name": "NTCHTEG",
+      "Category": "Internal",
+      "Indexes": ["r", "teg"],
+      "Instances": "For learning technologies teg when ETL with technology clusters is used.",
+      "Description": "Number of processes using the same key technology teg.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "CLUSTER", "Affected Equations/Variables": "EQ_CLU"
+    },
+    {
+      "Name": "PAT",
+      "Category": "Internal",
+      "Indexes": ["r", "p"],
+      "Instances": null,
+      "Description": "The internal parameter PAT describes the specific investment costs of the first unit. It is derived in COEF_ETL.ETL using PBT, SC0 and CCAP0. PAT does not occur directly in the equations, but is used in the calculation of equation coefficients.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "PBT, SC0, CCAP0", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PBT",
+      "Category": "Internal",
+      "Indexes": ["r", "p"],
+      "Instances": null,
+      "Description": "The learning index PBT is an internal parameter calculated in COEF_ETL.ETL. It is derived from the progress ratio PRAT using the formula: PBT(r,p) = -log(PRAT(r,p))/log(2). PBT does not occur directly in the equations, but is used in the calculation of equation coefficients.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "PRAT", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PYR_V1",
+      "Category": "Internal",
+      "Indexes": [],
+      "Instances": "For the model",
+      "Description": "Minimum of pastyears and MINYR.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "pastyear, MINYR", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "SALV_DEC",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "p", "k", "ll"],
+      "Instances": "For those technologies with salvage costs incurred after the model horizon the contribution to the objective function.",
+      "Description": "Salvage proportion of decommissioning costs made at period v with commissioning year k.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_DELIF", "Affected Equations/Variables": "SALVDECOM"
+    },
+    {
+      "Name": "SALV_INV",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "p", "k"],
+      "Instances": "For those technologies with salvage costs incurred after the model horizon the contribution to the objective function.",
+      "Description": "Salvage proportion of investment made at period v with commissioning year k.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_ELIFE, NCAP_FDR", "Affected Equations/Variables": "SALVINV"
+    },
+    {
+      "Name": "SALVSURV",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "p", "k"],
+      "Instances": "For those technologies with surveillance costs incurred after the model horizon the contribution to the objective function.",
+      "Description": "Salvage proportion of surveillance costs made at period v with commissioning year k.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_TLIFE, NCAP_DLAG", "Affected Equations/Variables": "SALVSURV"
+    },
+    {
+      "Name": "SHAPE_CPT",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "t", "p"],
+      "Instances": null,
+      "Description": "Age-dependent SHAPE multiplier of the parameter COEF_CPT.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_CPX, SHAPE", "Affected Equations/Variables": "COEF_CPT"
+    },
+    {
+      "Name": "SHAPE_FOM",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "y", "p"],
+      "Instances": null,
+      "Description": "Age-dependent SHAPE multiplier of the parameter NCAP_FOM.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_FOMX, SHAPE", "Affected Equations/Variables": "OBJ_FOM"
+    },
+    {
+      "Name": "SHAPE_FSUB",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "y", "p"],
+      "Instances": null,
+      "Description": "Age-dependent SHAPE multiplier of the parameter NCAP_FSUB.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_FSUBX, SHAPE", "Affected Equations/Variables": "OBJ_FSB"
+    },
+    {
+      "Name": "SHAPE_FTAX",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "y", "p"],
+      "Instances": null,
+      "Description": "Age-dependent SHAPE multiplier of the parameter NCAP_FTAX.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "NCAP_FTAXX, SHAPE", "Affected Equations/Variables": "OBJ_FTX"
+    },
+    {
+      "Name": "SHAPE_FLO",
+      "Category": "Internal",
+      "Indexes": ["r", "v", "y", "p", "cg1", "cg2"],
+      "Instances": null,
+      "Description": "Age-dependent SHAPE multiplier of the parameters FLO_FUNC/FLO_SUM.",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": "FLO_FUNCX, SHAPE", "Affected Equations/Variables": "COEF_PTRAN"
+    },
+    {
+      "Name": "YEARVAL",
+      "Category": "Internal",
+      "Indexes": ["y"],
+      "Instances": "A value for each year.",
+      "Description": "Numerical value of year index (e.g. YEARVAL('1984') equals 1984).",
+      "Units/Ranges/Defaults": null, "Related Sets/Parameters": null, "Affected Equations/Variables": null
+    },
+    // Reporting Parameters (from Table 15)
+    {
+      "Name": "AGG_OUT",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity production by an aggregation process: Production of commodity (c) in period (t) and timeslice (s) from other commodities aggregated into c.",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": null, "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CAP_NEW",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "p", "t", "uc_n"],
+      "Description": "Newly installed capacity and lumpsum investment by vintage and commissioning period: New capacity and lumpsum investment of process (p) of vintage (v) commissioned in period (t).",
+      "Units/Ranges/Defaults": "Capacity Units", "Details/Notes": "uc_n indicates UC tags INSTCAP and LUMPINV", "Related Sets/Parameters": "VAR_NCAP, VAR_DNCAP", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CM_RESULT",
+      "Category": "Reporting",
+      "Indexes": ["c", "t"],
+      "Description": "Climate module results for the levels of climate variable (c) in period (t).",
+      "Units/Ranges/Defaults": "Various climate units", "Details/Notes": null, "Related Sets/Parameters": "VAR_Climate", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CM_MAXC_M",
+      "Category": "Reporting",
+      "Indexes": ["c", "t"],
+      "Description": "Climate module results for the duals of constraint related to climate variable (c) in period (t).",
+      "Units/Ranges/Defaults": "Dual values / Marginals", "Details/Notes": null, "Related Sets/Parameters": "EQ_CLIMAX", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_ACTC",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "uc_n"],
+      "Description": "Annual activity costs: Annual undiscounted variable costs (caused by ACT_COST) in period (t) associated with the operation (activity) of a process (p) with vintage period (v). Additional indicator (uc_n) for start-up costs.",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "ACT_COST, VAR_ACT", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_COMC",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c"],
+      "Description": "Annual commodity costs: Annual undiscounted costs for commodity (c) (caused by COM_CSTNET and COM_CSTPRD) in period (t).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "COM_CSTNET, COM_CSTPRD", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_COME",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c"],
+      "Description": "Annual elastic demand cost term: Annual costs (losses) due to elastic demand changes of commodity (c). When elastic demands are used the objective function describes the total surplus of producers and consumers, which reaches its maximum in the equilibrium of demand and supply.",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "VAR_ELAST", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_COMX",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c"],
+      "Description": "Annual commodity taxes/subsidies: Annual undiscounted taxes and subsidies for commodity (c) (caused by COM_TAXNET, COM_SUBNET, COM_TAXPRD, COM_SUBPRD) in period (t).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "COM_TAX*, COM_SUB*", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_DAM",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c"],
+      "Description": "Annual damage cost term: Annual undiscounted commodity (c) related costs, caused by DAM_COST, in period (t).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "DAM_COST", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_DECC",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p"],
+      "Description": "Annual decommissioning costs: Annual undiscounted decommissioning costs (caused by NCAP_DCOST and NCAP_DLAGC) in period (t), associated with the dismantling of process (p) with vintage period (v).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "NCAP_DCOST, NCAP_DLAGC", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_FIXC",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p"],
+      "Description": "Annual fixed operating and maintenance costs: Annual undiscounted fixed operating and maintenance costs (caused by NCAP_FOM) in period (t) associated with the installed capacity of process (p) with vintage period (v).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "NCAP_FOM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_FIXX",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p"],
+      "Description": "Annual fixed taxes/subsidies: Annual undiscounted fixed operating and maintenance costs (caused by NCAP_FTAX, NCAP_FSUB) in period (t) associated with the installed capacity of process (p) with vintage period (v).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "NCAP_FTAX, NCAP_FSUB", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_FLOC",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c"],
+      "Description": "Annual flow costs (including import/export prices): Annual undiscounted flow related costs (caused by FLO_COST, FLO_DELV, IRE_PRICE) in period (t) associated with a commodity (c) flow in/out of a process (p) with vintage period (v) as well as capacity related commodity flows (specified by NCAP_COM, NCAP_ICOM, NCAP_OCOM).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "FLO_COST, FLO_DELV, IRE_PRICE", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_FLOX",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c"],
+      "Description": "Annual flow taxes/subsidies: Annual undiscounted flow related costs (caused by FLO_TAX, FLO_SUB) in period (t) associated with a commodity (c) flow in/out of a process (p) with vintage period (v) as well as capacity related commodity flows (specified by NCAP_COM, NCAP_ICOM, NCAP_OCOM).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "FLO_TAX, FLO_SUB", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_INVC",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "uc_n"],
+      "Description": "Annual investment costs: Annual undiscounted investment costs (caused by NCAP_COST) in period (t) spread over the economic lifetime (NCAP_ELIFE) of a process (p) with vintage period (v).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "NCAP_COST", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_INVX",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "uc_n"],
+      "Description": "Annual investment taxes/subsidies: Annual undiscounted investment costs (caused by NCAP_ITAX, NCAP_ISUB) in period (t) spread over the economic lifetime (NCAP_ELIFE) of a process (p) with vintage period (v).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "NCAP_ITAX, NCAP_ISUB", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_IREC",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c"],
+      "Description": "Annual implied costs of endogenous trade: Annual undiscounted costs from endogenous imports/exports of commodity (c) in period (t) associated with process (p) and vintage period (v), valued according to the marginal(s) of the trade equation of process p.",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "VAR_IRE", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_PVC",
+      "Category": "Reporting",
+      "Indexes": ["uc_n", "r", "c"],
+      "Description": "Total discounted costs by commodity (optional, activate by setting RPT_OPT('OBJ','1')=1): Total present value of commodity-related costs in the base year, by type (with types COM, ELS, DAM). See Part III, Section 3.10 on the reporting options, and Table 16 below for acronym explanations.",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "VAR_COMNET, VAR_COMPRD, VAR_ELAST, CST_DAM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_PVP",
+      "Category": "Reporting",
+      "Indexes": ["uc_n", "r", "p"],
+      "Description": "Total discounted costs by process (optional, activate by setting RPT_OPT('OBJ','1')=1): Total present value of process-related costs in the base year, by type (with types INV, INV+, FIX, ACT, FLO, IRE, where INV+ is only used for the split according to hurdle rate). See Part III, Section 3.10 on the reporting options, and Table 16 below for acronym explanations.",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "CST_INVC, CST_INVX, CST_FIXC, CST_FIXX, CST_ACTC, CST_FLOC, CST_FLOX, CST_IREC", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_SALV",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "p"],
+      "Description": "Salvage values of capacities at EOH+1: Salvage value of investment cost, taxes and subsidies of process (p) with vintage period (v), for which the technical lifetime exceeds the end of the model horizon, value at year EOH+1.",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "EQ_OBJSALV", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "CST_TIME",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "s", "uc_n"],
+      "Description": "Discounted value of time by period: Present value of the time in each model period (t) by region (r), with s='ANNUAL' and uc_n='COST'/'LEVCOST' depending on whether the $SET ANNCOST LEV reporting option has been used.",
+      "Units/Ranges/Defaults": "Year", "Details/Notes": null, "Related Sets/Parameters": "Time_NPV", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "EQ_PEAK.L",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Peaking Constraint Slack: Level of the peaking equation (EQ_PEAK) of commodity (c) in period (t) and timeslice (s).",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": "EQ_PEAK", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "EQE_COMBAL.L",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Slack/Levels: Level of the commodity balance equation (EQE_COMBAL) of commodity (c) in period (t) and timeslice (s), where the equation is a strict equality.",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": "EQE_COMBAL", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "EQG_COMBAL.L",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Slack/Levels: Level of the commodity balance equation (EQG_COMBAL) of commodity (c) in period (t) and timeslice (s), where the equation is an inequality.",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": "EQG_COMBAL", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "F_IN",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c", "s"],
+      "Description": "Commodity Consumption by Process: Input flow (consumption) of commodity (c) in period (t) and timeslice (s) into process (p) with vintage period (v), including exchange processes.",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_FLO, VAR_IRE", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "F_OUT",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c", "s"],
+      "Description": "Commodity Production by Process: Output flow (production) of commodity (c) in period (t) and timeslice (s) from process (p) with vintage period (v), including exchange processes.",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_FLO, VAR_IRE", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "OBJZ.L",
+      "Category": "Reporting",
+      "Indexes": [],
+      "Description": "Total discounted system cost: Level of the ObjZ variable, equal to the value of the objective function.",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "EQ_OBJ", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "P_OUT",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p", "c", "s"],
+      "Description": "Commodity Flow Levels by Process (set RPT_OPT(NRG_TYPE,'1')=1 to activate, see Part III): Output flow level (power level) of commodity (c) in period (t) and timeslice (s) of process (p). By default only Output levels are reported, but with RPT_OPT(NRG_TYPE,'3')=2, input levels are reported as negative values.",
+      "Units/Ranges/Defaults": "Power Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_FLO", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_ACTL",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "s"],
+      "Description": "Process Activity: Level value of activity variable (VAR_ACT) in period (t), timeslice (s) of process (p) in vintage period (v).",
+      "Units/Ranges/Defaults": "Activity Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_ACT", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_ACTM",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "s"],
+      "Description": "Process Activity – Marginals: Undiscounted annual reduced costs of activity variable (VAR_ACT) in period (t) and timeslice (s) of process (p) with vintage period (v); when the variable is at its lower (upper) bound, the reduced cost describes the increase (decrease) in the objective function caused by an increase of the lower (upper) bound by one unit; the reduced cost can also be interpreted as the necessary decrease or increase of the cost coefficient of the activity variable in the objective function, for the activity variable to leave its lower (upper) bound.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "VAR_ACTM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_CAPL",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p"],
+      "Description": "Technology Capacity: Capacity of process (p) in period (t), derived from VAR_NCAP in previous periods summed over all vintage periods. For still existing past investments, see PAR_PASTI.",
+      "Units/Ranges/Defaults": "Capacity Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_CAP, VAR_NCAP, NCAP_PASTI", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_CAPLO",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p"],
+      "Description": "Capacity Lower Limit: Lower bound on capacity variable (CAP_BND('LO')), only reported, if the lower bound is greater than zero.",
+      "Units/Ranges/Defaults": "Capacity Units", "Details/Notes": null, "Related Sets/Parameters": "CAP_BND", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_CAPM",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p"],
+      "Description": "Technology Capacity – Marginals: Undiscounted reduced costs of capacity variable (VAR_CAP); only reported in those cases, in which the capacity variable is generated (bound CAP_BND specified or endogenous technology learning is used); the reduced costs describe in the case, that the capacity variable is at its lower (upper) bound, the cost increase (decrease) of the objective function caused by an increase of the lower (upper) bound by one unit. The reduced cost is undiscounted with COEF_PVT.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "VAR_CapM, COEF_PVT", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_CAPUP",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p"],
+      "Description": "Capacity Upper Limit: Upper bound on capacity variable (CAP_BND('UP')), only reported, if upper bound is smaller than infinity.",
+      "Units/Ranges/Defaults": "Capacity Units", "Details/Notes": null, "Related Sets/Parameters": "CAP_BND", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_COMBALEM",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Slack/Levels – Marginals: Undiscounted annual shadow price of commodity balance (EQE_COMBAL) being a strict equality. The marginal value describes the cost increase in the objective function, if the difference between production and consumption is increased by one unit. The marginal value can be determined by the production side (increasing production), but can also be set by the demand side (e.g., decrease of consumption by energy saving or substitution measures).",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "EQE_COMBALM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_COMBALGM",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Slack/Levels – Marginals: Undiscounted annual shadow price of commodity balance (EQG_COMBAL) being an inequality (production being greater than or equal to consumption); positive number, if production equals consumption; the marginal value describes the cost increase in the objective function, if the difference between production and consumption is increased by one unit. The marginal value can be determined by the production side (increasing production), but can also be set by the demand side (e.g., decrease of consumption by energy saving or substitution measures).",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "EQG_COMBALM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_COMNETL",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Net: Level value of the variable corresponding the net level of a commodity (c) (VAR_COMNET). The net level of a commodity is equivalent to the total production minus total consumption of said commodity. It is only reported, if a bound or cost is specified for it or it is used in a user constraint.",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_Comnet", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_COMNETM",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Net – Marginal: Undiscounted annual reduced costs of the VAR_COMNET variable of commodity (c). It is only reported, if a bound or cost is specified for it or it is used in a user constraint.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "VAR_ComnetM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_COMPRDL",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Total Production: Level value of the commodity production variable (VAR_COMPRD). The variable represents the total production of a commodity. It is only reported, if a bound or cost is specified for it or it is used in a user constraint.",
+      "Units/Ranges/Defaults": "Commodity Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_Comprd", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_COMPRDM",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "c", "s"],
+      "Description": "Commodity Total Production – Marginal: Undiscounted annual reduced costs of the commodity production variable (VAR_COMPRD). It is only reported, if a bound or cost is specified for it or it is used in a user constraint.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "VAR_ComprdM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_CUMCST",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "uc_n", "c"],
+      "Description": "Cumulative costs by type (if constrained); Level of cumulative constraint for costs of type (uc_n) and currency (c) in region (r).",
+      "Units/Ranges/Defaults": "Currency", "Details/Notes": null, "Related Sets/Parameters": "VAR_CumCst", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_CUMFLOL",
+      "Category": "Reporting",
+      "Indexes": ["r", "p", "c", "v", "t"],
+      "Description": "Cumulative flow constraint – Levels: Level of cumulative constraint for flow of commodity (c) of process (p) between the year range (v–t).",
+      "Units/Ranges/Defaults": "Flow Units", "Details/Notes": null, "Related Sets/Parameters": "EQ_Cumflo", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_CUMFLOM",
+      "Category": "Reporting",
+      "Indexes": ["r", "p", "c", "v", "t"],
+      "Description": "Cumulative flow constraint – Marginals: Shadow price of cumulative constraint for flow of commodity (c) of process (p) between the year range (v–t). Not undiscounted.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "EQ_CumfloM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_EOUT",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c"],
+      "Description": "Electricity supply by technology and energy source (optional): Electricity output of electricity supply processes by energy source; based on using NRG_TMAP to identify electricity commodities, but excludes standard and storage processes having electricity as input. (Opted out by default – set RPT_OPT('FLO','5')=1 to activate; see Part III, Section 3.10).",
+      "Units/Ranges/Defaults": "Power Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_Eout", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_FLO",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c", "s"],
+      "Description": "Flow of commodity (c) entering or leaving process (p) with vintage period (v) in period (t).",
+      "Units/Ranges/Defaults": "Flow Units", "Details/Notes": "See F_IN/F_OUT", "Related Sets/Parameters": "VAR_FLO", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_FLO_M",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c", "s"],
+      "Description": "Discounted reduced costs of flow variable of commodity (c) in period (t) of process (p) with vintage period (v); the reduced costs describe that the flow variable is at its lower (upper) bound, and give the cost increase (decrease) of the objective function caused by an increase of the lower (upper) bound by one unit; the undiscounted reduced costs can be interpreted as the necessary decrease / increase of the cost coefficient of the flow variable, such that the flow will leave its lower (upper) bound.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": null, "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_IRE",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c", "s", "ie"],
+      "Description": "Inter-regional exchange flow of commodity (c) in period (t) via exchange process (p) entering region (r) as import (ie=’IMP’) or leaving region (r) as export (ie=’EXP’).",
+      "Units/Ranges/Defaults": "Flow Units", "Details/Notes": "See F_IN/F_OUT", "Related Sets/Parameters": "VAR_IRE", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_IREM",
+      "Category": "Reporting",
+      "Indexes": ["r", "v", "t", "p", "c", "s", "ie"],
+      "Description": "Discounted reduced costs of inter-regional exchange flow variable of commodity (c) in period (t) of exchange process (p) with vintage period (v); the reduced costs describe that the flow variable is at its lower (upper) bound, and give the cost increase (or decrease) of the objective function caused by an increase of the lower (upper bound) by one unit; the undiscounted reduced costs can be interpreted as the necessary decrease / increase of the cost coefficient of the flow variable in the objective function, such that the flow will leave its lower (upper) bound.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "EQ_IreM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_IPRIC",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p", "c", "s", "uc_n"],
+      "Description": "Inter-regional trade equations – Marginals: Undiscounted shadow price of the inter-regional trade equation of commodity (c) via exchange process (p) in period (t) and timeslice (s). The undiscounted shadow price can be interpreted as the import/export price of the traded commodity. Note: ucn={IMP/EXP}.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "EQ_IreM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_NCAPL",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p"],
+      "Description": "Technology Investment – New capacity: Level value of investment variable (VAR_NCAP) of process (p) in period (v).",
+      "Units/Ranges/Defaults": "Capacity Units", "Details/Notes": "Note v=t for this variable.", "Related Sets/Parameters": "VAR_Ncap", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_NCAPM",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p"],
+      "Description": "Technology Investment – Marginals: Undiscounted reduced costs of investment variable (VAR_NCAP) of process (p); only reported, when the capacity variable is at its lower or upper bound; the reduced costs describe in the case, that the investment variable is at its lower (upper) bound, the cost increase (decrease) of the objective function caused by an increase of the lower (upper) bound by one unit; the undiscounted reduced costs can be interpreted as the necessary decrease / increase in the investment cost coefficient, such that the investment variable will leave its lower (upper) bound.",
+      "Units/Ranges/Defaults": "Marginal Costs", "Details/Notes": null, "Related Sets/Parameters": "VAR_NcapM", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_NCAPR",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p", "uc_n"],
+      "Description": "Technology Investment – BenCost + ObjRange (see Part III, Section 3.10 for more details): Cost-benefit and ranging indicators for process (p) in period (t), where uc_n is the name of the indicator: COST, CGAP, GGAP, RATIO, GRATIO, RNGLO, RNGUP.",
+      "Units/Ranges/Defaults": "Varies", "Details/Notes": null, "Related Sets/Parameters": "VAR_NcapR", "Affected Equations/Variables": null
+    },
+    {
+      "Name": "PAR_PASTI",
+      "Category": "Reporting",
+      "Indexes": ["r", "t", "p", "v"],
+      "Description": "Technology Capacity: Residual capacity of past investments (NCAP_PASTI) of process (p) still existing in period (t), where vintage (v) is set to '0' to distinguish residual capacity from new capacity.",
+      "Units/Ranges/Defaults": "Capacity Units", "Details/Notes": null, "Related Sets/Parameters": "VAR_Cap", "Affected Equations/Variables": null
+    }
+  ]
+}

@@ -1,2 +1,0 @@
-[console_scripts]
-dd-converter = dd_converter.__main__:main

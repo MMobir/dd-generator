@@ -1,164 +1,1072 @@
 {
-  "sets": {
-    "com": {
-      "index": null,
-      "description": "The set of all commodities in the model, a user-defined list in all regions, and a subset of the commodity group set cg. Aliases include com1, com2, com3."
+  "sets": [
+    {
+      "Set ID/Indexes": "age",
+      "Alias": ["life", "jot"],
+      "Description": "Index for age (number of years since installation) into a parameter shaping curve; default elements 1–200.",
+      "Category": "User Input"
     },
-    "prc": {
-      "index": null,
-      "description": "The set containing all processes of the model, a user-defined list in all regions. Alias is p."
+    {
+      "Set ID/Indexes": "all_r",
+      "Alias": "all_reg",
+      "Description": "Set of all regions, internal as well as external; a region is defined as internal by putting it in the internal region set (r), regions that are not member of the internal region set are per definition external.",
+      "Category": "User Input"
     },
-    "top": {
-      "index": ["r", "p", "c", "io"],
-      "description": "A multi-dimensional set that specifies for a process the commodities entering and leaving that process."
+    {
+      "Set ID/Indexes": "bd(lim)",
+      "Alias": null,
+      "Description": "Index of bound type; subset of the set lim having the internally fixed elements 'LO', 'UP', 'FX'.",
+      "Category": "Internal"
     },
-    "cg": {
-      "index": null,
-      "description": "The set comprising all commodity groups. Each commodity c is considered a commodity group with only one element. It's a user-defined list of all commodities and commodity groups in all regions. Aliases include com_grp, cg1, cg2, cg3, cg4. The initial elements are the members of com_type."
+    {
+      "Set ID/Indexes": "c (cg)",
+      "Alias": "com, com1, com2, com3",
+      "Description": "User defined list of all commodities in all regions; subset of cg.",
+      "Category": "User Input"
     },
-    "all_reg": {
-      "index": null,
-      "description": "The set containing all regions of the model, including both internal and external model regions. Alias is all_r."
+    {
+      "Set ID/Indexes": "cg",
+      "Alias": "com_grp, cg1, cg2, cg3, cg4",
+      "Description": "User defined list of all commodities and commodity groups (see Figure 2) in all regions.",
+      "Category": "User Input"
     },
-    "r": {
-      "index": ["all_reg"],
-      "description": "The set comprising the so-called internal model regions. It is a subset of the set all_reg, denoted as r(all_reg). Alias is reg."
+    {
+      "Set ID/Indexes": "clu (p)",
+      "Alias": null,
+      "Description": "Set of cluster technologies in endogenous technology learning.",
+      "Category": "User Input"
     },
-    "com_type": {
-      "index": null,
-      "description": "Indicator of commodity type; internally established as: 'DEM' (demand), 'NRG' (energy), 'MAT' (material), 'ENV' (environment), 'FIN' (financial). The predefined elements should never be deleted."
+    {
+      "Set ID/Indexes": "com_desc (r,c)",
+      "Alias": null,
+      "Description": "Commodities by region, only to facilitate different descriptions by region. The elements are pairs {r,c}, for which the description is specified according to the GAMS syntax.",
+      "Category": "User Input"
     },
-    "dem_sect": {
-      "index": null,
-      "description": "List of demand sectors; internally established as: 'AGR' (agriculture), 'RES' (residential), 'COM' (commercial and public services), 'IND' (industry), 'TRN' (transport), 'NE' (non-energy), 'OTH' (other). The predefined elements should not be deleted."
+    {
+      "Set ID/Indexes": "com_gmap (r,cg,c)",
+      "Alias": null,
+      "Description": "Mapping of commodity c to user-defined commodity group cg, including itself [set of triplets {r,cg,c} such that commodity c in in group cg in region r].",
+      "Category": "User Input"
     },
-    "age": {
-      "index": null,
-      "description": "Index for age (number of years since installation) into a parameter shaping curve; default elements 1–200. Aliases are life, jot."
+    {
+      "Set ID/Indexes": "com_lim (r,c,lim)",
+      "Alias": null,
+      "Description": "Definition of commodity balance equation type [set of triplets {r,c,lim} such that commodity c has a balance of type lim (lim='UP','LO','FX', 'N') in region r]; Default: for commodities of type NRG, DM and ENV production is greater or equal consumption, while for MAT and FIN commodities the balance is a strict equality.",
+      "Category": "User Input"
     },
-    "bd": {
-      "index": ["lim"],
-      "description": "Index of bound type; subset of lim, having the internally fixed elements 'LO', 'UP', 'FX'. Alias is bnd_type, lim."
+    {
+      "Set ID/Indexes": "com_off (r,c,y1,y2)",
+      "Alias": null,
+      "Description": "Specifying that the commodity c in region r is not available between the years y1 and y2 [set of quadruplets {r,c,y1,y2} such that commodity c is unavailable from years y1 to y1 in region r] ; note that y1 may be 'BOH' for the first year of the first period and y2 may be 'EOH' for the last year of the last period.",
+      "Category": "User Input"
     },
-    "lim": {
-      "index": null,
-      "description": "Index of limit types; internally fixed = 'LO', 'UP', 'FX' and 'N'. Alias is lim_type, l."
+    {
+      "Set ID/Indexes": "com_peak (r,cg)",
+      "Alias": null,
+      "Description": "Set of pairs {r,cg} such that a peaking constraint is to be generated for commodity cg in region r; note that the peaking equation can be generated for a single commodity (cg also contains single commodities c) or for a group of commodities, e.g. electricity commodities differentiated by voltage level.",
+      "Category": "User Input"
     },
-    "nrg_type": {
-      "index": null,
-      "description": "Indicator of energy commodity type; initialized to predefined types."
+    {
+      "Set ID/Indexes": "com_pkts (r,cg,s)",
+      "Alias": null,
+      "Description": "Set of triplets {r,cg,s} such that a peaking constraint for a single commodity or a group of commodities cg (e.g. if the model differentiates between three electricity commodities: electricity on high, middle and low voltage ) is to be generated for the timeslice s; Default: all timeslices of com_ts; note that the peaking constraint will be binding only for the timeslice with the highest load.",
+      "Category": "User Input"
     },
-    "pastyear": {
-      "index": null,
-      "description": "Years for which past investments are specified; past years should usually be before the beginning of the first period but past investments may also be specified on later years. Aliases are pyr, modlyear, year."
+    {
+      "Set ID/Indexes": "com_tmap (r,com_type,c)",
+      "Alias": null,
+      "Description": "Mapping of commodities to the main commodity types (see com_type in Table 1); [set of triplets {r,com_type,c} such that commodity c has type com_type];",
+      "Category": "User Input"
     },
-    "prc_grp": {
-      "index": null,
-      "description": "List of process groups; internally established in MAPLIST.DEF."
+    {
+      "Set ID/Indexes": "com_ts (r,c,s)",
+      "Alias": null,
+      "Description": "Set of triplets {r,c,s} such that commodity c is available in timeslice s in region r; commodity balances will be generated for the given timeslices; Default: all timeslices of timeslice level specified by com_tsl.",
+      "Category": "User Input"
     },
-    "s": {
-      "index": ["tslvl"],
-      "description": "Timeslice divisions of a year, at any of the tslvl levels. Aliases are all_ts, ts, s2, sl."
+    {
+      "Set ID/Indexes": "com_tsl (r,c,tslvl)",
+      "Alias": null,
+      "Description": "Set of triplets {r,c,tslvl} such that commodity c is modelled on the timeslice level tslvl in region r; Default: 'ANNUAL timeslice level.",
+      "Category": "User Input"
     },
-    "side": {
-      "index": null,
-      "description": "Side indicator for defining coefficients in user constraints; internally fixed = 'LHS', 'RHS'."
+    {
+      "Set ID/Indexes": "com_type",
+      "Alias": null,
+      "Description": "Indicator of commodity type; initialized to the following elements: DEM, NRG, MAT, ENV, FIN. The predefined elements should never be deleted.",
+      "Category": "Internal"
     },
-    "t": {
-      "index": null,
-      "description": "Representative years for the model periods. Alias is milestonyr, tt."
+    {
+      "Set ID/Indexes": "com_unit (r,c,units_com)",
+      "Alias": null,
+      "Description": "Set of triplets {r,c,units_com} such that commodity c is expressed in unit units_com in region r.",
+      "Category": "User Input"
     },
-    "teg": {
-      "index": null,
-      "description": "Technologies modelled with endogenous technology learning."
+    {
+      "Set ID/Indexes": "costagg",
+      "Alias": null,
+      "Description": "List of cost aggregation types available for user-defined cost constraints: INV, INVTAX, INVSUB, INVTAXSUB, INVALL, FOM, FOMTAX, FOMSUB, FOMTAXSUB, FOMALL, COMTAX, COMSUB, COMTAXSUB, FLOTAX, FLOSUB, FLOTAXSUB, FIX, FIXTAX, FIXSUB, FIXTAXSUB, FIXALL, ALLTAX, ALLSUB, ALLTAXSUB",
+      "Category": "Internal"
     },
-    "tslvl": {
-      "index": null,
-      "description": "Timeslice level indicator; internally fixed = 'ANNUAL', 'SEASON', 'WEEKLY', 'DAYNITE'."
+    {
+      "Set ID/Indexes": "cur",
+      "Alias": null,
+      "Description": "User defined list of currency units.",
+      "Category": "User Input"
     },
-    "u": {
-      "index": null,
-      "description": "List of all units; maintained in the file UNITS.DEF. Aliases are units, units_com, units_cap, units_act."
+    {
+      "Set ID/Indexes": "datayear (year)",
+      "Alias": null,
+      "Description": "Years for which model input data are to be taken; No default.",
+      "Category": "User Input"
     },
-    "uc_grptyp": {
-      "index": null,
-      "description": "Fixed internal list of the key types of variables. Alias is e."
+    {
+      "Set ID/Indexes": "dem_sect",
+      "Alias": null,
+      "Description": "List of demand sectors; internally established in MAPLIST.DEF as: AGR, RES, COM, IND, TRN, NE, OTH. The predefined elements should not be deleted.",
+      "Category": "Internal"
     },
-    "uc_n": {
-      "index": null,
-      "description": "User specified unique indicator for a user constraint. Alias is ucn."
+    {
+      "Set ID/Indexes": "dem_smap (r,dem_sect,c)",
+      "Alias": null,
+      "Description": "Mapping of demands to main demand sectors (see dem_sect in Table 1); [set of triplets {r,dem_sect,c} such that commodity c belongs to sector dem_sect];",
+      "Category": "User Input"
     },
-    "uc_name": {
-      "index": null,
-      "description": "Fixed list of indicators associated with various attributes that can be referenced in user constraints to be applied when deriving a coefficient."
+    {
+      "Set ID/Indexes": "env_map (r,env_grp,c)",
+      "Alias": null,
+      "Description": "Mapping of environmental commodities to main types (see env_grp in Table 1); [set of triplets {r,env_grp,c} such that commodity c is of type env_grp].",
+      "Category": "User Input"
     },
-    "unit": {
-      "index": null,
-      "description": "List of capacity blocks that can be added in lumpy investment option; default elements 0–100; the element '0' describes the case when no capacity is added."
+    {
+      "Set ID/Indexes": "env_type",
+      "Alias": null,
+      "Description": "List of emission types; internally established in MAPLIST.DEF as: GHG, PEM, OEM, OTHENV",
+      "Category": "Internal"
     },
-    "com_ts": {
-      "index": ["r", "c", "s"],
-      "description": "Set of triplets {r,c,s} such that commodity c is available in timeslice s in region r; commodity balances will be generated for the given timeslices; Default: all timeslices of timeslice level specified by com_tsl."
+    {
+      "Set ID/Indexes": "ie",
+      "Alias": null,
+      "Description": "Export/import exchange index; internally fixed to the two elements: 'IMP' standing for import and 'EXP' standing for export.",
+      "Category": "Internal"
     },
-    "com_tsl": {
-      "index": ["r", "c", "tslvl"],
-      "description": "Set of triplets {r,c,tslvl} such that commodity c is modelled on the timeslice level tslvl in region r; Default: 'ANNUAL' timeslice level."
+    {
+      "Set ID/Indexes": "io",
+      "Alias": null,
+      "Description": "Input/Output index; internally fixed elements: 'IN', 'OUT'; used in combination with processes and commodities as indicator whether a commodity enters or leaves a process.",
+      "Category": "Internal"
     },
-    "com_unit": {
-      "index": ["r", "c", "units_com"],
-      "description": "Set of triplets {r,c,units_com} such that commodity c is expressed in unit units_com in region r."
+    {
+      "Set ID/Indexes": "j",
+      "Alias": ["jj"],
+      "Description": "Indicator for elastic demand steps and sequence number of the shape/multi curves; default elements 1–999.",
+      "Category": "Internal"
     },
-    "afs": {
-      "index": ["r", "t", "p", "s", "bd"],
-      "description": "Indicator that the internal parameter COEF_AF exists."
+    {
+      "Set ID/Indexes": "kp",
+      "Alias": null,
+      "Description": "Index for “kink” points in ETL formulation; currently limited to 1-6 {can be extended in <case>.run file by including SET KP / 1*n /; for n-kink points.",
+      "Category": "Internal"
     },
-    "bohyear": {
-      "index": ["*"],
-      "description": "Set allyear plus element 'BOH' (Beginning Of Horizon). The asterisk denotes a wildcard, so domain checking is disabled."
+    {
+      "Set ID/Indexes": "lim",
+      "Alias": ["lim_type", "l"],
+      "Description": "Index of limit types; internally fixed = 'LO', 'UP', 'FX', 'N'.",
+      "Category": "Internal"
     },
-    "dm_year": {
-      "index": ["year"],
-      "description": "Union of sets datayear and modlyear."
+    {
+      "Set ID/Indexes": "nrg_tmap (r,nrg_type,c)",
+      "Alias": null,
+      "Description": "Mapping of energy commodities to main types (see nrg_type in Table 1); [set of triplets {r,nrg_type,c} such that commodity c is of type nrg_type].",
+      "Category": "User Input"
     },
-    "eachyear": {
-      "index": ["year"],
-      "description": "Set of all years between scalars MINYR and MIYR_VL + DUR_MAX."
+    {
+      "Set ID/Indexes": "nrg_type",
+      "Alias": null,
+      "Description": "List of energy types; internally established in MAPLIST.DEF as: FOSSIL, NUCLR, SYNTH, FRERENEW, LIMRENEW, ELC, HTHEAT, LTHEAT, CONSRV. The predefined elements should not be deleted.",
+      "Category": "Internal"
     },
-    "miyr_1": {
-      "index": ["t"],
-      "description": "First milestonyr."
+    {
+      "Set ID/Indexes": "p",
+      "Alias": "prc",
+      "Description": "User defined list of all processes in all regions",
+      "Category": "User Input"
     },
-    "no_act": {
-      "index": ["r", "p"],
-      "description": "List of processes p in region r not requiring the activity variable; used in reduction algorithm."
+    {
+      "Set ID/Indexes": "pastyear (year)",
+      "Alias": "pyr",
+      "Description": "Years for which past investments are specified; pastyears usually lie before the beginning of the first period; No default.",
+      "Category": "User Input"
     },
-    "no_cap": {
-      "index": ["r", "p"],
-      "description": "List of processes p in region r not having any capacity related input parameters; used in reduction algorithm."
+    {
+      "Set ID/Indexes": "prc_actunt (r,p,cg,units_act)",
+      "Alias": null,
+      "Description": "Definition of activity [Set of quadruples such that the commodity group cg is used to define the activity of the process p, with units units_act, in region r].",
+      "Category": "User Input"
     },
-    "no_rvp": {
-      "index": ["r", "v", "p"],
-      "description": "New investment in process p in region r is not possible in period v and previously installed capacity does not exist anymore."
+    {
+      "Set ID/Indexes": "prc_aoff (r,p,y1,y2)",
+      "Alias": null,
+      "Description": "Set of quadruples {r,p,y1,y2} such that process p cannot operate (activity is zero) between the years y1 and y2 in region r; note that y1 may be 'BOH' for first year of first period and y2 may be 'EOH' for last year of last period.",
+      "Category": "User Input"
     },
-    "obj_1a": {
-      "index": ["r", "v", "p"],
-      "description": "Investment case small investment and no repetition of investment."
+    {
+      "Set ID/Indexes": "prc_capunt (r,p,cg,units_cap)",
+      "Alias": null,
+      "Description": "Definition of capacity unit of process p [set of quadruples {r,p,cg,units_cap} such that process p uses commodity group cg and units units_cap to define its capacity in region r].",
+      "Category": "User Input"
     },
-    "obj_1b": {
-      "index": ["r", "v", "p"],
-      "description": "Investment case small investment and repetition of investment."
+    {
+      "Set ID/Indexes": "prc_desc (r,p)",
+      "Alias": null,
+      "Description": "Processes by region, only to facilitate different descriptions by region. The elements are pairs {r,p}, for which the process description is specified according to the GAMS syntax.",
+      "Category": "User Input"
     },
-    "UC_SETS": {
-      "index": null,
-      "description": "A higher-level categorization of user constraint sets available in VEDA2.0, including types like R_E, R_S, T_E, T_S, TS_E, TS_S, and T_SUC. These are VEDA-specific ways of using underlying TIMES sets."
+    {
+      "Set ID/Indexes": "prc_dscncap (r,p)",
+      "Alias": null,
+      "Description": "Set of processes p to be modelled using the lumpy investment formulation in region r; Default: empty set. If p is not in this set, then any lumpy investment parameters provided for p are ignored.",
+      "Category": "User Input"
     },
-    "UC_INDEXES": {
-      "index": null,
-      "description": "Row identifiers for user constraint tables in VEDA2.0. They would correspond to the standard TIMES sets."
+    {
+      "Set ID/Indexes": "prc_foff (r,p,c,s,y1,y2)",
+      "Alias": null,
+      "Description": "Set of sextuples specifying that the flow of commodity c at process p and timeslice s is not available between the years y1 and y2 in region r; note that y1 may be 'BOH' for first year of first period and y2 may be 'EOH' for last year of last period.",
+      "Category": "User Input"
     },
-    "SOW": {
-      "index": null,
-      "description": "Mentioned as 'Scenarios of the World' in the context of stochastic programming. This is an index for the different scenarios in a stochastic model."
+    {
+      "Set ID/Indexes": "prc_grp",
+      "Alias": null,
+      "Description": "List of process groups; internally established in MAPLIST.DEF as: CHP, DISTR, DMD, ELE, HPL, IRE, MISC, PRE, PRV, PRW, REF, RENEW, XTRACT, NST, STG, STK, STS. The user may augment this list with any additional groups desired. The following predefined groups affect the data processing carried out by the model generator, and should not be deleted by the user: CHP, DISTR, DMD, ELE, HPL, IRE, PRE, PRV, PRW, REF, NST, STG, STK and STS.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "prc_map (r,prc_grp,p)",
+      "Alias": null,
+      "Description": "Grouping of processes into process groups (prc_grp) [set of triplets {r,prc_grp,p} such that process p belongs to group prc_grp in region r]. Note: used strictly for reporting purposes.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_noff (r,p,y1,y2)",
+      "Alias": null,
+      "Description": "Set of quadruples {r,p,y1,y2} such that new capacity of process p cannot be installed between the years y1 and y2 in region r; note that y1 may be 'BOH' for first year of first period and y2 may be 'EOH' for last year of last period.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_nstts (r,p,s)",
+      "Alias": null,
+      "Description": "Set of triplets {r,p,s} such that process p is a night storage device with charging timeslices s in region r; note that for night storage devices the commodity entering and the commodity leaving the storage may be different, as defined via the set top.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_pkaf (all_r,p)",
+      "Alias": null,
+      "Description": "Set of pairs {all_r,p} such that the availability factor (ncap_af) is to be used as value for the fraction of capacity of process p that can contribute to the peaking constraints (ncap_pkcnt), in region r.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_pkno (all_r,p)",
+      "Alias": null,
+      "Description": "Set of pairs {all_r,p}such that process p cannot be used in the peaking constraints in region r.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_rcap (r,p)",
+      "Alias": null,
+      "Description": "Set of pairs {r,p}such that early retirements are activated for process p in region r.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_ts (all_r,p,s)",
+      "Alias": "prc_ts2",
+      "Description": "Set of triplets {all_r,p,s} such that process p can operate at timeslice s in region r; Default: all timeslices on the timeslice level specified by prc_tsl.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_tsl (r,p,tslvl)",
+      "Alias": null,
+      "Description": "Set of triplets {r,p,tslvl} such that process p can operate at timeslice level tslvl in region r; Default: 'ANNUAL' timeslice level.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "prc_vint (r,p)",
+      "Alias": null,
+      "Description": "Set of processes p that are vintaged technologies in region r, i.e. technical characteristics are tied to when the capacity was installed, not the current period; Default: process is not vintaged; note that vintaging increases the model size.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "r (all_reg)",
+      "Alias": "reg",
+      "Description": "Set of internal regions; Subset of all_r.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "s",
+      "Alias": "all_ts, ts, s2, sl",
+      "Description": "Set of all timeslices (define the sub-annual divisions of a period). Timeslices effectively defined for specific processes and technologies are subsets of this set.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "side",
+      "Alias": null,
+      "Description": "Index of constraint sides; internally fixed to the elements 'LHS', 'RHS'",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "t (year)",
+      "Alias": "milestonyr, tt",
+      "Description": "Set of representative years (middle years) for the model periods within the modelling horizon.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "teg (p)",
+      "Alias": null,
+      "Description": "Set of technologies selected for endogenous technology learning; Subset of set p; if p not in teg, then any ETL investment parameters provided are ignored.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "top (r,p,c,io)",
+      "Alias": null,
+      "Description": "RES topology definition indicating that commodity c enters (io=’IN’) or leaves (io='OUT') the process p [set of quadruples {r,p,c,io} such that process p has a flow of commodity c with orientation io in region r].",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "top_ire (all_reg,com, all_r,c,p)",
+      "Alias": null,
+      "Description": "RES topology definition for trade between regions [Set of quintuples indicating that commodity com from region all_reg is traded (exported) via exchange process p (where it is imported) into region all_r as commodity c]; note: the name of the traded commodity may be different in the two regions. By using all_reg=all_r, one can also define bi-directional processes within a region, e.g. for modeling transmission lines.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "ts_group (all_r,tslvl,s)",
+      "Alias": null,
+      "Description": "Set of triplets {all_r,tslvl,s} such that timeslice s belongs to the timeslice level tslvl in region r; needed for the definition of the timeslice tree; only default is that the 'ANNUAL' timeslice belongs to the 'ANNUAL' timeslice level.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "ts_map (all_r,s,ts)",
+      "Alias": null,
+      "Description": "Set of triplets {all_r,s,ts} such that s is an intermediate node s of the timeslice tree (neither 'ANNUAL' nor the lowest level), and ts is a node directly under s in region r; the set is further extended by allowing ts = s (see figure 1).",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "ts_off (r,ts,y1,y2)",
+      "Alias": null,
+      "Description": "Set of quadruples {r,ts,y1,y2} such that the timeslice branch consisting of the timeslice ts and all the timeslices below it will not be taken into account in the model between the years y1 and y2 in region r; note that y1 may be 'BOH' for first year of first period and y2 may be 'EOH' for last year of last period. The timeslice ts specified in ts_off must be directly below ANNUAL in the timeslice tree specified (usually at the SEASON level).",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "tslvl",
+      "Alias": null,
+      "Description": "Index of timeslice levels; internally fixed to the elements 'ANNUAL', 'SEASON', 'WEEKLY', 'DAYNITE'.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "u",
+      "Alias": null,
+      "Description": "List of all units; maintained in the file UNITS.DEF.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_attr (r,uc_n,side, uc_grptype, uc_name)",
+      "Alias": null,
+      "Description": "Set of quintuples such that the UC modifier specified by the uc_name (e.g., cost, conversion factor, etc.) will be applied to the coefficient for the variable identified by uc_grptype in the user constraint uc_n, for the side side ('LHS' or 'RHS') in region r; if uc_name='GROWTH' the user constraint represents a growth constraint.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_cost",
+      "Alias": null,
+      "Description": "Internally fixed list of cost types that can be used as modifier attributes in user constraints: COST, DELIV, TAX, SUB",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "uc_dyndir (r,uc_n,side)",
+      "Alias": null,
+      "Description": "If side = 'RHS', indicator for growth constraints to be generated between the periods t–1 and t; if side = 'LHS', the set is ignored.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_gmap_c (r,uc_n,uc_grptype,c)",
+      "Alias": null,
+      "Description": "Indicator that a commodity variable (VAR_COMCON or VAR_COMPRD) for commodity (c) in a region (r) appears in a user constraint (uc_n).",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_gmap_p (r,uc_n,uc_grptype,p)",
+      "Alias": null,
+      "Description": "Indicator that a variable (VAR_ACT, VAR_NCAP or VAR_CAP) associated with a process (p) in a region (r) appears in a user constraint (uc_n).",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_gmap_u (r,uc_n,ucn)",
+      "Alias": null,
+      "Description": "Indicator that a variable (VAR_UCRT) associated with a user constraint (ucn) in a region (r) appears in another user constraint (uc_n).",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_grptype",
+      "Alias": null,
+      "Description": "Index of internally fixed key types of variables: ACT, FLO, IRE, CAP, NCAP, COMPRD, COMNET, COMCON, UCN These are used in association with the user constraints.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "uc_map_flo (uc_n,r,p,c)",
+      "Alias": null,
+      "Description": "Indicator that the flow variable (VAR_FLO) for region r, process p and commodity c is involved in user constraint uc_n.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_map_ire (uc_n,r,p,c)",
+      "Alias": null,
+      "Description": "Indicator that an import/export (according to top_ire) trade variable (VAR_IRE) for region r, process p, and commodity c is involved in a user constraint (uc_n).",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_n",
+      "Alias": "ucn",
+      "Description": "List of user specified unique indicators of the user constraints.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_name",
+      "Alias": null,
+      "Description": "List of internally fixed indicators for attributes able to be referenced as coefficients in user constraints (e.g. the flow variable may be multiplied by the attribute FLO_COST in a user constraint if desired): COST, DELIV, TAX, SUB, EFF, NET, BUILDUP, CAPACT, CAPFLO, GROWTH, NEWFLO, ONLINE, PERIOD, PERDISC, INVCOST, INVTAX, INVSUB, CUMSUM, SYNC, YES See Section 6.4.6 for more detailed information.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "uc_r_each (all_r,uc_n)",
+      "Alias": null,
+      "Description": "Set of pairs {all_r,uc_n} such that the user constraint uc_n is to be generated for each specified region all_r.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_r_sum (all_r,uc_n)",
+      "Alias": null,
+      "Description": "Set of pairs {all_r,uc_n} indicating that the user constraint uc_n is summing over all specified regions all_r (that is these constraints do not have a region index). Note that depending on the specified regions in uc_r_sum, the summation may be done only over a subset of all model regions. For example if the model contains the regions FRA, GER, ESP and one wants to create a user constraint called GHG summing over the regions FRA and GER but not ESP, the set uc_r_sum contains has the two entries {'FRA', 'GHG'} and {'GER', 'GHG'}.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_t_each (r,uc_n,t)",
+      "Alias": null,
+      "Description": "Indicator that the user constraint uc_n is to be generated for each specified period t.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_t_succ (r,uc_n,t)",
+      "Alias": null,
+      "Description": "Indicator that the user constraint uc_n is to be generated between the two successive periods t and t+1.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_t_sum (r,uc_n,t)",
+      "Alias": null,
+      "Description": "Indicator that the user constraint uc_n is to be generated summing over the periods t.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_ts_each (r,uc_n,s)",
+      "Alias": null,
+      "Description": "Indicator that the user constraint uc_n will be generated for each specified timeslice s.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_ts_sum (r,uc_n,s)",
+      "Alias": null,
+      "Description": "Indicator that the user constraint uc_n is to be generated summing over the specified timeslice s.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "uc_tsl (r,uc_n,side,tslvl)",
+      "Alias": null,
+      "Description": "Indicator of the target timeslice level tslvl of a timeslice-dynamic (or pseudo-dynamic) user constraint uc_n.",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "unit",
+      "Alias": null,
+      "Description": "List of capacity blocks that can be added in lumpy investment option; default elements 0–100; the element '0' describes the case when no capacity is added.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "v",
+      "Alias": "modlyear",
+      "Description": "Union of the sets pastyear and t corresponding to all the years (periods) of a model run (thus actually an internal set).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "ww",
+      "Alias": "allsow, w",
+      "Description": "States of the world that can be used; default elements 1–64; under user control by the dollar control parameter $SET MAXSOW <n> in the <case>.RUN file",
+      "Category": "User Input"
+    },
+    {
+      "Set ID/Indexes": "year",
+      "Alias": "allyear, ll",
+      "Description": "Years that can be used in the model; default range 1850-2200; under user control by the dollar control parameters $SET BOTIME <y> and $SET EOTIME <y> in the <case>.RUN file.",
+      "Category": "User Input"
+    },
+        {
+      "Set ID/Indexes": "afs (r,t,p,s,bd)",
+      "Alias": null,
+      "Description": "Indicator that the internal parameter COEF_AF, which is used as coefficient of the capacity (new investment variable VAR_NCAP plus past investments NCAP_PASTI) in the capacity utilization constraint EQ(l)_CAPACT, exists.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "bohyear (*)",
+      "Alias": null,
+      "Description": "Set allyear plus element 'BOH' (Beginning Of Horizon).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "dm_year (year)",
+      "Alias": null,
+      "Description": "Union of sets datayear and modlyear",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "eachyear (year)",
+      "Alias": null,
+      "Description": "Set of all years between scalars MINYR (first year needed for cost calculation in objective function) and MIYR_VL + DUR_MAX (estimation of last year possible cost terms may occur).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "eohyear (*)",
+      "Alias": null,
+      "Description": "Set allyear plus element 'EOH' (Ending OF Horizon)",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "eohyears (year)",
+      "Alias": null,
+      "Description": "Set of all years between scalars MINYR (first year needed for cost calculation in objective function) and MIYR_VL (last year of model horizon).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "finest (r,s)",
+      "Alias": null,
+      "Description": "Set of finest timeslices s used in region r.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "fs_emis (r,p,cg,c,com)",
+      "Alias": null,
+      "Description": "Indicator that the flow variable (VAR_FLO) associated with emission com can be replaced by the flow variable of c multiplied by the emission factor FLO_SUM, which is used in the transformation equation (EQ_PTRANS) between the commodity group cg and the commodity com; used in the reduction algorithm (see Part III).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "g_rcur (r,cur)",
+      "Alias": null,
+      "Description": "Indicator of main currency cur by region r. For regions having several discounted currencies, the one having highest present value factors is selected; used for undiscounting the solution marginals.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "invspred (year,jot,k,y)",
+      "Alias": null,
+      "Description": "Set of investment years y and commissioning years k belonging to the investment spread starting with year and having jot number of steps (used for investment and fixed cost accounting).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "invstep (year,jot,y,jot)",
+      "Alias": null,
+      "Description": "Set of investment years y belonging to the investment spread starting with year and having jot number of steps (used for investment and fixed cost accounting).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "miyr_1 (t)",
+      "Alias": null,
+      "Description": "First milestonyr.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "no_act (r,p)",
+      "Alias": null,
+      "Description": "List of processes p in region r not requiring the activity variable; used in reduction algorithm",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "no_cap (r,p)",
+      "Alias": null,
+      "Description": "List of processes p in region r not having any capacity related input parameters; used in reduction algorithm.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "no_rvp (r,v,p)",
+      "Alias": null,
+      "Description": "New investment in process p in region r is not possible in period v and previously installed capacity does not exist anymore.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_1a (r,v,p)",
+      "Alias": null,
+      "Description": "Investment case small investment (NCAP_ILED/D(v) <= G_ILEDNO) and no repetition of investment (NCAP_TLIFE + NCAP_ILED >= D(v)) for process p in region r and vintage period v.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_1b (r,v,p)",
+      "Alias": null,
+      "Description": "Investment case small investment (NCAP_ILED/D(v) <= G_ILEDNO) and repetition of investment (NCAP_TLIFE + NCAP_ILED < D(v)) for process p in region r and vintage period v.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_2a (r,v,p)",
+      "Alias": null,
+      "Description": "Investment case large investment (NCAP_ILED/D(v) > G_ILEDNO) and no repetition of investment (NCAP_TLIFE + NCAP_ILED >= D(v)) for process p in region r and vintage period v.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_2b (r,v,p)",
+      "Alias": null,
+      "Description": "Investment case large investment (NCAP_ILED/D(v) > G_ILEDNO) and repetition of investment (NCAP_TLIFE + NCAP_ILED < D(v)) for process p in region r and vintage period v.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_idc (r,v,p,life,k,age)",
+      "Alias": null,
+      "Description": "Summation control for calculating the interest during constriction (IDC) for investment Cases 2.a and 2.b.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_sumii (r,v,p,life,y,jot)",
+      "Alias": null,
+      "Description": "Summation control for investment and capacity related taxes and subsidies of the in the annual objective function, with lifetime life, spread starting in commissioning year y, having jot number of steps in the spread, and vintage period v.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_sumiii (r,v,p,ll,k,y)",
+      "Alias": null,
+      "Description": "Summation control for decommissioning costs with for the running year index y of annual objective function, vintage period v, startup-year ll, and commissioning year k (e.g. for spreading decommissioning costs over decommissioning time).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_sumiv (r,v,p,life,y,jot)",
+      "Alias": null,
+      "Description": "Summation control for fixed costs in the annual objective function with lifetime life, spread starting in commissioning year y, having jot number of steps in the spread, and vintage period v.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_sumivs (r,v,p,k,y)",
+      "Alias": null,
+      "Description": "Summation control for decommissioning surveillance costs with running year index y of annual objective function, vintage period v and commissioning year k.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_sums (r,v,p)",
+      "Alias": null,
+      "Description": "Indicator that process p in region r with vintage period v has a salvage value for investments with a (technical) lifetime that extends past the model horizon.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_sums3 (r,v,p)",
+      "Alias": null,
+      "Description": "Indicator that process p in region r with vintage period v has a salvage value associated with the decommissioning or surveillance costs.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "obj_sumsi (r,v,p,k)",
+      "Alias": null,
+      "Description": "Indicator that for commissioning years k process p in region r with vintage period v has a salvage value due to investment, decommissioning or surveillance costs arising from the technical lifetime extending past the model horizon.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "periodyr (v,y)",
+      "Alias": null,
+      "Description": "Mapping of individual years y to the modlyear (milestonyr or pastyear; v) period they belong to; if v is a pastyear, only the pastyear itself belongs to the period; for the last period of the model horizon also the years until the very end of the model accounting horizon (MIYR_VL + DUR_MAX) are elements of periodyr.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "prc_act (r,p)",
+      "Alias": null,
+      "Description": "Indicator that a process p in region r needs an activity variable (used in reduction algorithm).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "prc_cap (r,p)",
+      "Alias": null,
+      "Description": "Indicator that a process p in region r needs a capacity variable (used in reduction algorithm).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "prc_spg (r,p,cg)",
+      "Alias": null,
+      "Description": "Shadow primary group (SPG) of a process p; all commodities on the opposite process side of the primary commodity group (PCG) which have the same commodity type as the PCG, usually internally determined (though it may be specified by the user under special circumstances (e.g., when not all the commodities on the opposite side of the process, which should be in the SPG, are of the same commodity type com_type). If no commodity of the same type is found: if PCG is of type 'DEM' and process is a material processing process (PRV or PRW), then the SPG contains all material commodities on the SPG side; otherwise the SPG is selected as the first type among the commodity types on the SPG side, in the flowing order: When PCG type is DEM: (NRG, MAT, ENV) When PCG type is NRG: (MAT, DEM, ENV) When PCG type is MAT: (NRG, DEM, ENV) When PCG type is ENV: (NRG, MAT, DEM)",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "prc_stgips (r,p,c)",
+      "Alias": null,
+      "Description": "Set of triplets {r,p,c} such that process p is an inter-period storage for the commodity c in region r; the commodity c enters and/or leaves the storage according to the set top; the storage can only operate at the ANNUAL level.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "prc_stgtss (r,p,c)",
+      "Alias": null,
+      "Description": "Set of triplets {r,p,c} such that process p is a storage process between timeslices (e.g., seasonal hydro reservoir, day/night pumped storage) for commodity c in region r; commodity c enters and/or leaves the storage according to set top; the storage operates at the timeslice level prc_tsl.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rc (r,c)",
+      "Alias": null,
+      "Description": "List of all commodities c found in region r.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rc_agp (r,c,lim)",
+      "Alias": null,
+      "Description": "Indicator of which commodities c are aggregated into other commodities by aggregation type lim.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rc_cumcom (r,com_var,y1,y2,c)",
+      "Alias": null,
+      "Description": "Indicator of a cumulative constraint of type com_var defined for commodity c between years y1 and y2",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rcj (r,c,j,bd)",
+      "Alias": null,
+      "Description": "Steps j used in direction bd for the elastic demand formulation of commodity c.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rcs_combal (r,t,c,s,bd)",
+      "Alias": null,
+      "Description": "Indicator of which timeslices (s) associate with commodity c in region r for time period t the commodity balance equation (EQ(l)_COMBAL) is to be generated, with a constraint type corresponding to bd.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rcs_comprd (r,t,c,s,bd)",
+      "Alias": null,
+      "Description": "Indicator of which timeslices (s) associate with commodity c in region r for time period t the commodity production equation (EQ(l)_COMBAL) is to be generated, with a constraint type according to bd, when a corresponding rhs_comprd indicator exists.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rcs_comts (r,c,s)",
+      "Alias": null,
+      "Description": "All timeslices s being at or above timeslice level (com_tsl) of commodity c in region r.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rdcur (r,cur)",
+      "Alias": null,
+      "Description": "List of currencies cur that are discounted (G_DRATE provided) in each region r.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rhs_combal (r,t,c,s)",
+      "Alias": null,
+      "Description": "Indicator that the commodity net variable (VAR_COMNET) is required in commodity balance (EQE_COMBAL), owing to bounds/costs imposed on the net amount.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rhs_comprd (r,t,c,s)",
+      "Alias": null,
+      "Description": "Indicator that the commodity production variable (VAR_COMPRD) is required in commodity balance (EQE_COMPRD), owing to a limit/costs imposed on the production.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp (r,p)",
+      "Alias": null,
+      "Description": "List of processes (p) in each region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_aire (r,p,ie)",
+      "Alias": null,
+      "Description": "List of exchange processes (p) in each region (r) with indicators (ie) corresponding to the activity being defined by imports/exports or both.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_flo (r,p)",
+      "Alias": null,
+      "Description": "List of all processes in region (r), except inter-regional exchange processes (ire).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_inout (r,p,io)",
+      "Alias": null,
+      "Description": "Indicator as to whether a process (p) in a region (r) is input or output (io = 'IN'/'OUT') normalized with respect to its activity.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_ire (all_r,p)",
+      "Alias": null,
+      "Description": "List of inter-regional exchange processes (p) found in each region (all_r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_pg (r,p,cg)",
+      "Alias": null,
+      "Description": "The primary commodity group (cg) of each process (p) in a region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_pgtype (r,p,com_type)",
+      "Alias": null,
+      "Description": "The commodity type (com_type) of primary commodity group of a process (p) in a region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_sgs (r,p)",
+      "Alias": null,
+      "Description": "List of those standard processes (p) in each region (r), which have been defined to have a night storage (NST) capability.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_std (r,p)",
+      "Alias": null,
+      "Description": "List of standard processes (p) in each region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_stg (r,p)",
+      "Alias": null,
+      "Description": "List of storage processes (p) in each region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_sts (r,p)",
+      "Alias": null,
+      "Description": "List of generalized timeslice storage processes (p) in each region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_upl (r,p,lim)",
+      "Alias": null,
+      "Description": "List of those processes (p) in each region (r) that have dispatching attributes ACT_MINLD/ACT_UPS defined, with qualifier lim.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rp_ups (r,p,tslvl,lim)",
+      "Alias": null,
+      "Description": "Timeslices (s) of a process (p) in a region (r) during which start-ups are permitted (used for processes in the set rp_upl(r,p,'FX'))",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc (r,p,c)",
+      "Alias": null,
+      "Description": "List of commodities (c) associated with a process p in region r (by top or top_ire).",
+      "Category": "Internal"
+    },
+        {
+      "Set ID/Indexes": "rpc_act (r,p,c)",
+      "Alias": null,
+      "Description": "Indicator that the primary commodity group of a process (p), except exchange processes (see rpc_aire) consists of only one commodity (c), enabling the corresponding flow variable to be replaced by the activity variable (used in reduction algorithm).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_aire (r,p,c)",
+      "Alias": null,
+      "Description": "Indicator that the primary commodity group of an exchange process (p) consists of only one commodity (c), enabling the corresponding flow variable to be replaced by the activity variable (used in reduction algorithm).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_capflo (r,v,p,c)",
+      "Alias": null,
+      "Description": "Indicator that a commodity flow c in region r is associated with the capacity of a process (p, due to NCAP_ICOM, NCAP_OCOM, or NCAP_COM being provided).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_cumflo (r,p,c,y1,y2)",
+      "Alias": null,
+      "Description": "Indicator of a cumulative constraint defined for commodity flow c of process p between years y1 and y2",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_noflo (r,p,c)",
+      "Alias": null,
+      "Description": "A subset of rpc_capflo indicating those processes (p) in a region (r) where a commodity (c) is only consumed or produced through capacity based flows, and thus has no flow variable for the commodity.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_emis (r,p,cg)",
+      "Alias": null,
+      "Description": "Indicator that the flow variable of an emission commodity (cg) associated with process (p) in a region (r) can be replaced by the fuel flow causing the emission multiplied by the emission factor (used in reduction algorithm).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_eqire (r,p,c)",
+      "Alias": null,
+      "Description": "Indicator of the commodities (c) associated with inter-regional exchange processes (p) in region (r) for which an inter-region exchange equation (EQ_IRE) is to be generated; the set does not contain the marketplace region (rpc_market).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpcc_ffunc (r,p,c)",
+      "Alias": null,
+      "Description": "Flow variable of a commodity (c) associated with a process (p) that can be replaced by another flow variable of the process, due to a direct FLO_FUNC or FLO_SUM relationship.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_ire (all_r,p,c,ie)",
+      "Alias": null,
+      "Description": "Commodities (c) imported or exported (ie='IMP'/'EXP') via process p in a region (all_r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_market (all_r,p,c,ie)",
+      "Alias": null,
+      "Description": "List of market regions (subset of all_r) that trade a commodity (c) through a process (p) either by only multidirectional export links (ie='EXP') or by both import and export links (ie='IMP'). The market structure is user-defined through the set top_ire.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_pg (r,p,cg,c)",
+      "Alias": null,
+      "Description": "Mapping of the commodities (c) in a region (r) that belong to the primary commodity group (cg) associated with process p.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_spg (r,p,c)",
+      "Alias": null,
+      "Description": "The list of commodities (c) in a region (r) belonging to the shadow primary group of process (p).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_stg (r,p,c)",
+      "Alias": null,
+      "Description": "List of stored (charged/discharged) commodities (c) of storage processes (p) in region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpc_stgn (r,p,c,io)",
+      "Alias": null,
+      "Description": "List of those stored (charged/discharged) commodities (c) of storage processes (p) in region (r), which are connected to the commodity balance on one side (io) only.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpcg_ptran (r,p,c1,c2,cg1,cg2)",
+      "Alias": null,
+      "Description": "Indicator of the transformation equations (EQ_PTRANS) that can be eliminated by the reduction algorithm.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rpcs_var (r,p,c,s)",
+      "Alias": null,
+      "Description": "The list of valid timeslices for the flow variable (VAR_FLO) of commodity c associated with process p in region r; flow variables of commodities which are part of the primary commodity group have the timeslice resolution of the process (prc_tsl), while all other flow variables are created according to the rps_s1 timeslices.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rps_prcts (r,p,s)",
+      "Alias": null,
+      "Description": "All (permitted) timeslices (s) at or above the process (p) timeslice level (prc_tsl) in a region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rps_s1 (r,p,s)",
+      "Alias": null,
+      "Description": "All (permitted) timeslices (s) belonging to the finest timeslice level of the process (p, prc_tsl) and the commodity timeslice level (com_tsl) of the shadow primary commodity group.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rps_s2 (r,p,s)",
+      "Alias": null,
+      "Description": "For an ANNUAL level NST process, contains all permitted timeslices (s) at the level above the finest commodity timeslice levels (com_tsl) of the shadow primary group (spg). For all other processes, rps_s2 = rps_s1.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rps_stg (r,p,s)",
+      "Alias": null,
+      "Description": "Process level timeslices (s) of timeslice storage process (p) in a region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rreg (all_reg,all_r)",
+      "Alias": null,
+      "Description": "Indicator that trade exists from region all_reg to region all_r.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rs_below (all_r,ts,s)",
+      "Alias": null,
+      "Description": "All timeslices (s) strictly below the higher timeslice (ts) in the timeslice tree.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rs_below1 (all_r,ts,s)",
+      "Alias": null,
+      "Description": "All timeslices (s) immediately (one level) below the higher timeslice (ts) in the timeslice tree.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rs_tree (all_r,ts,s)",
+      "Alias": null,
+      "Description": "For a timeslice (ts) all timeslices (s) that are on the same paths within the timeslice tree, e.g. if ts=SP_WD in Fig. 6, valid timeslices s are: ANNUAL, SP, SP_WD, SP_WD_D, SP_WD_N",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtc_cumnet (r,t,c)",
+      "Alias": null,
+      "Description": "Indicator that the commodity net variable (VAR_COMNET) for commodity c in region r for period t has a cumulative bound applied.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtc_cumprd (r,t,c)",
+      "Alias": null,
+      "Description": "Indicator that the commodity production variable (VAR_COMPRD) for commodity c in region r for period t has a cumulative bound applied.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtcs_sing (r,t,c,s,io)",
+      "Alias": null,
+      "Description": "Indicator that a commodity c is not available in a specific period t and timeslice s, since the all the processes producing (io='OUT') or consuming it (io='IN') are turned-off. In the case of io='OUT', the commodity is not available, meaning that processes having only this commodity as input cannot operate. Similar reasoning applies to the case io='IN'.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtcs_varc (r,t,c,s)",
+      "Alias": null,
+      "Description": "For commodity (c) in region (r) indicator for the timeslices (s) and the periods (t) the commodity is available.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtp = rvp (r,v,p)",
+      "Alias": null,
+      "Description": "Indication of the periods and pastyears for which process (p) in region (r) is available; all other RTP_* control sets are based on this set.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtp_cptyr (r,v,t,p)",
+      "Alias": null,
+      "Description": "For each vintage period (v) an indication of the periods (t) for which newly installed capacity of process (p) in a region (r) is available, taking into account construction lead-time (NCAP_ILED) and technical lifetime (NCAP_TLIFE).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtp_off (r,t,p)",
+      "Alias": null,
+      "Description": "Indication of the periods (t) in which no new investment is permitted for a process (p) in a region (r).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtp_vara (r,t,p)",
+      "Alias": null,
+      "Description": "Indication of the periods (t) for which a process (p) in a region (r) is available.",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtp_varp (r,t,p)",
+      "Alias": null,
+      "Description": "Indicator that the capacity variable (VAR_CAP) will be generated for process (p) in a region (r) in period (t).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtp_vintyr (r,v,t,p)",
+      "Alias": null,
+      "Description": "An indication of for which periods (t) a process (p) in a region (r) is available since it was first installed (v); for vintaged processes (prc_vint) identical to rtp_cptyr, for non-vintaged processes the v index in the rtp_cptyr entries is ignored by setting it to t (v = t).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtpc (r,t,p,c)",
+      "Alias": null,
+      "Description": "For a process (p) in a region (r) the combination of the periods it is available (rtp) and commodities associated with it (rpc).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtps_off (r,t,p,s)",
+      "Alias": null,
+      "Description": "An indication for process (p) of the timeslices (s) for which the process is turned-off (used in reduction algorithm).",
+      "Category": "Internal"
+    },
+    {
+      "Set ID/Indexes": "rtpcs_varf (r,t,p,c,s)",
+      "Alias": null,
+      "Description": "The list of valid timeslices (s) and periods (t) for the flow variable (VAR_FLO) of process (p) and commodity (c); taking into account the availability of the activity, capacity and flow (rtp_vara, rpcs_var and prc_foff). The timeslice level of a flow variable equals the process timeslice level (prc_tsl) when the flow is part of the primary commodity group of the process. Otherwise the timeslice level of a flow variable is set to the finest level of the commodities in the shadow group (SPG) or the process level, whichever is finer.",
+      "Category": "Internal"
     }
-  }
-} 
+  ]
+}
